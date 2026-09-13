@@ -20,9 +20,18 @@ public class Main {
             "Concluído"
         );
 
+        Projeto projeto3 = new Projeto(
+            3,
+            "Aplicativo Mobile",
+            "Aplicativo",
+            "Mobile",
+            "Concluído"
+        );
+
         projeto1.exibirDados();
         System.out.println();
         projeto2.exibirDados();
-        
+        System.out.println();
+        projeto3.exibirDados();
     }
 }
