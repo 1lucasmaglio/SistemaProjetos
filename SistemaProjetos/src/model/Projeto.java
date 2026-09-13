@@ -36,7 +36,7 @@ public class Projeto {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
     
-    // Método extra (Página 22)
+    // Método extra
     public void exibirDados() {
         System.out.println("ID: " + id);
         System.out.println("Nome: " + nome);
