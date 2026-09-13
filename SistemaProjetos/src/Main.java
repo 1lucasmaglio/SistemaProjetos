@@ -25,7 +25,7 @@ public class Main {
             "Aplicativo Mobile",
             "Aplicativo",
             "Mobile",
-            "Concluído"
+            "Planejado"
         );
 
         projeto1.exibirDados();
