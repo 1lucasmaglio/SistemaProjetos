@@ -1,7 +1,9 @@
 import model.Projeto;
 
 public class Main {
+
     public static void main(String[] args) {
+
         Projeto projeto1 = new Projeto(
             1,
             "Sistema Acadêmico",
@@ -22,8 +24,9 @@ public class Main {
         System.out.println(projeto1.getNome());
         System.out.println(projeto1.getCategoria());
         System.out.println(projeto1.getStatus());
+
         System.out.println();
-        
+
         System.out.println("PROJETO 2");
         System.out.println(projeto2.getNome());
         System.out.println(projeto2.getCategoria());
