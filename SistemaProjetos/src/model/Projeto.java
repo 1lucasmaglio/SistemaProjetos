@@ -19,6 +19,14 @@ public class Projeto {
         this.status = status;
     }
 
+    public void exibirDados() {
+        System.out.println("ID: " + id);
+        System.out.println("Nome: " + nome);
+        System.out.println("Descrição: " + descricao);
+        System.out.println("Categoria: " + categoria);
+        System.out.println("Status: " + status);
+    }
+
     public int getId() {
         return id;
     }
@@ -57,17 +65,5 @@ public class Projeto {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public void exibirDados() {
-        System.out.println("ID: " + id);
-        System.out.println("Nome: " + nome);
-        System.out.println("Descrição: " + descricao);
-        System.out.println("Categoria: " + categoria);
-        System.out.println("Status: " + status);
-    }
-
-    public boolean estaConcluido() {
-        return status.equals("Concluído");
     }
 }
