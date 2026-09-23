@@ -1,97 +1,186 @@
+import java.util.Scanner;
+
 import model.Projeto;
 import service.ProjetoService;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
-        System.out.println("==============================");
-        System.out.println("     SISTEMA DE PROJETOS     ");
-        System.out.println("==============================");
-        System.out.println();
-        System.out.println("Projeto: Portfólio Acadêmico");
-        System.out.println("Desenvolvido em Java");
-        System.out.println("Versão: 1.0");
-        System.out.println();
+        Scanner scanner = new Scanner(System.in);
+        ProjetoService service = new ProjetoService();
 
-        ProjetoService service =
-            new ProjetoService();
+        service.carregar();
 
-        Projeto p1 = new Projeto(
-            1,
-            "Sistema Acadêmico",
-            "Sistema para gerenciamento acadêmico",
-            "Software",
-            "Em desenvolvimento"
-        );
+        int opcao = -1;
 
-        Projeto p2 = new Projeto(
-            2,
-            "Site Institucional",
-            "Website institucional",
-            "Web",
-            "Concluído"
-        );
+        while (opcao != 0) {
 
-        Projeto p3 = new Projeto(
-            3,
-            "Aplicativo Mobile",
-            "Aplicativo para prestação de serviços",
-            "Mobile",
-            "Planejado"
-        );
+            System.out.println();
+            System.out.println("========================================");
+            System.out.println(" SISTEMA DE PROJETOS");
+            System.out.println("========================================");
+            System.out.println("1 - Listar projetos");
+            System.out.println("2 - Buscar projeto");
+            System.out.println("3 - Cadastrar projeto");
+            System.out.println("4 - Alterar projeto");
+            System.out.println("5 - Excluir projeto");
+            System.out.println("0 - Sair");
+            System.out.print("Escolha: ");
 
-        service.adicionar(p1);
-        service.adicionar(p2);
-        service.adicionar(p3);
+            opcao = scanner.nextInt();
+            scanner.nextLine();
 
-        System.out.println(
-            "TOTAL DE PROJETOS: "
-            + service.listar().size()
-        );
-        System.out.println();
+            switch (opcao) {
 
-        System.out.println("LISTA DE PROJETOS");
+                case 1:
+                    System.out.println("\n--- LISTA DE PROJETOS ---");
 
-        for (Projeto projeto : service.listar()) {
-            projeto.exibirDados();
-            System.out.println("----------------");
+                    for (Projeto projeto : service.listar()) {
+                        projeto.exibirDados();
+                        System.out.println("-------------------------");
+                    }
 
+                    break;
+
+                case 2:
+                    System.out.println("\n--- BUSCA DE PROJETO ---");
+                    System.out.print("Digite o ID: ");
+
+                    int idBusca = scanner.nextInt();
+                    scanner.nextLine();
+
+                    Projeto encontrado = service.buscarPorId(idBusca);
+
+                    if (encontrado != null) {
+                        encontrado.exibirDados();
+                    } else {
+                        System.out.println("Projeto não encontrado.");
+                    }
+
+                    break;
+
+                case 3:
+                    System.out.println("\n--- CADASTRO DE PROJETO ---");
+
+                    System.out.print("ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+
+                    System.out.print("Nome: ");
+                    String nome = scanner.nextLine();
+
+                    System.out.print("Descrição: ");
+                    String descricao = scanner.nextLine();
+
+                    System.out.print("Categoria: ");
+                    String categoria = scanner.nextLine();
+
+                    System.out.print("Status: ");
+                    String status = scanner.nextLine();
+
+                    Projeto projeto = new Projeto(id, nome, descricao, categoria, status);
+                    boolean cadastrado = service.adicionar(projeto);
+
+                    if (cadastrado) {
+                        service.salvar();
+                        System.out.println("Projeto cadastrado com sucesso.");
+                    } else {
+                        System.out.println("Não foi possível cadastrar.");
+                    }
+
+                    break;
+
+                case 4:
+                    System.out.println("\n--- ALTERAÇÃO DE PROJETO ---");
+                    System.out.print("Digite o ID do projeto: ");
+
+                    int idAlterar = scanner.nextInt();
+                    scanner.nextLine();
+
+                    Projeto existente = service.buscarPorId(idAlterar);
+
+                    if (existente == null) {
+                        System.out.println("Projeto não encontrado.");
+                        break;
+                    }
+
+                    System.out.println("\nProjeto atual:");
+                    existente.exibirDados();
+
+                    System.out.print("\nNovo nome: ");
+                    String novoNome = scanner.nextLine();
+
+                    System.out.print("Nova descrição: ");
+                    String novaDescricao = scanner.nextLine();
+
+                    System.out.print("Nova categoria: ");
+                    String novaCategoria = scanner.nextLine();
+
+                    System.out.print("Novo status: ");
+                    String novoStatus = scanner.nextLine();
+
+                    Projeto atualizado = new Projeto(
+                            idAlterar,
+                            novoNome,
+                            novaDescricao,
+                            novaCategoria,
+                            novoStatus
+                    );
+
+                    boolean alterado = service.alterar(atualizado);
+
+                    if (alterado) {
+                        service.salvar();
+                        System.out.println("Projeto alterado com sucesso.");
+                    } else {
+                        System.out.println("Não foi possível alterar.");
+                    }
+
+                    break;
+
+                case 5:
+                    System.out.println("\n--- EXCLUSÃO DE PROJETO ---");
+                    System.out.print("Digite o ID do projeto: ");
+
+                    int idExcluir = scanner.nextInt();
+                    scanner.nextLine();
+
+                    Projeto projetoExcluir = service.buscarPorId(idExcluir);
+
+                    if (projetoExcluir == null) {
+                        System.out.println("Projeto não encontrado.");
+                        break;
+                    }
+
+                    System.out.println("\nProjeto que será excluído:");
+                    projetoExcluir.exibirDados();
+
+                    System.out.print("Confirma exclusão? (S/N): ");
+                    String confirmacao = scanner.nextLine();
+
+                    if (confirmacao.equalsIgnoreCase("S")) {
+                        boolean removido = service.removerPorId(idExcluir);
+
+                        if (removido) {
+                            service.salvar();
+                            System.out.println("Projeto excluído com sucesso.");
+                        }
+                    } else {
+                        System.out.println("Exclusão cancelada.");
+                    }
+
+                    break;
+
+                case 0:
+                    System.out.println("Encerrando o sistema...");
+                    break;
+
+                default:
+                    System.out.println("Opção inválida.");
+            }
         }
 
-        System.out.println();
-
-        System.out.println("BUSCA PELO ID 2");
-
-        Projeto encontrado =
-            service.buscarPorId(2);
-
-        if (encontrado != null) {
-            encontrado.exibirDados();
-
-        }
-
-        System.out.println();
-
-        System.out.println("PROJETOS WEB");
-
-        for (Projeto projeto :
-            service.buscarPorCategoria("Web")
-        ) {
-
-            projeto.exibirDados();
-
-        }
-
-        System.out.println();
-
-        System.out.println("PROJETOS CONCLUÍDOS");
-
-        for (Projeto projeto :
-            service.buscarPorStatus("Concluído")
-        ) {
-            projeto.exibirDados();
-
-        }
+        scanner.close();
     }
 }
