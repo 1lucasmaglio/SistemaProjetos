@@ -16,11 +16,13 @@ public class ProjetoCSV {
     }
 
     public void salvar(List<Projeto> projetos) throws Exception {
+
         List<String> linhas = new ArrayList<>();
 
         linhas.add("id;nome;descricao;categoria;status");
 
         for (Projeto projeto : projetos) {
+
             String linha = projeto.getId() + ";" +
                     projeto.getNome() + ";" +
                     projeto.getDescricao() + ";" +
@@ -34,6 +36,7 @@ public class ProjetoCSV {
     }
 
     public List<Projeto> listar() throws Exception {
+
         List<Projeto> projetos = new ArrayList<>();
 
         if (!Files.exists(caminho)) {
@@ -43,6 +46,7 @@ public class ProjetoCSV {
         List<String> linhas = Files.readAllLines(caminho);
 
         for (int i = 1; i < linhas.size(); i++) {
+
             String linha = linhas.get(i);
             String[] dados = linha.split(";");
 
@@ -52,7 +56,14 @@ public class ProjetoCSV {
             String categoria = dados[3];
             String status = dados[4];
 
-            Projeto projeto = new Projeto(id, nome, descricao, categoria, status);
+            Projeto projeto = new Projeto(
+                    id,
+                    nome,
+                    descricao,
+                    categoria,
+                    status
+            );
+
             projetos.add(projeto);
         }
 
