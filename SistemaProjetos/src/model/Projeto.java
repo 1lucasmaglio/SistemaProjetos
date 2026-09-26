@@ -1,103 +1,76 @@
-package service;
+package model;
 
-import java.util.ArrayList;
-import java.util.List;
+public class Projeto {
 
-import dao.ProjetoCSV;
-import model.Projeto;
+    private int id;
+    private String nome;
+    private String descricao;
+    private String categoria;
+    private String status;
 
-public class ProjetoService {
-
-    private List<Projeto> projetos;
-    private ProjetoCSV dao;
-
-    public ProjetoService() {
-        projetos = new ArrayList<>();
-        dao = new ProjetoCSV();
+    public Projeto() {
     }
 
-    public void carregar() throws Exception {
-        projetos = dao.listar();
+    public Projeto(int id, String nome, String descricao, String categoria, String status) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.status = status;
     }
 
-    public void salvar() throws Exception {
-        dao.salvar(projetos);
+    public Projeto(String nome, String descricao, String categoria, String status) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.status = status;
     }
 
-    public boolean adicionar(Projeto projeto) {
-        if (projeto.getNome() == null || projeto.getNome().isBlank()) {
-            return false;
-        }
-
-        if (buscarPorId(projeto.getId()) != null) {
-            return false;
-        }
-
-        projetos.add(projeto);
-        return true;
+    public int getId() {
+        return id;
     }
 
-    public List<Projeto> listar() {
-        return projetos;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public Projeto buscarPorId(int id) {
-        for (Projeto projeto : projetos) {
-            if (projeto.getId() == id) {
-                return projeto;
-            }
-        }
-
-        return null;
+    public String getNome() {
+        return nome;
     }
 
-    public List<Projeto> buscarPorCategoria(String categoria) {
-        List<Projeto> resultado = new ArrayList<>();
-
-        for (Projeto projeto : projetos) {
-            if (projeto.getCategoria().equalsIgnoreCase(categoria)) {
-                resultado.add(projeto);
-            }
-        }
-
-        return resultado;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public List<Projeto> buscarPorStatus(String status) {
-        List<Projeto> resultado = new ArrayList<>();
-
-        for (Projeto projeto : projetos) {
-            if (projeto.getStatus().equalsIgnoreCase(status)) {
-                resultado.add(projeto);
-            }
-        }
-
-        return resultado;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public boolean removerPorId(int id) {
-        Projeto projeto = buscarPorId(id);
-
-        if (projeto != null) {
-            projetos.remove(projeto);
-            return true;
-        }
-
-        return false;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public boolean alterar(Projeto projetoAtualizado) {
-        Projeto projeto = buscarPorId(projetoAtualizado.getId());
+    public String getCategoria() {
+        return categoria;
+    }
 
-        if (projeto == null) {
-            return false;
-        }
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 
-        projeto.setNome(projetoAtualizado.getNome());
-        projeto.setDescricao(projetoAtualizado.getDescricao());
-        projeto.setCategoria(projetoAtualizado.getCategoria());
-        projeto.setStatus(projetoAtualizado.getStatus());
+    public String getStatus() {
+        return status;
+    }
 
-        return true;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void exibirDados() {
+        System.out.println("ID: " + id);
+        System.out.println("Nome: " + nome);
+        System.out.println("Descrição: " + descricao);
+        System.out.println("Categoria: " + categoria);
+        System.out.println("Status: " + status);
     }
 }
