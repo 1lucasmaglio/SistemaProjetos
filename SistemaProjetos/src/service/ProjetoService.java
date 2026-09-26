@@ -3,46 +3,33 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.ProjetoCSV;
 import model.Projeto;
 
 public class ProjetoService {
 
     private List<Projeto> projetos;
+    private ProjetoCSV dao;
 
     public ProjetoService() {
-
         projetos = new ArrayList<>();
-
+        dao = new ProjetoCSV();
     }
 
-    public boolean adicionar(Projeto projeto) {
+    public void carregar() throws Exception {
+        projetos = dao.listar();
+    }
 
-        if (
-            projeto.getNome() == null ||
-            projeto.getNome().trim().isEmpty()
-        ) {
+    public void salvar() throws Exception {
+        dao.salvar(projetos);
+    }
 
-            return false;
-
-        }
-
-        if (
-            buscarPorId(projeto.getId()) != null
-        ) {
-
-            return false;
-
-        }
-
+    public void adicionar(Projeto projeto) {
         projetos.add(projeto);
-
-        return true;
     }
 
     public List<Projeto> listar() {
-
         return projetos;
-
     }
 
     public Projeto buscarPorId(int id) {
@@ -50,55 +37,35 @@ public class ProjetoService {
         for (Projeto projeto : projetos) {
 
             if (projeto.getId() == id) {
-
                 return projeto;
-
             }
         }
 
         return null;
     }
 
-    public List<Projeto> buscarPorCategoria(
-        String categoria
-    ) {
+    public List<Projeto> buscarPorCategoria(String categoria) {
 
-        List<Projeto> resultado =
-            new ArrayList<>();
+        List<Projeto> resultado = new ArrayList<>();
 
         for (Projeto projeto : projetos) {
 
-            if (
-                projeto.getCategoria()
-                       .equalsIgnoreCase(categoria)
-            ) {
-
+            if (projeto.getCategoria().equalsIgnoreCase(categoria)) {
                 resultado.add(projeto);
-
             }
         }
 
         return resultado;
     }
 
-    public List<Projeto> buscarPorStatus(
-        String status
-    ) {
+    public List<Projeto> buscarPorStatus(String status) {
 
-
-
-        List<Projeto> resultado =
-            new ArrayList<>();
+        List<Projeto> resultado = new ArrayList<>();
 
         for (Projeto projeto : projetos) {
 
-            if (
-                projeto.getStatus()
-                       .equalsIgnoreCase(status)
-            ) {
-
+            if (projeto.getStatus().equalsIgnoreCase(status)) {
                 resultado.add(projeto);
-
             }
         }
 
@@ -109,14 +76,28 @@ public class ProjetoService {
 
         Projeto projeto = buscarPorId(id);
 
-        if (projeto != null) {
-
-            projetos.remove(projeto);
-
-            return true;
-
+        if (projeto == null) {
+            return false;
         }
 
-        return false;
+        projetos.remove(projeto);
+
+        return true;
+    }
+
+    public boolean alterar(Projeto projetoAtualizado) {
+
+        Projeto projeto = buscarPorId(projetoAtualizado.getId());
+
+        if (projeto == null) {
+            return false;
+        }
+
+        projeto.setNome(projetoAtualizado.getNome());
+        projeto.setDescricao(projetoAtualizado.getDescricao());
+        projeto.setCategoria(projetoAtualizado.getCategoria());
+        projeto.setStatus(projetoAtualizado.getStatus());
+
+        return true;
     }
 }
