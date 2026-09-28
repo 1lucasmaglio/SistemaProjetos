@@ -25,6 +25,17 @@ public class ProjetoService {
     }
 
     public void adicionar(Projeto projeto) {
+
+        int maiorId = 0;
+
+        for (Projeto p : projetos) {
+
+            if (p.getId() > maiorId) {
+                maiorId = p.getId();
+            }
+        }
+
+        projeto.setId(maiorId + 1);
         projetos.add(projeto);
     }
 
@@ -46,11 +57,14 @@ public class ProjetoService {
 
     public List<Projeto> buscarPorCategoria(String categoria) {
 
-        List<Projeto> resultado = new ArrayList<>();
+        List<Projeto> resultado =
+                new ArrayList<>();
 
         for (Projeto projeto : projetos) {
 
-            if (projeto.getCategoria().equalsIgnoreCase(categoria)) {
+            if (projeto.getCategoria()
+                    .equalsIgnoreCase(categoria)) {
+
                 resultado.add(projeto);
             }
         }
@@ -60,11 +74,14 @@ public class ProjetoService {
 
     public List<Projeto> buscarPorStatus(String status) {
 
-        List<Projeto> resultado = new ArrayList<>();
+        List<Projeto> resultado =
+                new ArrayList<>();
 
         for (Projeto projeto : projetos) {
 
-            if (projeto.getStatus().equalsIgnoreCase(status)) {
+            if (projeto.getStatus()
+                    .equalsIgnoreCase(status)) {
+
                 resultado.add(projeto);
             }
         }
@@ -87,16 +104,28 @@ public class ProjetoService {
 
     public boolean alterar(Projeto projetoAtualizado) {
 
-        Projeto projeto = buscarPorId(projetoAtualizado.getId());
+        Projeto projeto =
+                buscarPorId(projetoAtualizado.getId());
 
         if (projeto == null) {
             return false;
         }
 
-        projeto.setNome(projetoAtualizado.getNome());
-        projeto.setDescricao(projetoAtualizado.getDescricao());
-        projeto.setCategoria(projetoAtualizado.getCategoria());
-        projeto.setStatus(projetoAtualizado.getStatus());
+        projeto.setNome(
+                projetoAtualizado.getNome()
+        );
+
+        projeto.setDescricao(
+                projetoAtualizado.getDescricao()
+        );
+
+        projeto.setCategoria(
+                projetoAtualizado.getCategoria()
+        );
+
+        projeto.setStatus(
+                projetoAtualizado.getStatus()
+        );
 
         return true;
     }

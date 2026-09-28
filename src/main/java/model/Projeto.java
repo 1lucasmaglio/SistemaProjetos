@@ -11,7 +11,9 @@ public class Projeto {
     public Projeto() {
     }
 
-    public Projeto(int id, String nome, String descricao, String categoria, String status) {
+    public Projeto(int id, String nome, String descricao,
+                   String categoria, String status) {
+
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -19,7 +21,9 @@ public class Projeto {
         this.status = status;
     }
 
-    public Projeto(String nome, String descricao, String categoria, String status) {
+    public Projeto(String nome, String descricao,
+                   String categoria, String status) {
+
         this.nome = nome;
         this.descricao = descricao;
         this.categoria = categoria;

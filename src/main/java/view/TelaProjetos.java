@@ -2,7 +2,17 @@ package view;
 
 import java.awt.GridLayout;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import model.Projeto;
@@ -37,8 +47,11 @@ public class TelaProjetos extends JFrame {
         criarEventos();
 
         try {
+
             service.carregar();
+
         } catch (Exception e) {
+
             JOptionPane.showMessageDialog(
                     this,
                     "Erro ao carregar projetos."
@@ -54,20 +67,26 @@ public class TelaProjetos extends JFrame {
         campoDescricao = new JTextField(20);
 
         comboCategoria = new JComboBox<>();
+
         comboCategoria.addItem("Web");
         comboCategoria.addItem("Software");
         comboCategoria.addItem("Mobile");
         comboCategoria.addItem("Outro");
 
         comboStatus = new JComboBox<>();
+
         comboStatus.addItem("Planejado");
         comboStatus.addItem("Em desenvolvimento");
         comboStatus.addItem("Concluído");
 
-        botaoCadastrar = new JButton("Cadastrar");
-        botaoLimpar = new JButton("Limpar");
+        botaoCadastrar =
+                new JButton("Cadastrar");
 
-        modelo = new DefaultTableModel();
+        botaoLimpar =
+                new JButton("Limpar");
+
+        modelo =
+                new DefaultTableModel();
 
         modelo.addColumn("ID");
         modelo.addColumn("Nome");
@@ -76,29 +95,49 @@ public class TelaProjetos extends JFrame {
 
         tabela = new JTable(modelo);
 
-        JPanel painelFormulario = new JPanel(
-                new GridLayout(5, 2, 10, 10)
+        JPanel painelFormulario =
+                new JPanel(
+                        new GridLayout(
+                                5,
+                                2,
+                                10,
+                                10
+                        )
+                );
+
+        painelFormulario.add(
+                new JLabel("Nome:")
         );
 
-        painelFormulario.add(new JLabel("Nome:"));
         painelFormulario.add(campoNome);
 
-        painelFormulario.add(new JLabel("Descrição:"));
+        painelFormulario.add(
+                new JLabel("Descrição:")
+        );
+
         painelFormulario.add(campoDescricao);
 
-        painelFormulario.add(new JLabel("Categoria:"));
+        painelFormulario.add(
+                new JLabel("Categoria:")
+        );
+
         painelFormulario.add(comboCategoria);
 
-        painelFormulario.add(new JLabel("Status:"));
+        painelFormulario.add(
+                new JLabel("Status:")
+        );
+
         painelFormulario.add(comboStatus);
 
         painelFormulario.add(botaoCadastrar);
         painelFormulario.add(botaoLimpar);
 
-        setLayout(new BoxLayout(
-                getContentPane(),
-                BoxLayout.Y_AXIS
-        ));
+        setLayout(
+                new BoxLayout(
+                        getContentPane(),
+                        BoxLayout.Y_AXIS
+                )
+        );
 
         add(painelFormulario);
         add(new JScrollPane(tabela));
@@ -128,14 +167,21 @@ public class TelaProjetos extends JFrame {
 
     private void cadastrar() {
 
-        String nome = campoNome.getText();
-        String descricao = campoDescricao.getText();
+        String nome =
+                campoNome.getText();
+
+        String descricao =
+                campoDescricao.getText();
 
         String categoria =
-                comboCategoria.getSelectedItem().toString();
+                comboCategoria
+                        .getSelectedItem()
+                        .toString();
 
         String status =
-                comboStatus.getSelectedItem().toString();
+                comboStatus
+                        .getSelectedItem()
+                        .toString();
 
         if (nome.isBlank()) {
 
@@ -147,12 +193,13 @@ public class TelaProjetos extends JFrame {
             return;
         }
 
-        Projeto projeto = new Projeto(
-                nome,
-                descricao,
-                categoria,
-                status
-        );
+        Projeto projeto =
+                new Projeto(
+                        nome,
+                        descricao,
+                        categoria,
+                        status
+                );
 
         service.adicionar(projeto);
 
@@ -181,7 +228,8 @@ public class TelaProjetos extends JFrame {
 
         modelo.setRowCount(0);
 
-        for (Projeto projeto : service.listar()) {
+        for (Projeto projeto :
+                service.listar()) {
 
             modelo.addRow(
                     new Object[]{
@@ -198,9 +246,10 @@ public class TelaProjetos extends JFrame {
 
         SwingUtilities.invokeLater(() -> {
 
-            TelaProjetos tela = new TelaProjetos();
-            tela.setVisible(true);
+            TelaProjetos tela =
+                    new TelaProjetos();
 
+            tela.setVisible(true);
         });
     }
 }

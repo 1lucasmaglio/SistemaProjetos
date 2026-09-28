@@ -8,7 +8,8 @@ import service.ProjetoService;
 
 public class Api {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args)
+            throws Exception {
 
         ProjetoService service =
                 new ProjetoService();
@@ -18,12 +19,15 @@ public class Api {
         var app = Javalin.create(config -> {
 
             // Rota inicial
-            config.routes.get("/", ctx -> {
+            config.routes.get(
+                    "/",
+                    ctx -> {
 
-                ctx.result(
-                        "API Sistema de Projetos"
-                );
-            });
+                        ctx.result(
+                                "API Sistema de Projetos"
+                        );
+                    }
+            );
 
             // Listar projetos
             config.routes.get(

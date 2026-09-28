@@ -2,6 +2,7 @@ package dao;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class ProjetoCSV {
     private Path caminho;
 
     public ProjetoCSV() {
-        caminho = Path.of("dados/projetos.csv");
+        caminho = Paths.get("dados/projetos.csv");
     }
 
     public void salvar(List<Projeto> projetos) throws Exception {
@@ -23,7 +24,8 @@ public class ProjetoCSV {
 
         for (Projeto projeto : projetos) {
 
-            String linha = projeto.getId() + ";" +
+            String linha =
+                    projeto.getId() + ";" +
                     projeto.getNome() + ";" +
                     projeto.getDescricao() + ";" +
                     projeto.getCategoria() + ";" +
@@ -32,6 +34,7 @@ public class ProjetoCSV {
             linhas.add(linha);
         }
 
+        Files.createDirectories(caminho.getParent());
         Files.write(caminho, linhas);
     }
 
@@ -43,7 +46,8 @@ public class ProjetoCSV {
             return projetos;
         }
 
-        List<String> linhas = Files.readAllLines(caminho);
+        List<String> linhas =
+                Files.readAllLines(caminho);
 
         for (int i = 1; i < linhas.size(); i++) {
 
