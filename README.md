@@ -2,7 +2,7 @@
 
 Sistema desenvolvido em **Java** para cadastro e gerenciamento de projetos.
 
-O projeto foi desenvolvido com o objetivo de aplicar conceitos de **orientação a objetos, organização em camadas, persistência de dados, interface gráfica e API REST**.
+O projeto está sendo desenvolvido durante as aulas com o objetivo de aplicar na prática conceitos de **orientação a objetos, organização em camadas, persistência de dados, interface gráfica e API REST**.
 
 ---
 
@@ -88,4 +88,6 @@ api/
 
 ## Status
 
-✅ Projeto funcional desenvolvido para estudo e aplicação prática dos conceitos de Java.
+🚧 **Em desenvolvimento**
+
+Projeto desenvolvido e atualizado durante as aulas, acompanhando a implementação de novos conceitos e funcionalidades.
