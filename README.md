@@ -2,7 +2,7 @@
 
 Sistema desenvolvido em **Java** para cadastro e gerenciamento de projetos.
 
-O projeto está sendo desenvolvido durante as aulas com o objetivo de aplicar na prática conceitos de **orientação a objetos, organização em camadas, persistência de dados, interface gráfica e API REST**.
+O projeto está sendo desenvolvido durante as aulas com o objetivo de aplicar na prática conceitos de **orientação a objetos, organização em camadas, persistência de dados, interface gráfica e comunicação HTTP**.
 
 ---
 
@@ -13,8 +13,10 @@ O sistema é dividido em diferentes partes, cada uma com sua responsabilidade:
 - `model` — representa os objetos do sistema.
 - `service` — concentra as operações e regras relacionadas aos projetos.
 - `dao` — realiza a leitura e escrita dos dados.
-- `view` — contém a interface gráfica.
-- `api` — disponibiliza os dados através de uma API REST.
+- `view` — contém a interface gráfica desktop.
+- `api` — recebe e responde requisições HTTP.
+
+A aplicação possui uma interface desktop desenvolvida com **Java Swing** e um servidor HTTP que será utilizado para disponibilizar as funcionalidades do sistema na web.
 
 Os projetos são armazenados em um arquivo CSV, permitindo que os dados permaneçam salvos mesmo depois que o programa é encerrado.
 
@@ -23,29 +25,47 @@ Os projetos são armazenados em um arquivo CSV, permitindo que os dados permane�
 ## Arquitetura
 
 ```text
-        VIEW
-          │
-          ▼
-       SERVICE
-          │
-          ▼
-         DAO
-          │
-          ▼
-  dados/projetos.csv
+     DESKTOP (Swing)
+            │
+            ▼
+         SERVICE
+            │
+            ▼
+           DAO
+            │
+            ▼
+    dados/projetos.csv
 
-API ─────► SERVICE
+API (HttpServer) ───► SERVICE
 ```
 
 ---
 
 ## Tecnologias utilizadas
 
-- **Java**
-- **Java Swing** — interface gráfica
-- **Javalin** — API REST
-- **Maven** — gerenciamento de dependências
+- **Java** — linguagem de programação
+- **Java Swing** — interface desktop
+- **HttpServer (JDK)** — servidor HTTP
 - **CSV** — persistência dos dados
+
+---
+
+## Funcionalidades
+
+### Interface desktop
+
+- Cadastro de projetos
+- Visualização dos projetos em tabela
+- Seleção de categoria e status
+- Armazenamento dos dados em CSV
+
+### API HTTP
+
+O sistema utiliza o `HttpServer`, disponível no JDK, para implementar a comunicação HTTP sem a necessidade de frameworks externos.
+
+Atualmente, o servidor possui uma rota inicial de identificação da aplicação.
+
+A implementação dos endpoints para gerenciamento dos projetos está em desenvolvimento.
 
 ---
 
@@ -56,15 +76,20 @@ SistemaProjetos/
 ├── dados/
 │   └── projetos.csv
 │
-├── src/main/java/
+├── src/
 │   ├── api/
+│   │   └── Api.java
 │   ├── dao/
+│   │   └── ProjetoCSV.java
 │   ├── model/
+│   │   └── Projeto.java
 │   ├── service/
+│   │   └── ProjetoService.java
 │   ├── view/
+│   │   └── TelaProjetos.java
 │   └── Main.java
 │
-├── pom.xml
+├── .gitignore
 └── README.md
 ```
 
@@ -72,16 +97,36 @@ SistemaProjetos/
 
 ## Executando o projeto
 
-Para utilizar a interface gráfica, execute:
+### Interface desktop
+
+Para iniciar a aplicação desktop, execute a classe:
 
 ```text
-Main.java
+src/view/TelaProjetos.java
 ```
 
-Para iniciar a API REST, execute a classe responsável pela API dentro do pacote:
+A interface permite cadastrar projetos e visualizar os registros armazenados no arquivo CSV.
+
+### Servidor HTTP
+
+Para iniciar o servidor, execute:
 
 ```text
-api/
+src/api/Api.java
+```
+
+O servidor será iniciado na porta `7070`.
+
+Acesse:
+
+```text
+http://localhost:7070/
+```
+
+Resposta atual:
+
+```text
+API Sistema de Projetos
 ```
 
 ---
@@ -91,3 +136,5 @@ api/
 🚧 **Em desenvolvimento**
 
 Projeto desenvolvido e atualizado durante as aulas, acompanhando a implementação de novos conceitos e funcionalidades.
+
+O desenvolvimento está concentrado na interface desktop e na expansão da API HTTP para permitir o gerenciamento dos projetos pela web.
