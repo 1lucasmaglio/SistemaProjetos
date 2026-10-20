@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sistema de Projetos</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="janela">
+
+        <!-- Cabeçalho -->
+        <header>
+            <h1>Sistema de Projetos</h1>
+            <p>Cadastro e gerenciamento de projetos</p>
+        </header>
+
+        <main>
+
+            <!-- Cadastro de projetos -->
+            <section id="cadastro">
+
+                <h2>Cadastrar Projeto</h2>
+
+                <form id="formProjeto">
+
+                    <div class="formulario">
+
+                        <label for="nome">Nome:</label>
+                        <input
+                            type="text"
+                            id="nome"
+                            name="nome"
+                            placeholder="Nome do projeto"
+                            required
+                        >
+
+                        <label for="descricao">Descrição:</label>
+                        <input
+                            type="text"
+                            id="descricao"
+                            name="descricao"
+                            placeholder="Descrição do projeto"
+                        >
+
+                        <label for="categoria">Categoria:</label>
+                        <select id="categoria" name="categoria">
+                            <option value="Web">Web</option>
+                            <option value="Software">Software</option>
+                            <option value="Mobile">Mobile</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+
+                        <label for="status">Status:</label>
+                        <select id="status" name="status">
+                            <option value="Planejado">Planejado</option>
+                            <option value="Em desenvolvimento">
+                                Em desenvolvimento
+                            </option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+
+                    </div>
+
+                    <!-- Botões -->
+                    <div class="botoes">
+                        <button type="submit">Cadastrar</button>
+                        <button type="reset">Limpar</button>
+                    </div>
+
+                </form>
+
+            </section>
+
+            <!-- Lista de projetos -->
+            <section id="projetos">
+
+                <h2>Projetos Cadastrados</h2>
+
+                <div class="tabela-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabelaProjetos">
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- Rodapé -->
+        <footer>
+            <p>Sistema de Projetos - Java</p>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
