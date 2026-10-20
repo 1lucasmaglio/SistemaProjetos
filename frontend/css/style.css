@@ -3,32 +3,71 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background-color: #f4f4f4;
-    color: #222;
+    background-color: #f3f6fa;
+    color: #293747;
+    line-height: 1.6;
 }
 
+/* Cabeçalho */
+
 header {
-    background-color: #263238;
+    background-color: #1e3045;
     color: white;
-    padding: 24px;
+    padding: 45px 20px;
     text-align: center;
+    border-bottom: 4px solid #3c8495;
 }
+
+header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+header p {
+    margin: 0;
+    color: #cbd7e3;
+    font-size: 16px;
+}
+
+/* Conteúdo principal */
 
 main {
     width: 90%;
     max-width: 1000px;
-    margin: 30px auto;
+    margin: 35px auto;
 }
 
 section {
+    padding: 32px;
+    margin-bottom: 28px;
     background-color: white;
-    padding: 24px;
-    margin-bottom: 24px;
-    border-radius: 8px;
+    border: 1px solid #e0e6ed;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(35, 55, 75, 0.05);
 }
+
+section h2 {
+    margin: 0 0 16px;
+    padding-bottom: 14px;
+    color: #1e3045;
+    font-size: 24px;
+    border-bottom: 2px solid #edf1f5;
+}
+
+.descricao {
+    margin: 0 0 24px;
+    color: #687789;
+    font-size: 15px;
+}
+
+/* Formulário */
 
 form {
     display: flex;
@@ -36,34 +75,168 @@ form {
     gap: 10px;
 }
 
-input,
-textarea,
-select,
-button {
-    font-size: 16px;
-    padding: 10px;
+form label {
+    margin-top: 8px;
+    color: #35485c;
+    font-size: 14px;
+    font-weight: bold;
 }
 
-textarea {
-    min-height: 100px;
+form input,
+form textarea,
+form select {
+    display: block;
+    width: 100%;
+    padding: 13px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: #293747;
+    background-color: #fbfcfe;
+    border: 1px solid #cfd8e2;
+    border-radius: 6px;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+    outline: none;
+    border-color: #3c8495;
+    background-color: white;
+}
+
+form textarea {
+    min-height: 115px;
     resize: vertical;
 }
 
+/* Botões */
+
 button {
+    padding: 12px 20px;
+    margin-top: 12px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: #286477;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
 }
 
+button:hover {
+    background-color: #1d4b5b;
+}
+
+form button {
+    align-self: flex-start;
+    min-width: 200px;
+    margin-top: 18px;
+}
+
+/* Mensagens */
+
+#mensagem {
+    margin: 0 0 18px;
+    color: #647588;
+    font-size: 14px;
+}
+
+/* Cartões dos projetos */
+
+#listaProjetos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
 .projeto {
-    border: 1px solid #ccc;
+    padding: 23px;
+    background-color: #fbfcfe;
+    border: 1px solid #e0e6ed;
+    border-top: 4px solid #3c8495;
     border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 12px;
 }
 
 .projeto h3 {
-    margin-top: 0;
+    margin: 0 0 15px;
+    color: #1e3045;
+    font-size: 20px;
+    overflow-wrap: anywhere;
 }
 
+.projeto p {
+    margin: 10px 0;
+    color: #5d6d7e;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+/* Botão de excluir */
+
 .projeto button {
-    margin-top: 10px;
+    margin-top: 14px;
+    padding: 10px 16px;
+    background-color: #b5434b;
+}
+
+.projeto button:hover {
+    background-color: #91343b;
+}
+
+/* Lista vazia */
+
+#listaProjetos > p {
+    color: #687789;
+    font-size: 14px;
+}
+
+/* Rodapé */
+
+footer {
+    padding: 25px 20px;
+    background-color: #1e3045;
+    color: #cbd7e3;
+    text-align: center;
+    border-top: 4px solid #3c8495;
+}
+
+footer p {
+    margin: 5px 0;
+    font-size: 13px;
+}
+
+/* Ajustes para celulares */
+
+@media (max-width: 650px) {
+
+    header {
+        padding: 32px 18px;
+    }
+
+    header h1 {
+        font-size: 28px;
+    }
+
+    main {
+        width: 94%;
+        margin: 22px auto;
+    }
+
+    section {
+        padding: 22px 18px;
+    }
+
+    section h2 {
+        font-size: 21px;
+    }
+
+    #listaProjetos {
+        grid-template-columns: 1fr;
+    }
+
+    form button {
+        width: 100%;
+    }
 }
