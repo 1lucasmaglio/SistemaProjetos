@@ -1,6 +1,8 @@
+
 package view;
 
 import java.awt.GridLayout;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -15,8 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import client.ApiClient;
 import model.Projeto;
-import service.ProjetoService;
 
 public class TelaProjetos extends JFrame {
 
@@ -31,8 +33,9 @@ public class TelaProjetos extends JFrame {
 
     private JButton botaoCadastrar;
     private JButton botaoLimpar;
+    private JButton botaoExcluir;
 
-    private ProjetoService service;
+    private ApiClient cliente;
 
     public TelaProjetos() {
 
@@ -41,19 +44,10 @@ public class TelaProjetos extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        service = new ProjetoService();
+        cliente = new ApiClient();
 
         criarComponentes();
         criarEventos();
-
-        try {
-            service.carregar();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                this,
-                "Erro ao carregar projetos."
-            );
-        }
 
         carregarTabela();
     }
@@ -76,6 +70,7 @@ public class TelaProjetos extends JFrame {
 
         botaoCadastrar = new JButton("Cadastrar");
         botaoLimpar = new JButton("Limpar");
+        botaoExcluir = new JButton("Excluir selecionado");
 
         modelo = new DefaultTableModel();
         modelo.addColumn("ID");
@@ -86,7 +81,7 @@ public class TelaProjetos extends JFrame {
         tabela = new JTable(modelo);
 
         JPanel painelFormulario = new JPanel(
-            new GridLayout(5, 2, 10, 10)
+            new GridLayout(6, 2, 10, 10)
         );
 
         painelFormulario.add(new JLabel("Nome:"));
@@ -104,6 +99,9 @@ public class TelaProjetos extends JFrame {
         painelFormulario.add(botaoCadastrar);
         painelFormulario.add(botaoLimpar);
 
+        painelFormulario.add(botaoExcluir);
+        painelFormulario.add(new JLabel(""));
+
         setLayout(
             new BoxLayout(
                 getContentPane(),
@@ -114,7 +112,7 @@ public class TelaProjetos extends JFrame {
         add(painelFormulario);
         add(new JScrollPane(tabela));
     }
- 
+
     private void criarEventos() {
 
         botaoLimpar.addActionListener(
@@ -123,6 +121,10 @@ public class TelaProjetos extends JFrame {
 
         botaoCadastrar.addActionListener(
             e -> cadastrar()
+        );
+
+        botaoExcluir.addActionListener(
+            e -> excluir()
         );
     }
 
@@ -166,10 +168,8 @@ public class TelaProjetos extends JFrame {
             status
         );
 
-        service.adicionar(projeto);
-
         try {
-            service.salvar();
+            cliente.cadastrarProjeto(projeto);
 
             JOptionPane.showMessageDialog(
                 this,
@@ -182,30 +182,92 @@ public class TelaProjetos extends JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(
                 this,
-                "Erro ao salvar projeto."
+                "Erro ao cadastrar projeto: " + e.getMessage()
             );
         }
     }
 
     private void carregarTabela() {
 
-        modelo.setRowCount(0);
+        try {
+            modelo.setRowCount(0);
 
-        for (Projeto projeto : service.listar()) {
-            modelo.addRow(
-                new Object[]{
-                    projeto.getId(),
-                    projeto.getNome(),
-                    projeto.getCategoria(),
-                    projeto.getStatus()
-                }
+            List<Projeto> projetos =
+                cliente.listarProjetos();
+
+            for (Projeto projeto : projetos) {
+                modelo.addRow(
+                    new Object[]{
+                        projeto.getId(),
+                        projeto.getNome(),
+                        projeto.getCategoria(),
+                        projeto.getStatus()
+                    }
+                );
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Erro ao carregar projetos: " + e.getMessage()
+            );
+        }
+    }
+
+    private void excluir() {
+
+        int linhaSelecionada = tabela.getSelectedRow();
+
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Selecione um projeto na tabela."
+            );
+
+            return;
+        }
+
+        int linhaModelo = tabela.convertRowIndexToModel(
+            linhaSelecionada
+        );
+
+        int id = (int) modelo.getValueAt(
+            linhaModelo,
+            0
+        );
+
+        int resposta = JOptionPane.showConfirmDialog(
+            this,
+            "Deseja realmente excluir este projeto?",
+            "Confirmar exclusão",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (resposta != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            cliente.excluirProjeto(id);
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Projeto excluído com sucesso!"
+            );
+
+            carregarTabela();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Erro ao excluir projeto: " + e.getMessage()
             );
         }
     }
 
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(() -> { // Run this interface code on Swing's interface thread.
+        SwingUtilities.invokeLater(() -> {
 
             TelaProjetos tela = new TelaProjetos();
             tela.setVisible(true);

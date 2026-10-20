@@ -13,7 +13,7 @@ public class ProjetoCSV {
     private Path caminho;
 
     public ProjetoCSV() {
-        caminho = Paths.get("dados/projetos.csv");
+        caminho = Paths.get("backend/dados/projetos.csv");
     }
 
     public void salvar(List<Projeto> projetos) throws Exception {
