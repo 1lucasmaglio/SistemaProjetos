@@ -1,0 +1,4 @@
+id;nome;email;senhaHash
+1;admin;admin@projetos.com;$2a$10$B3iryhdAJMGqXSOIdXVpBeBePBY7cD51IqYg9SIPDgvxtRRiLJm0W
+2;Olivia Rodrigo;oliviarodrigo@gmail.com;$2a$10$9NndDmlZaCDyKyAvWhoUDezFHd6PiCmOcWwC96y8GTNV38vv9l9bq
+3;Thiago Almeida;thiagoalmeida@gmail.com;$2a$10$wHhZadWcCRDmxIyGNUaK8OrWaqMxwN94uBifKDHZyTxtj/uj80WV.

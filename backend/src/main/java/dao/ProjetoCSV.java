@@ -1,8 +1,10 @@
+
 package dao;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,16 +22,19 @@ public class ProjetoCSV {
 
         List<String> linhas = new ArrayList<>();
 
-        linhas.add("id;nome;descricao;categoria;status");
+        linhas.add("id;usuarioId;nome;descricao;categoria;status;dataCriacao;prazo");
 
         for (Projeto projeto : projetos) {
 
             String linha =
                     projeto.getId() + ";" +
+                    projeto.getUsuarioId() + ";" +
                     projeto.getNome() + ";" +
                     projeto.getDescricao() + ";" +
                     projeto.getCategoria() + ";" +
-                    projeto.getStatus();
+                    projeto.getStatus() + ";" +
+                    projeto.getDataCriacao() + ";" +
+                    projeto.getPrazo();
 
             linhas.add(linha);
         }
@@ -46,19 +51,20 @@ public class ProjetoCSV {
             return projetos;
         }
 
-        List<String> linhas =
-                Files.readAllLines(caminho);
+        List<String> linhas = Files.readAllLines(caminho);
 
         for (int i = 1; i < linhas.size(); i++) {
 
-            String linha = linhas.get(i);
-            String[] dados = linha.split(";");
+            String[] dados = linhas.get(i).split(";");
 
             int id = Integer.parseInt(dados[0]);
-            String nome = dados[1];
-            String descricao = dados[2];
-            String categoria = dados[3];
-            String status = dados[4];
+            int usuarioId = Integer.parseInt(dados[1]);
+            String nome = dados[2];
+            String descricao = dados[3];
+            String categoria = dados[4];
+            String status = dados[5];
+            LocalDate dataCriacao = LocalDate.parse(dados[6]);
+            LocalDate prazo = LocalDate.parse(dados[7]);
 
             Projeto projeto = new Projeto(
                     id,
@@ -67,6 +73,10 @@ public class ProjetoCSV {
                     categoria,
                     status
             );
+
+            projeto.setUsuarioId(usuarioId);
+            projeto.setDataCriacao(dataCriacao);
+            projeto.setPrazo(prazo);
 
             projetos.add(projeto);
         }

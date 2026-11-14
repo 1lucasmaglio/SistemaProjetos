@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Sistema de Projetos</title>
+
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+
+<body>
+
+    <main class="pagina-login">
+
+        <section class="painel-login">
+
+            <div class="marca-login">
+                SP <span>|</span> Projetos
+            </div>
+
+            <h1>Bem-vindo!</h1>
+
+            <p class="descricao-login">
+                Entre com sua conta para acessar seus projetos.
+            </p>
+
+            <form id="formLogin">
+
+                <div class="campo">
+                    <label for="email">E-mail</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Digite seu e-mail"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="senha">Senha</label>
+
+                    <input
+                        type="password"
+                        id="senha"
+                        placeholder="Digite sua senha"
+                        required
+                    >
+                </div>
+
+                <p id="mensagemLogin" role="status"></p>
+
+                <button
+                    type="submit"
+                    class="botao botao-principal botao-login"
+                >
+                    Entrar
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <script src="/frontend/js/login.js"></script>
+
+</body>
+</html>

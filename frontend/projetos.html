@@ -4,101 +4,236 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Projetos</title>
-
     <link rel="stylesheet" href="/frontend/css/style.css">
 </head>
 
 <body>
 
-    <!-- Cabeçalho -->
-    <header>
-        <h1>Sistema de Projetos</h1>
-        <p>Cadastro e gerenciamento de projetos</p>
-    </header>
+    <div class="layout">
 
-    <main>
+        <!-- Menu lateral -->
+        <aside class="sidebar">
+            <div class="marca">
+                SP <span>|</span> Projetos
+            </div>
 
-        <!-- Cadastro de projetos -->
-        <section id="cadastro">
+            <nav class="menu">
+                <a href="#dashboard">Dashboard</a>
+                <a href="#projetos" class="ativo">Projetos</a>
+                <a href="#relatorios">Relatórios</a>
+                <a href="#configuracoes">Configurações</a>
+            </nav>
+        </aside>
 
-            <h2>Cadastrar projeto</h2>
+        <div class="area-aplicacao">
 
-            <p class="descricao">
-                Preencha os campos abaixo para cadastrar um projeto.
-            </p>
+            <header class="barra-superior">
+                <strong>Sistema de Projetos</strong>
 
-            <form id="formProjeto">
+                <div class="acoes-usuario">
+                    <span id="usuarioAtual">Usuário</span>
+                    <button type="button" id="botaoSair" class="botao botao-secundario">
+                        Sair
+                    </button>
+                </div>
+            </header>
 
-                <label for="nome">Nome:</label>
-                <input
-                    type="text"
-                    id="nome"
-                    placeholder="Digite o nome do projeto"
-                    required
-                >
+            <main>
 
-                <label for="descricao">Descrição:</label>
-                <textarea
-                    id="descricao"
-                    placeholder="Descreva o projeto"
-                    required
-                ></textarea>
+                <!-- Introdução -->
+                <section class="introducao" id="dashboard">
+                    <h1>Dashboard</h1>
+                    <p>
+                        Gerencie e acompanhe seus projetos.
+                    </p>
+                </section>
 
-                <label for="categoria">Categoria:</label>
-                <select id="categoria" required>
-                    <option value="Web">Web</option>
-                    <option value="Software">Software</option>
-                    <option value="Mobile">Mobile</option>
-                    <option value="Outro">Outro</option>
-                </select>
+                <!-- Estatísticas -->
+                <section class="cards-estatisticas">
+                    <article class="card-estatistica azul">
+                        <span>Total de projetos</span>
+                        <strong id="valorTotal">0</strong>
+                    </article>
 
-                <label for="status">Status:</label>
-                <select id="status" required>
-                    <option value="Planejado">Planejado</option>
-                    <option value="Em desenvolvimento">
-                        Em desenvolvimento
-                    </option>
-                    <option value="Concluído">Concluído</option>
-                </select>
+                    <article class="card-estatistica verde">
+                        <span>Concluídos</span>
+                        <strong id="valorConcluidos">0</strong>
+                    </article>
 
-                <button type="submit">
-                    Cadastrar projeto
-                </button>
+                    <article class="card-estatistica laranja">
+                        <span>Em andamento</span>
+                        <strong id="valorAndamento">0</strong>
+                    </article>
 
-            </form>
+                    <article class="card-estatistica roxo">
+                        <span>Planejados</span>
+                        <strong id="valorPlanejados">0</strong>
+                    </article>
+                </section>
 
-        </section>
+                <!-- Cadastro -->
+                <section class="painel" id="cadastro">
+                    <h2>Cadastro de Projeto</h2>
 
-        <!-- Projetos cadastrados -->
-        <section id="projetos">
+                    <form id="formProjeto">
+                        <div class="campos-formulario">
 
-            <h2>Projetos cadastrados</h2>
+                            <div class="campo">
+                                <label for="nome">Nome do projeto</label>
+                                <input type="text" id="nome" placeholder="Digite o nome do projeto" required>
+                            </div>
 
-            <p class="descricao">
-                Consulte os projetos registrados no sistema.
-            </p>
+                            <div class="campo">
+                                <label for="descricao">Descrição</label>
+                                <input type="text" id="descricao" placeholder="Descreva o projeto" required>
+                            </div>
 
-            <p id="mensagem"></p>
+                            <div class="campo">
+                                <label for="categoria">Categoria</label>
+                                <select id="categoria" required>
+                                    <option value="Web">Web</option>
+                                    <option value="Software">Software</option>
+                                    <option value="Mobile">Mobile</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
 
-            <div id="listaProjetos"></div>
+                            <div class="campo">
+                                <label for="status">Status</label>
+                                <select id="status" required>
+                                    <option value="Planejado">Planejado</option>
+                                    <option value="Em desenvolvimento">Em desenvolvimento</option>
+                                    <option value="Concluído">Concluído</option>
+                                </select>
+                            </div>
 
-        </section>
+                            <div class="campo">
+                                <label for="prazo">Prazo</label>
+                                <input type="date" id="prazo" required>
+                            </div>
 
-    </main>
+                        </div>
 
-    <!-- Rodapé -->
-    <footer>
-        <p>Sistema de Projetos</p>
-        <p>Projeto acadêmico de Análise e Desenvolvimento de Sistemas</p>
-    </footer>
+                        <div class="acoes-formulario">
+                            <button type="reset" class="botao botao-secundario">
+                                Limpar
+                            </button>
+
+                            <button type="submit" class="botao botao-principal">
+                                Cadastrar projeto
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Lista de projetos -->
+                <section class="painel" id="projetos">
+                    <div class="cabecalho-lista">
+
+                        <div>
+                            <h2>Lista de Projetos</h2>
+                            <p id="mensagem" role="status">
+                                Carregando projetos...
+                            </p>
+                        </div>
+
+                        <div class="controles-lista">
+                            <input type="search" id="campoBusca" placeholder="Buscar projeto..." aria-label="Buscar projetos">
+                        </div>
+
+                    </div>
+
+                    <div class="tabela-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="coluna-id">ID</th>
+                                    <th>Nome</th>
+                                    <th>Categoria</th>
+                                    <th>Status</th>
+                                    <th>Data de criação</th>
+                                    <th>Prazo</th>
+                                    <th class="coluna-acoes">Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="listaProjetos">
+                                <tr>
+                                    <td colspan="7" class="estado-vazio">
+                                        Carregando...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Popup de edição -->
+                <div id="popupEdicao" class="popup">
+                    <div class="conteudo-popup">
+                        <h2>Editar Projeto</h2>
+
+                        <form id="formEdicao">
+
+                            <div class="campo">
+                                <label for="editarNome">Nome do projeto</label>
+                                <input type="text" id="editarNome" required>
+                            </div>
+
+                            <div class="campo">
+                                <label for="editarDescricao">Descrição</label>
+                                <input type="text" id="editarDescricao" required>
+                            </div>
+
+                            <div class="campo">
+                                <label for="editarCategoria">Categoria</label>
+                                <select id="editarCategoria" required>
+                                    <option value="Web">Web</option>
+                                    <option value="Software">Software</option>
+                                    <option value="Mobile">Mobile</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+
+                            <div class="campo">
+                                <label for="editarStatus">Status</label>
+                                <select id="editarStatus" required>
+                                    <option value="Planejado">Planejado</option>
+                                    <option value="Em desenvolvimento">Em desenvolvimento</option>
+                                    <option value="Concluído">Concluído</option>
+                                </select>
+                            </div>
+
+                            <div class="campo">
+                                <label for="editarPrazo">Prazo</label>
+                                <input type="date" id="editarPrazo" required>
+                            </div>
+
+                            <div class="acoes-formulario">
+                                <button type="button" id="botaoCancelarEdicao">Cancelar</button>
+                                <button type="submit">Salvar alterações</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- Rodapé -->
+            <footer>
+                <span>Sistema de Projetos</span>
+                <span>
+                    Projeto acadêmico de Análise e Desenvolvimento de Sistemas
+                </span>
+            </footer>
+
+        </div>
+    </div>
 
     <script src="/frontend/js/script.js"></script>
 
 </body>
-
 </html>

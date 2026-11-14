@@ -1,12 +1,18 @@
+
 package model;
+
+import java.time.LocalDate;
 
 public class Projeto {
 
     private int id;
+    private int usuarioId;
     private String nome;
     private String descricao;
     private String categoria;
     private String status;
+    private LocalDate dataCriacao;
+    private LocalDate prazo;
 
     public Projeto() {
     }
@@ -30,12 +36,28 @@ public class Projeto {
         this.status = status;
     }
 
+    public Projeto(String nome, String descricao, String categoria, String status, LocalDate prazo) {
+    this.nome = nome;
+    this.descricao = descricao;
+    this.categoria = categoria;
+    this.status = status;
+    this.prazo = prazo;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(int usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public String getNome() {
@@ -70,11 +92,30 @@ public class Projeto {
         this.status = status;
     }
 
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDate getPrazo() {
+        return prazo;
+    }
+
+    public void setPrazo(LocalDate prazo) {
+        this.prazo = prazo;
+    }
+
     public void exibirDados() {
         System.out.println("ID: " + id);
+        System.out.println("Usuário ID: " + usuarioId);
         System.out.println("Nome: " + nome);
         System.out.println("Descrição: " + descricao);
         System.out.println("Categoria: " + categoria);
         System.out.println("Status: " + status);
+        System.out.println("Data de criação: " + dataCriacao);
+        System.out.println("Prazo: " + prazo);
     }
 }

@@ -1,5 +1,7 @@
+
 package service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,12 @@ public class ProjetoService {
 
     public void adicionar(Projeto projeto) {
 
+        LocalDate hoje = LocalDate.now();
+
+        projeto.setDataCriacao(hoje);
+
+        validarPrazo(projeto);
+
         int maiorId = 0;
 
         for (Projeto p : projetos) {
@@ -39,8 +47,43 @@ public class ProjetoService {
         projetos.add(projeto);
     }
 
+    private void validarPrazo(Projeto projeto) {
+
+        if (projeto.getPrazo() == null) {
+            throw new IllegalArgumentException(
+                    "O prazo do projeto é obrigatório."
+            );
+        }
+
+        if (projeto.getPrazo().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException(
+                    "O prazo não pode ser uma data passada."
+            );
+        }
+
+        if (projeto.getPrazo().isBefore(projeto.getDataCriacao())) {
+            throw new IllegalArgumentException(
+                    "O prazo não pode ser anterior à data de criação."
+            );
+        }
+    }
+
     public List<Projeto> listar() {
         return projetos;
+    }
+
+    public List<Projeto> listarPorUsuario(int usuarioId) {
+
+    List<Projeto> resultado = new ArrayList<>();
+
+    for (Projeto projeto : projetos) {
+
+        if (projeto.getUsuarioId() == usuarioId) {
+            resultado.add(projeto);
+        }
+    }
+
+    return resultado;
     }
 
     public Projeto buscarPorId(int id) {
@@ -57,8 +100,7 @@ public class ProjetoService {
 
     public List<Projeto> buscarPorCategoria(String categoria) {
 
-        List<Projeto> resultado =
-                new ArrayList<>();
+        List<Projeto> resultado = new ArrayList<>();
 
         for (Projeto projeto : projetos) {
 
@@ -74,8 +116,7 @@ public class ProjetoService {
 
     public List<Projeto> buscarPorStatus(String status) {
 
-        List<Projeto> resultado =
-                new ArrayList<>();
+        List<Projeto> resultado = new ArrayList<>();
 
         for (Projeto projeto : projetos) {
 
@@ -111,21 +152,12 @@ public class ProjetoService {
             return false;
         }
 
-        projeto.setNome(
-                projetoAtualizado.getNome()
-        );
-
-        projeto.setDescricao(
-                projetoAtualizado.getDescricao()
-        );
-
-        projeto.setCategoria(
-                projetoAtualizado.getCategoria()
-        );
-
-        projeto.setStatus(
-                projetoAtualizado.getStatus()
-        );
+        projeto.setNome(projetoAtualizado.getNome());
+        projeto.setDescricao(projetoAtualizado.getDescricao());
+        projeto.setCategoria(projetoAtualizado.getCategoria());
+        projeto.setStatus(projetoAtualizado.getStatus());
+        projeto.setPrazo(projetoAtualizado.getPrazo());
+        validarPrazo(projeto);
 
         return true;
     }

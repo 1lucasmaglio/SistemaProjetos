@@ -3,18 +3,23 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.FlowLayout;
 import java.awt.Insets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,8 +29,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 
 import client.ApiClient;
 import model.Projeto;
@@ -35,6 +45,7 @@ public class TelaProjetos extends JFrame {
     private JTextField campoNome;
     private JTextField campoDescricao;
     private JTextField campoBusca;
+    private DatePicker campoPrazo;
 
     private JComboBox<String> comboCategoria;
     private JComboBox<String> comboStatus;
@@ -44,8 +55,8 @@ public class TelaProjetos extends JFrame {
 
     private JButton botaoCadastrar;
     private JButton botaoLimpar;
-    private JButton botaoExcluir;
     private JButton botaoBuscar;
+    private JButton botaoSair;
 
     private JLabel valorTotal;
     private JLabel valorConcluidos;
@@ -62,7 +73,7 @@ public class TelaProjetos extends JFrame {
     private final Color TEXTO = new Color(45, 55, 72);
     private final Color CINZA = new Color(115, 125, 140);
 
-    public TelaProjetos() {
+    public TelaProjetos(ApiClient cliente) {
 
         setTitle("Sistema de Projetos");
         setSize(1200, 760);
@@ -70,7 +81,7 @@ public class TelaProjetos extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        cliente = new ApiClient();
+        this.cliente = cliente;
 
         criarComponentes();
         criarEventos();
@@ -97,8 +108,22 @@ public class TelaProjetos extends JFrame {
         usuario.setFont(new Font("SansSerif", Font.PLAIN, 14));
         usuario.setForeground(CINZA);
 
+        botaoSair = criarBotao(
+            "Sair",
+            new Color(190, 55, 65),
+            BRANCO
+        );
+
+        JPanel painelUsuario = new JPanel(
+            new FlowLayout(FlowLayout.RIGHT, 15, 0)
+        );
+
+        painelUsuario.setBackground(BRANCO);
+        painelUsuario.add(usuario);
+        painelUsuario.add(botaoSair);
+
         barraSuperior.add(tituloSistema, BorderLayout.WEST);
-        barraSuperior.add(usuario, BorderLayout.EAST);
+        barraSuperior.add(painelUsuario, BorderLayout.EAST);
 
         // Menu lateral
         JPanel sidebar = new JPanel();
@@ -174,7 +199,7 @@ public class TelaProjetos extends JFrame {
         conteudo.add(painelCards);
         conteudo.add(Box.createVerticalStrut(22));
 
-        // Formulário
+        // Formulário de cadastro
         JPanel painelFormulario = new JPanel(new BorderLayout(10, 15));
         painelFormulario.setBackground(BRANCO);
         painelFormulario.setBorder(
@@ -195,6 +220,10 @@ public class TelaProjetos extends JFrame {
         campoNome = new JTextField();
         campoDescricao = new JTextField();
 
+        DatePickerSettings configuracoes = new DatePickerSettings();
+        configuracoes.setFormatForDatesCommonEra("dd-MM-yyyy");
+        campoPrazo = new DatePicker(configuracoes);
+
         comboCategoria = new JComboBox<>(new String[]{
             "Web", "Software", "Mobile", "Outro"
         });
@@ -207,19 +236,27 @@ public class TelaProjetos extends JFrame {
         estilizarCampo(campoDescricao);
         estilizarCombo(comboCategoria);
         estilizarCombo(comboStatus);
+        estilizarCampo(campoPrazo.getComponentDateTextField());
 
-        JPanel campos = new JPanel(new GridLayout(2, 2, 15, 12));
+        JPanel campos = new JPanel(new GridLayout(3, 2, 15, 12));
         campos.setBackground(BRANCO);
 
         campos.add(criarCampoComRotulo("Nome do projeto", campoNome));
         campos.add(criarCampoComRotulo("Descrição", campoDescricao));
         campos.add(criarCampoComRotulo("Categoria", comboCategoria));
         campos.add(criarCampoComRotulo("Status", comboStatus));
+        campos.add(criarCampoComRotulo("Prazo (DD-MM-AAAA)", campoPrazo));
 
         botaoCadastrar = criarBotao("Cadastrar projeto", AZUL, BRANCO);
-        botaoLimpar = criarBotao("Limpar", new Color(232, 237, 245), TEXTO);
+        botaoLimpar = criarBotao(
+            "Limpar",
+            new Color(232, 237, 245),
+            TEXTO
+        );
 
-        JPanel botoesFormulario = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        JPanel botoesFormulario = new JPanel(
+            new FlowLayout(FlowLayout.RIGHT, 10, 0)
+        );
         botoesFormulario.setBackground(BRANCO);
         botoesFormulario.add(botaoLimpar);
         botoesFormulario.add(botaoCadastrar);
@@ -252,35 +289,46 @@ public class TelaProjetos extends JFrame {
 
         campoBusca = new JTextField(18);
         campoBusca.setPreferredSize(new Dimension(220, 34));
+
         botaoBuscar = criarBotao("Buscar", AZUL, BRANCO);
-        botaoExcluir = criarBotao(
-            "Excluir selecionado",
-            new Color(190, 55, 65),
-            BRANCO
-        );
 
         JPanel barraLista = new JPanel(new BorderLayout());
         barraLista.setBackground(BRANCO);
         barraLista.add(tituloLista, BorderLayout.WEST);
 
-        JPanel controlesBusca = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        JPanel controlesBusca = new JPanel(
+            new FlowLayout(FlowLayout.RIGHT, 8, 0)
+        );
         controlesBusca.setBackground(BRANCO);
         controlesBusca.add(campoBusca);
         controlesBusca.add(botaoBuscar);
-        controlesBusca.add(botaoExcluir);
 
         barraLista.add(controlesBusca, BorderLayout.EAST);
 
+        // Modelo da tabela
         modelo = new DefaultTableModel(
-            new Object[]{"ID", "Nome", "Categoria", "Status"}, 0
+            new Object[]{
+                "ID",
+                "Nome",
+                "Categoria",
+                "Status",
+                "Data de criação",
+                "Prazo",
+                "Ações"
+            },
+            0
         ) {
             @Override
             public boolean isCellEditable(int linha, int coluna) {
-                return false;
+                return coluna == 6;
             }
         };
 
         tabela = new JTable(modelo);
+
+        tabela.getTableHeader().setReorderingAllowed(false);
+        tabela.getTableHeader().setResizingAllowed(false);
+
         tabela.setRowHeight(38);
         tabela.setFont(new Font("SansSerif", Font.PLAIN, 13));
         tabela.setForeground(TEXTO);
@@ -290,6 +338,7 @@ public class TelaProjetos extends JFrame {
         tabela.setSelectionBackground(new Color(224, 235, 255));
         tabela.setSelectionForeground(AZUL_ESCURO);
         tabela.setFillsViewportHeight(true);
+
         tabela.getTableHeader().setFont(
             new Font("SansSerif", Font.BOLD, 13)
         );
@@ -299,7 +348,25 @@ public class TelaProjetos extends JFrame {
 
         DefaultTableCellRenderer centralizar = new DefaultTableCellRenderer();
         centralizar.setHorizontalAlignment(SwingConstants.CENTER);
+
         tabela.getColumnModel().getColumn(0).setCellRenderer(centralizar);
+
+        // Configuração da coluna Ações
+        tabela.getColumnModel().getColumn(6).setCellRenderer(
+            new ActionCellRenderer()
+        );
+
+        tabela.getColumnModel().getColumn(6).setCellEditor(
+            new ActionCellEditor()
+        );
+
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(180);
+        tabela.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tabela.getColumnModel().getColumn(3).setPreferredWidth(130);
+        tabela.getColumnModel().getColumn(4).setPreferredWidth(130);
+        tabela.getColumnModel().getColumn(5).setPreferredWidth(110);
+        tabela.getColumnModel().getColumn(6).setPreferredWidth(90);
 
         JScrollPane scrollTabela = new JScrollPane(tabela);
         scrollTabela.setBorder(
@@ -371,7 +438,10 @@ public class TelaProjetos extends JFrame {
         return card;
     }
 
-    private JPanel criarCampoComRotulo(String rotulo, java.awt.Component campo) {
+    private JPanel criarCampoComRotulo(
+        String rotulo,
+        Component campo
+    ) {
 
         JPanel painel = new JPanel(new BorderLayout(0, 6));
         painel.setBackground(BRANCO);
@@ -386,7 +456,11 @@ public class TelaProjetos extends JFrame {
         return painel;
     }
 
-    private JButton criarBotao(String texto, Color fundo, Color frente) {
+    private JButton criarBotao(
+        String texto,
+        Color fundo,
+        Color frente
+    ) {
 
         JButton botao = new JButton(texto);
         botao.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -404,6 +478,7 @@ public class TelaProjetos extends JFrame {
     }
 
     private void estilizarCampo(JTextField campo) {
+
         campo.setFont(new Font("SansSerif", Font.PLAIN, 13));
         campo.setPreferredSize(new Dimension(200, 34));
         campo.setBorder(
@@ -415,6 +490,7 @@ public class TelaProjetos extends JFrame {
     }
 
     private void estilizarCombo(JComboBox<String> combo) {
+
         combo.setFont(new Font("SansSerif", Font.PLAIN, 13));
         combo.setPreferredSize(new Dimension(200, 34));
     }
@@ -423,23 +499,47 @@ public class TelaProjetos extends JFrame {
 
         botaoLimpar.addActionListener(e -> limparFormulario());
         botaoCadastrar.addActionListener(e -> cadastrar());
-        botaoExcluir.addActionListener(e -> excluir());
         botaoBuscar.addActionListener(e -> buscarProjetos());
+
+        botaoSair.addActionListener(e -> {
+
+            int resposta = JOptionPane.showConfirmDialog(
+                this,
+                "Deseja realmente sair?",
+                "Sair",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (resposta == JOptionPane.YES_OPTION) {
+
+                cliente.limparToken();
+
+                TelaLogin tela = new TelaLogin();
+                tela.setVisible(true);
+
+                dispose();
+            }
+        });
     }
 
     private void limparFormulario() {
 
         campoNome.setText("");
         campoDescricao.setText("");
+        campoPrazo.clear();
+
         comboCategoria.setSelectedIndex(0);
         comboStatus.setSelectedIndex(0);
+
         campoNome.requestFocus();
     }
 
+    // Cadastro de um novo projeto.
     private void cadastrar() {
 
-        String nome = campoNome.getText();
-        String descricao = campoDescricao.getText();
+        String nome = campoNome.getText().trim();
+        String descricao = campoDescricao.getText().trim();
+        LocalDate prazo = campoPrazo.getDate();
 
         String categoria = comboCategoria.getSelectedItem().toString();
         String status = comboStatus.getSelectedItem().toString();
@@ -450,10 +550,15 @@ public class TelaProjetos extends JFrame {
         }
 
         Projeto projeto = new Projeto(
-            nome, descricao, categoria, status
+            nome,
+            descricao,
+            categoria,
+            status,
+            prazo
         );
 
         try {
+
             cliente.cadastrarProjeto(projeto);
 
             JOptionPane.showMessageDialog(
@@ -465,6 +570,7 @@ public class TelaProjetos extends JFrame {
             carregarTabela();
 
         } catch (Exception e) {
+
             JOptionPane.showMessageDialog(
                 this,
                 "Erro ao cadastrar projeto: " + e.getMessage()
@@ -472,9 +578,11 @@ public class TelaProjetos extends JFrame {
         }
     }
 
+    // Carrega todos os projetos na tabela.
     private void carregarTabela() {
 
         try {
+
             modelo.setRowCount(0);
 
             List<Projeto> projetos = cliente.listarProjetos();
@@ -490,15 +598,24 @@ public class TelaProjetos extends JFrame {
                     projeto.getId(),
                     projeto.getNome(),
                     projeto.getCategoria(),
-                    projeto.getStatus()
+                    projeto.getStatus(),
+                    projeto.getDataCriacao().format(
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                    ),
+                    projeto.getPrazo().format(
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                    ),
+                    ""
                 });
 
                 if ("Concluído".equalsIgnoreCase(projeto.getStatus())) {
                     concluidos++;
+
                 } else if (
                     "Em desenvolvimento".equalsIgnoreCase(projeto.getStatus())
                 ) {
                     andamento++;
+
                 } else if ("Planejado".equalsIgnoreCase(projeto.getStatus())) {
                     planejados++;
                 }
@@ -510,6 +627,7 @@ public class TelaProjetos extends JFrame {
             valorPlanejados.setText(String.valueOf(planejados));
 
         } catch (Exception e) {
+
             JOptionPane.showMessageDialog(
                 this,
                 "Erro ao carregar projetos: " + e.getMessage()
@@ -517,11 +635,13 @@ public class TelaProjetos extends JFrame {
         }
     }
 
+    // Busca projetos pelo nome, categoria ou status.
     private void buscarProjetos() {
 
         String busca = campoBusca.getText().trim().toLowerCase();
 
         try {
+
             modelo.setRowCount(0);
 
             List<Projeto> projetos = cliente.listarProjetos();
@@ -534,16 +654,25 @@ public class TelaProjetos extends JFrame {
                     || projeto.getStatus().toLowerCase().contains(busca);
 
                 if (corresponde) {
+
                     modelo.addRow(new Object[]{
                         projeto.getId(),
                         projeto.getNome(),
                         projeto.getCategoria(),
-                        projeto.getStatus()
+                        projeto.getStatus(),
+                        projeto.getDataCriacao().format(
+                            DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                        ),
+                        projeto.getPrazo().format(
+                            DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                        ),
+                        ""
                     });
                 }
             }
 
         } catch (Exception e) {
+
             JOptionPane.showMessageDialog(
                 this,
                 "Erro ao buscar projetos: " + e.getMessage()
@@ -551,21 +680,182 @@ public class TelaProjetos extends JFrame {
         }
     }
 
-    private void excluir() {
+    // Abre o popup de edição do projeto selecionado.
+    private void editarProjeto(int id) {
 
-        int linhaSelecionada = tabela.getSelectedRow();
+        try {
 
-        if (linhaSelecionada == -1) {
+            List<Projeto> projetos = cliente.listarProjetos();
+
+            for (Projeto projeto : projetos) {
+
+                if (projeto.getId() == id) {
+
+                    abrirPopupEdicao(projeto);
+                    return;
+                }
+            }
+
             JOptionPane.showMessageDialog(
                 this,
-                "Selecione um projeto na tabela."
+                "Projeto não encontrado."
             );
-            return;
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Erro ao carregar projeto: " + e.getMessage()
+            );
         }
+    }
 
-        int linhaModelo = tabela.convertRowIndexToModel(linhaSelecionada);
+    // Cria e exibe a janela modal de edição.
+    private void abrirPopupEdicao(Projeto projeto) {
 
-        int id = (int) modelo.getValueAt(linhaModelo, 0);
+        JDialog dialog = new JDialog(
+            this,
+            "Editar projeto",
+            true
+        );
+
+        dialog.setResizable(false);
+
+        JPanel painel = new JPanel(new BorderLayout(15, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(
+            BorderFactory.createEmptyBorder(25, 25, 25, 25)
+        );
+
+        // Define um tamanho maior para acomodar todos os campos.
+        painel.setPreferredSize(new Dimension(560, 500));
+
+        JLabel titulo = new JLabel("Editar Projeto");
+        titulo.setFont(new Font("SansSerif", Font.BOLD, 20));
+        titulo.setForeground(AZUL_ESCURO);
+
+        // Campos preenchidos com os dados atuais.
+        JTextField nome = new JTextField(projeto.getNome());
+        JTextField descricao = new JTextField(projeto.getDescricao());
+
+        DatePickerSettings configuracoes = new DatePickerSettings();
+        configuracoes.setFormatForDatesCommonEra("dd-MM-yyyy");
+
+        DatePicker prazo = new DatePicker(configuracoes);
+        prazo.setDate(projeto.getPrazo());
+
+        JComboBox<String> categoria = new JComboBox<>(new String[]{
+            "Web", "Software", "Mobile", "Outro"
+        });
+
+        JComboBox<String> status = new JComboBox<>(new String[]{
+            "Planejado", "Em desenvolvimento", "Concluído"
+        });
+
+        categoria.setSelectedItem(projeto.getCategoria());
+        status.setSelectedItem(projeto.getStatus());
+
+        estilizarCampo(nome);
+        estilizarCampo(descricao);
+        estilizarCampo(prazo.getComponentDateTextField());
+        estilizarCombo(categoria);
+        estilizarCombo(status);
+
+        // Organiza os cinco campos verticalmente.
+        JPanel campos = new JPanel(new GridLayout(5, 1, 10, 14));
+        campos.setBackground(BRANCO);
+
+        campos.add(criarCampoComRotulo("Nome do projeto", nome));
+        campos.add(criarCampoComRotulo("Descrição", descricao));
+        campos.add(criarCampoComRotulo("Categoria", categoria));
+        campos.add(criarCampoComRotulo("Status", status));
+        campos.add(criarCampoComRotulo("Prazo (DD-MM-AAAA)", prazo));
+
+        JButton botaoSalvar = criarBotao(
+            "Salvar alterações",
+            AZUL,
+            BRANCO
+        );
+
+        JButton botaoCancelar = criarBotao(
+            "Cancelar",
+            new Color(232, 237, 245),
+            TEXTO
+        );
+
+        JPanel botoes = new JPanel(
+            new FlowLayout(FlowLayout.RIGHT, 10, 0)
+        );
+        botoes.setBackground(BRANCO);
+        botoes.add(botaoCancelar);
+        botoes.add(botaoSalvar);
+
+        painel.add(titulo, BorderLayout.NORTH);
+        painel.add(campos, BorderLayout.CENTER);
+        painel.add(botoes, BorderLayout.SOUTH);
+
+        dialog.setContentPane(painel);
+
+        // Calcula o tamanho da janela com base no conteúdo.
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+
+        botaoCancelar.addActionListener(e -> dialog.dispose());
+
+        botaoSalvar.addActionListener(e -> {
+
+            String novoNome = nome.getText().trim();
+            String novaDescricao = descricao.getText().trim();
+            LocalDate novoPrazo = prazo.getDate();
+
+            String novaCategoria = categoria.getSelectedItem().toString();
+            String novoStatus = status.getSelectedItem().toString();
+
+            if (novoNome.isBlank()) {
+                JOptionPane.showMessageDialog(
+                    dialog,
+                    "Informe o nome do projeto."
+                );
+                return;
+            }
+
+            Projeto projetoAtualizado = new Projeto(
+                novoNome,
+                novaDescricao,
+                novaCategoria,
+                novoStatus,
+                novoPrazo
+            );
+
+            try {
+
+                cliente.alterarProjeto(
+                    projeto.getId(),
+                    projetoAtualizado
+                );
+
+                JOptionPane.showMessageDialog(
+                    dialog,
+                    "Projeto alterado com sucesso!"
+                );
+
+                dialog.dispose();
+                carregarTabela();
+
+            } catch (Exception ex) {
+
+                JOptionPane.showMessageDialog(
+                    dialog,
+                    "Erro ao alterar projeto: " + ex.getMessage()
+                );
+            }
+        });
+
+        dialog.setVisible(true);
+    }
+
+    // Exclui o projeto correspondente ao ID recebido.
+    private void excluir(int id) {
 
         int resposta = JOptionPane.showConfirmDialog(
             this,
@@ -579,6 +869,7 @@ public class TelaProjetos extends JFrame {
         }
 
         try {
+
             cliente.excluirProjeto(id);
 
             JOptionPane.showMessageDialog(
@@ -589,11 +880,122 @@ public class TelaProjetos extends JFrame {
             carregarTabela();
 
         } catch (Exception e) {
+
             JOptionPane.showMessageDialog(
                 this,
                 "Erro ao excluir projeto: " + e.getMessage()
             );
         }
+    }
+
+    // Desenha os botões na coluna Ações.
+    private class ActionCellRenderer extends JPanel
+        implements TableCellRenderer {
+
+        private final JButton editar = new JButton("✎");
+        private final JButton excluir = new JButton("🗑");
+
+        public ActionCellRenderer() {
+
+            setLayout(new FlowLayout(FlowLayout.CENTER, 4, 3));
+            setBackground(BRANCO);
+
+            configurarBotaoAcao(editar, AZUL);
+            configurarBotaoAcao(excluir, new Color(190, 55, 65));
+
+            add(editar);
+            add(excluir);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(
+            JTable tabela,
+            Object valor,
+            boolean selecionado,
+            boolean foco,
+            int linha,
+            int coluna
+        ) {
+
+            return this;
+        }
+    }
+
+    // Controla os cliques nos botões da coluna Ações.
+    private class ActionCellEditor extends AbstractCellEditor
+        implements TableCellEditor {
+
+        private final JPanel painel = new JPanel(
+            new FlowLayout(FlowLayout.CENTER, 4, 3)
+        );
+
+        private final JButton editar = new JButton("✎");
+        private final JButton excluir = new JButton("🗑");
+
+        private int idSelecionado;
+
+        public ActionCellEditor() {
+
+            painel.setBackground(BRANCO);
+
+            configurarBotaoAcao(editar, AZUL);
+            configurarBotaoAcao(excluir, new Color(190, 55, 65));
+
+            editar.setToolTipText("Editar projeto");
+            excluir.setToolTipText("Excluir projeto");
+
+            painel.add(editar);
+            painel.add(excluir);
+
+            editar.addActionListener(e -> {
+
+                stopCellEditing();
+                editarProjeto(idSelecionado);
+            });
+
+            excluir.addActionListener(e -> {
+
+                stopCellEditing();
+                excluir(idSelecionado);
+            });
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(
+            JTable tabela,
+            Object valor,
+            boolean selecionado,
+            int linha,
+            int coluna
+        ) {
+
+            int linhaModelo = tabela.convertRowIndexToModel(linha);
+
+            idSelecionado = (int) modelo.getValueAt(linhaModelo, 0);
+
+            return painel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return "";
+        }
+    }
+
+    // Configuração visual dos botões de ação.
+    private void configurarBotaoAcao(JButton botao, Color cor) {
+
+        botao.setFont(new Font("SansSerif", Font.BOLD, 15));
+        botao.setForeground(cor);
+        botao.setBackground(BRANCO);
+        botao.setFocusPainted(false);
+        botao.setBorderPainted(false);
+        botao.setOpaque(true);
+        botao.setPreferredSize(new Dimension(30, 27));
+        botao.setMargin(new Insets(0, 0, 0, 0));
+        botao.setCursor(new java.awt.Cursor(
+            java.awt.Cursor.HAND_CURSOR
+        ));
     }
 
     public static void main(String[] args) {
@@ -606,7 +1008,7 @@ public class TelaProjetos extends JFrame {
                 e.printStackTrace();
             }
 
-            TelaProjetos tela = new TelaProjetos();
+            TelaLogin tela = new TelaLogin();
             tela.setVisible(true);
         });
     }
