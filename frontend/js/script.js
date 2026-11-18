@@ -16,238 +16,472 @@ document.getElementById("botaoSair").addEventListener("click", function() {
 
 });
 
-/* Armazena os projetos recebidos da API para utilizá-los na pesquisa e nas estatísticas. */
+
+/* NAVEGAÇÃO ENTRE AS TELAS */
+
+const telaDashboard = document.getElementById("telaDashboard");
+const telaProjetos = document.getElementById("telaProjetos");
+
+const linkDashboard = document.getElementById("linkDashboard");
+const linkProjetos = document.getElementById("linkProjetos");
+
+function mostrarTela(telaSelecionada) {
+
+    // Mostra a tela selecionada e esconde a outra.
+    telaDashboard.classList.toggle("ativa", telaSelecionada === "dashboard");
+    telaProjetos.classList.toggle("ativa", telaSelecionada === "projetos");
+
+    // Destaca no menu o link da tela que está aberta.
+    linkDashboard.classList.toggle("ativo", telaSelecionada === "dashboard");
+    linkProjetos.classList.toggle("ativo", telaSelecionada === "projetos");
+}
+
+linkDashboard.addEventListener("click", function(evento) {
+
+    evento.preventDefault();
+
+    mostrarTela("dashboard");
+
+});
+
+linkProjetos.addEventListener("click", function(evento) {
+
+    evento.preventDefault();
+
+    mostrarTela("projetos");
+
+});
+
+
+/* ARMAZENAMENTO DOS PROJETOS */
+
 let projetosCarregados = [];
 
 let projetoEmEdicao = null;
 
-/* Busca os projetos cadastrados e atualiza a tabela e as estatísticas do dashboard. */
+
+/* GRÁFICO DE STATUS */
+
+let graficoStatus = null;
+
+let graficoCategoria = null;
+
+let graficoMensal = null;
+
+
+function atualizarGraficoStatus(concluidos, emAndamento, planejados) {
+
+    const elementoGraficoStatus = document.getElementById("graficoStatus");
+
+    const contextoGrafico = elementoGraficoStatus.getContext("2d");
+
+    const dados = [concluidos, emAndamento, planejados];
+
+    if (graficoStatus === null) {
+
+        graficoStatus = new Chart(contextoGrafico, {
+
+            type: "doughnut",
+
+            data: {
+                labels: ["Concluídos", "Em desenvolvimento", "Planejados"],
+
+                datasets: [{
+                    data: dados,
+
+                    backgroundColor: [
+                        "#30D158", // Green — completed
+                        "#0A84FF", // Blue — in development
+                        "#8E8E93"  // Gray — planned
+                    ],
+
+                    borderWidth: 0
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+
+        });
+
+    } else {
+
+        graficoStatus.data.datasets[0].data = dados;
+
+        graficoStatus.update();
+
+    }
+}
+
+
+
+/* GRÁFICO DE PROJETOS POR CATEGORIA */
+
+function atualizarGraficoCategoria(web, software, mobile, outro) {
+
+    const elementoGraficoCategoria = document.getElementById("graficoCategoria");
+
+    const contextoGraficoCategoria = elementoGraficoCategoria.getContext("2d");
+
+    const dados = [web, software, mobile, outro];
+
+    if (graficoCategoria === null) {
+
+        graficoCategoria = new Chart(contextoGraficoCategoria, {
+
+            type: "bar",
+
+            data: {
+                labels: ["Web", "Software", "Mobile", "Outro"],
+
+                datasets: [{
+                    label: "Quantidade de projetos",
+                    data: dados,
+
+                    backgroundColor: [
+                        "#0A84FF", // Blue — Web
+                        "#BF5AF2", // Purple — Software
+                        "#64D2FF", // Cyan — Mobile
+                        "#FF9F0A"  // Orange — Other
+                    ],
+
+                    borderWidth: 0
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+
+        });
+
+    } else {
+
+        graficoCategoria.data.datasets[0].data = dados;
+
+        graficoCategoria.update();
+
+    }
+}
+
+
+
+/* GRÁFICO DE EVOLUÇÃO MENSAL */
+
+function atualizarGraficoMensal(projetos) {
+
+    const elementoGraficoMensal = document.getElementById("graficoMensal");
+
+    const contextoGraficoMensal = elementoGraficoMensal.getContext("2d");
+
+    const contagemPorMes = {};
+
+    projetos.forEach(projeto => {
+
+        const ano = projeto.dataCriacao[0];
+        const mes = projeto.dataCriacao[1];
+
+        const chave = `${ano}-${String(mes).padStart(2, "0")}`;
+
+        if (contagemPorMes[chave] === undefined) {
+            contagemPorMes[chave] = 0;
+        }
+
+        contagemPorMes[chave]++;
+
+    });
+
+    const meses = Object.keys(contagemPorMes).sort();
+
+    const nomesMeses = [
+        "Janeiro", "Fevereiro", "Março", "Abril",
+        "Maio", "Junho", "Julho", "Agosto",
+        "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+
+    const labels = meses.map(chave => {
+
+        const [ano, mes] = chave.split("-");
+
+        return `${nomesMeses[Number(mes) - 1]} ${ano}`;
+
+    });
+
+    const dados = meses.map(mes => contagemPorMes[mes]);
+
+    if (graficoMensal === null) {
+
+        graficoMensal = new Chart(contextoGraficoMensal, {
+
+            type: "line",
+
+            data: {
+                labels: labels,
+
+                datasets: [{
+                    label: "Projetos criados",
+                    data: dados,
+                    borderColor: "#0A84FF",
+                    backgroundColor: "rgba(10, 132, 255, 0.15)",
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+
+        });
+
+    } else {
+
+        graficoMensal.data.labels = labels;
+        graficoMensal.data.datasets[0].data = dados;
+
+        graficoMensal.update();
+
+    }
+}
+
+
+
+/* LISTAGEM DOS PROJETOS */
+
 function listarProjetos() {
 
-    // Localiza o elemento responsável por exibir mensagens na página.
     const mensagem = document.getElementById("mensagem");
 
-    // Informa ao usuário que os projetos estão sendo carregados.
     mensagem.textContent = "Carregando projetos...";
 
-    // Solicita à API Java a lista de projetos cadastrados.
     fetch(API_URL, {
         headers: {
             "Authorization": "Bearer " + token
         }
     })
     .then(response => {
-        // Verifica se a consulta foi realizada com sucesso.
+
         if (!response.ok) {
             throw new Error("Erro ao consultar a API.");
         }
 
-        // Converte a resposta JSON em dados JavaScript.
         return response.json();
+
     })
     .then(projetos => {
-        // Guarda os projetos recebidos para utilizá-los em outras funções.
+
         projetosCarregados = projetos;
 
-        // Atualiza os números apresentados nos cartões do dashboard.
         atualizarEstatisticas(projetos);
 
-        // Exibe os projetos na tabela, considerando o texto da pesquisa.
         filtrarProjetos();
 
-        // Informa que os projetos foram carregados.
         mensagem.textContent = "Projetos carregados com sucesso.";
+
     })
     .catch(erro => {
-        // Informa que ocorreu um problema durante a consulta.
+
         mensagem.textContent = "Não foi possível carregar os projetos.";
 
-        // Registra o erro no console para auxiliar nos testes.
         console.error(erro);
+
     });
 }
 
-/* Calcula e atualiza a quantidade de projetos em cada situação. */
+
+/* ESTATÍSTICAS DO DASHBOARD */
+
 function atualizarEstatisticas(projetos) {
 
-    // Inicializa os contadores das estatísticas.
     let total = 0;
     let concluidos = 0;
     let emAndamento = 0;
     let planejados = 0;
 
-    // Percorre todos os projetos recebidos da API.
+    let web = 0;
+    let software = 0;
+    let mobile = 0;
+    let outro = 0;
+
     projetos.forEach(projeto => {
 
-        // Aumenta a quantidade total de projetos.
         total++;
 
-        // Verifica se o projeto está concluído.
         if (projeto.status === "Concluído") {
             concluidos++;
         }
 
-        // Verifica se o projeto está em andamento.
-        if (projeto.status === "Em andamento") {
+        if (projeto.status === "Em desenvolvimento") {
             emAndamento++;
         }
 
-        // Verifica se o projeto está planejado.
         if (projeto.status === "Planejado") {
             planejados++;
         }
 
+        if (projeto.categoria === "Web") {
+            web++;
+
+        }
+
+        if (projeto.categoria === "Software") {
+            software++;
+        }
+
+        if (projeto.categoria === "Mobile") {
+            mobile++;
+        }
+
+        if (projeto.categoria === "Outro") {
+            outro++;
+        }
+
     });
 
-    // Localiza os elementos HTML responsáveis por mostrar as estatísticas.
     const valorTotal = document.getElementById("valorTotal");
     const valorConcluidos = document.getElementById("valorConcluidos");
     const valorAndamento = document.getElementById("valorAndamento");
     const valorPlanejados = document.getElementById("valorPlanejados");
 
-    // Atualiza os valores apresentados no dashboard.
     valorTotal.textContent = total;
     valorConcluidos.textContent = concluidos;
     valorAndamento.textContent = emAndamento;
     valorPlanejados.textContent = planejados;
+
+    atualizarGraficoStatus(concluidos, emAndamento, planejados);
+    atualizarGraficoCategoria(web, software, mobile, outro);
+    atualizarGraficoMensal(projetos);
 }
 
-/* Filtra os projetos de acordo com o nome, a categoria ou o status pesquisado. */
+
+/* PESQUISA DE PROJETOS */
+
 function filtrarProjetos() {
 
-    // Recupera o texto digitado no campo de pesquisa.
     const campoBusca = document.getElementById("campoBusca");
 
-    // Converte o texto para letras minúsculas para facilitar a comparação.
     const termoBusca = campoBusca.value.toLowerCase();
 
-    // Cria uma lista que receberá apenas os projetos correspondentes à pesquisa.
     const projetosFiltrados = [];
 
-    // Percorre todos os projetos armazenados.
     projetosCarregados.forEach(projeto => {
 
-        // Converte os dados do projeto para letras minúsculas.
         const nome = projeto.nome.toLowerCase();
         const categoria = projeto.categoria.toLowerCase();
         const status = projeto.status.toLowerCase();
 
-        // Verifica se algum dos campos contém o texto pesquisado.
         if (
             nome.includes(termoBusca) ||
             categoria.includes(termoBusca) ||
             status.includes(termoBusca)
         ) {
-            // Adiciona o projeto à lista de resultados.
+
             projetosFiltrados.push(projeto);
+
         }
 
     });
 
-    // Exibe somente os projetos encontrados.
     exibirProjetos(projetosFiltrados);
 }
 
+
+/* FORMATAÇÃO DAS DATAS */
+
 function formatarData(data) {
+
     const [ano, mes, dia] = data;
 
     return `${String(dia).padStart(2, "0")}/${String(mes).padStart(2, "0")}/${ano}`;
 }
 
 
-/* Exibe os projetos recebidos na tabela do sistema. */
+/* EXIBIÇÃO DOS PROJETOS NA TABELA */
+
 function exibirProjetos(projetos) {
 
-    // Localiza o corpo da tabela no HTML.
     const listaProjetos = document.getElementById("listaProjetos");
 
-    // Remove as linhas exibidas anteriormente.
     listaProjetos.replaceChildren();
 
-    // Verifica se existem projetos para exibir.
     if (projetos.length === 0) {
 
-        // Cria uma nova linha para apresentar uma mensagem.
         const linha = document.createElement("tr");
 
-        // Cria uma coluna para a mensagem.
         const coluna = document.createElement("td");
 
-        // Faz a coluna ocupar o espaço das cinco colunas da tabela.
         coluna.colSpan = 7;
 
-        // Verifica se não existem projetos cadastrados.
         if (projetosCarregados.length === 0) {
 
             coluna.textContent = "Nenhum projeto cadastrado.";
 
         } else {
 
-            // Informa que a pesquisa não encontrou resultados.
             coluna.textContent = "Nenhum projeto encontrado.";
 
         }
 
-        // Adiciona a coluna à linha.
         linha.appendChild(coluna);
 
-        // Adiciona a linha à tabela.
         listaProjetos.appendChild(linha);
 
-        // Encerra a função porque não existem projetos para exibir.
         return;
     }
 
-    // Percorre os projetos que devem aparecer na tabela.
     projetos.forEach(projeto => {
 
-        // Cria uma nova linha para o projeto.
         const linha = document.createElement("tr");
 
-        // Cria a coluna responsável por mostrar o ID.
         const colunaId = document.createElement("td");
-
-        // Define o ID do projeto como conteúdo da coluna.
         colunaId.textContent = projeto.id;
 
-        // Cria a coluna responsável por mostrar o nome.
         const colunaNome = document.createElement("td");
-
-        // Define o nome do projeto como conteúdo da coluna.
         colunaNome.textContent = projeto.nome;
 
-        // Cria a coluna responsável por mostrar a categoria.
         const colunaCategoria = document.createElement("td");
-
-        // Define a categoria do projeto como conteúdo da coluna.
         colunaCategoria.textContent = projeto.categoria;
 
-        // Cria a coluna responsável por mostrar o status.
         const colunaStatus = document.createElement("td");
-
-        // Define o status do projeto como conteúdo da coluna.
         colunaStatus.textContent = projeto.status;
 
         const colunaDataCriacao = document.createElement("td");
-
         colunaDataCriacao.textContent = formatarData(projeto.dataCriacao);
 
         const colunaPrazo = document.createElement("td");
-
         colunaPrazo.textContent = formatarData(projeto.prazo);
 
-        // Cria a coluna responsável pelas ações.
         const colunaAcoes = document.createElement("td");
 
-        // Cria o botão de edição.
         const botaoEditar = document.createElement("button");
-
         botaoEditar.textContent = "✎";
+        botaoEditar.classList.add("btn", "btn-primary", "btn-sm");
 
-        // Cria o botão de exclusão.
         const botaoExcluir = document.createElement("button");
-
         botaoExcluir.textContent = "✕";
+        botaoExcluir.classList.add("btn", "btn-danger", "btn-sm");
 
         botaoEditar.title = "Editar projeto";
         botaoExcluir.title = "Excluir projeto";
@@ -255,25 +489,28 @@ function exibirProjetos(projetos) {
         botaoEditar.classList.add("botao-editar");
         botaoExcluir.classList.add("botao-excluir");
 
-        // Define o que acontece quando o botão de edição é clicado.
         botaoEditar.addEventListener("click", function() {
 
             editarProjeto(projeto.id);
 
         });
 
-        // Define o que acontece quando o botão de exclusão é clicado.
         botaoExcluir.addEventListener("click", function() {
 
             excluirProjeto(projeto.id);
 
         });
 
-        // Adiciona os botões à coluna de ações.
-        colunaAcoes.appendChild(botaoEditar);
-        colunaAcoes.appendChild(botaoExcluir);
+        const containerAcoes = document.createElement("div");
+        containerAcoes.style.display = "flex";
+        containerAcoes.style.justifyContent = "center";
+        containerAcoes.style.gap = "8px";
 
-        // Adiciona todas as colunas à linha.
+        containerAcoes.appendChild(botaoEditar);
+        containerAcoes.appendChild(botaoExcluir);
+
+        colunaAcoes.appendChild(containerAcoes);
+
         linha.appendChild(colunaId);
         linha.appendChild(colunaNome);
         linha.appendChild(colunaCategoria);
@@ -282,19 +519,18 @@ function exibirProjetos(projetos) {
         linha.appendChild(colunaPrazo);
         linha.appendChild(colunaAcoes);
 
-        // Adiciona a linha completa ao corpo da tabela.
         listaProjetos.appendChild(linha);
 
     });
 }
 
-/* Executa o cadastro de um projeto quando o formulário é enviado. */
+
+/* CADASTRO DE PROJETOS */
+
 document.getElementById("formProjeto").addEventListener("submit", function(evento) {
 
-    // Impede que o formulário recarregue a página automaticamente.
     evento.preventDefault();
 
-    // Organiza os dados digitados pelo usuário em um objeto.
     const projeto = {
         nome: document.getElementById("nome").value,
         descricao: document.getElementById("descricao").value,
@@ -303,56 +539,52 @@ document.getElementById("formProjeto").addEventListener("submit", function(event
         prazo: document.getElementById("prazo").value
     };
 
-    // Envia o projeto para a API Java.
     fetch(API_URL, {
         method: "POST",
         headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
         },
-        // Converte o objeto projeto para JSON antes do envio.
         body: JSON.stringify(projeto)
     })
     .then(response => {
-        // Verifica se o cadastro foi realizado com sucesso.
+
         if (!response.ok) {
             throw new Error("Erro ao cadastrar o projeto.");
         }
 
-        // Retorna a resposta da API.
         return response;
+
     })
     .then(() => {
-        // Informa ao usuário que o cadastro foi realizado.
+
         alert("Projeto cadastrado com sucesso!");
 
-        // Limpa os campos do formulário.
         document.getElementById("formProjeto").reset();
 
-        // Atualiza a tabela e as estatísticas.
         listarProjetos();
+
     })
     .catch(erro => {
-        // Informa que ocorreu um problema durante o cadastro.
+
         alert("Não foi possível cadastrar o projeto.");
 
-        // Registra o erro no console.
         console.error(erro);
+
     });
 });
 
-/* Exclui um projeto de acordo com seu ID. */
+
+/* EXCLUSÃO DE PROJETOS */
+
 function excluirProjeto(id) {
 
-    // Solicita a confirmação do usuário antes da exclusão.
     const confirmar = confirm("Deseja realmente excluir este projeto?");
 
-    // Encerra a função caso o usuário cancele a operação.
     if (!confirmar) {
         return;
     }
 
-    // Envia uma solicitação DELETE para a API Java.
     fetch(`${API_URL}/${id}`, {
         method: "DELETE",
         headers: {
@@ -360,25 +592,27 @@ function excluirProjeto(id) {
         }
     })
     .then(response => {
-        // Verifica se a exclusão foi realizada com sucesso.
+
         if (!response.ok) {
             throw new Error("Erro ao excluir o projeto.");
         }
 
-        // Informa que o projeto foi excluído.
         alert("Projeto excluído com sucesso!");
 
-        // Atualiza a tabela e as estatísticas.
         listarProjetos();
+
     })
     .catch(erro => {
-        // Informa que ocorreu um problema durante a exclusão.
+
         alert("Não foi possível excluir o projeto.");
 
-        // Registra o erro no console.
         console.error(erro);
+
     });
 }
+
+
+/* EDIÇÃO DE PROJETOS */
 
 function editarProjeto(id) {
 
@@ -392,19 +626,20 @@ function editarProjeto(id) {
     document.getElementById("editarDescricao").value = projeto.descricao;
     document.getElementById("editarCategoria").value = projeto.categoria;
     document.getElementById("editarStatus").value = projeto.status;
-    
+
     const prazo = projeto.prazo;
 
     document.getElementById("editarPrazo").value =
-    `${prazo[0]}-${String(prazo[1]).padStart(2, "0")}-${String(prazo[2]).padStart(2, "0")}`;
+        `${prazo[0]}-${String(prazo[1]).padStart(2, "0")}-${String(prazo[2]).padStart(2, "0")}`;
 
     popup.style.display = "flex";
 }
 
-// Carrega os projetos quando a página é aberta.
+
+/* INICIALIZAÇÃO */
+
 listarProjetos();
 
-// Atualiza os resultados sempre que o usuário digita no campo de pesquisa.
 document.getElementById("campoBusca").addEventListener("input", filtrarProjetos);
 
 document.getElementById("botaoCancelarEdicao").addEventListener("click", function() {
@@ -413,7 +648,11 @@ document.getElementById("botaoCancelarEdicao").addEventListener("click", functio
 
 });
 
+
+/* SALVAR ALTERAÇÕES */
+
 document.getElementById("formEdicao").addEventListener("submit", function(evento) {
+
     evento.preventDefault();
 
     const projetoAtualizado = {

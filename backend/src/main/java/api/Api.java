@@ -4,11 +4,13 @@ package api;
 import java.util.List;
 import java.util.Map;
 
+import dao.ArquivoLog;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import model.LoginRequest;
 import model.Projeto;
 import model.Usuario;
+import service.LogService;
 import service.ProjetoService;
 import service.SessaoService;
 import service.UsuarioService;
@@ -18,15 +20,49 @@ public class Api {
     public static void main(String[] args)
             throws Exception {
 
+        ArquivoLog arquivoLog = new ArquivoLog();
+
+        // Carregar projetos
         ProjetoService service =
                 new ProjetoService();
 
-        service.carregar();
+        try {
 
+            service.carregar();
+
+        } catch (Exception e) {
+
+            registrarSeguro(
+                    arquivoLog,
+                    "error.log",
+                    "Erro ao carregar projetos do CSV: " +
+                    e.getMessage()
+            );
+
+            throw e;
+        }
+
+        LogService logService = new LogService();
+
+        // Carregar usuários
         UsuarioService usuarioService =
                 new UsuarioService();
 
-        usuarioService.carregar();
+        try {
+
+            usuarioService.carregar();
+
+        } catch (Exception e) {
+
+            registrarSeguro(
+                    arquivoLog,
+                    "error.log",
+                    "Erro ao carregar usuários do CSV: " +
+                    e.getMessage()
+            );
+
+            throw e;
+        }
 
         SessaoService sessaoService =
                 new SessaoService();
@@ -38,6 +74,60 @@ public class Api {
                 cors.addRule(rule -> {
                     rule.anyHost();
                 });
+            });
+
+            // Registrar requisições da API
+            config.requestLogger.http((ctx, ms) -> {
+
+                registrarSeguro(
+                        arquivoLog,
+                        "api.log",
+                        ctx.method() + " " +
+                        ctx.path() +
+                        " - Status: " + ctx.status() +
+                        " - " + ms + " ms"
+                );
+            });
+
+            // Registrar inicialização e encerramento
+            config.events.serverStarted(() -> {
+
+                registrarSeguro(
+                        arquivoLog,
+                        "application.log",
+                        "API iniciada na porta 7070."
+                );
+            });
+
+            config.events.serverStopping(() -> {
+
+                registrarSeguro(
+                        arquivoLog,
+                        "application.log",
+                        "API sendo encerrada."
+                );
+            });
+
+            // Registrar erros inesperados
+            config.routes.exception(Exception.class, (e, ctx) -> {
+
+                registrarSeguro(
+                        arquivoLog,
+                        "error.log",
+                        "Erro inesperado: " +
+                        e.getClass().getSimpleName() +
+                        " - " + e.getMessage()
+                );
+
+                registrarSeguro(
+                        arquivoLog,
+                        "application.log",
+                        "Erro geral na aplicação: " +
+                        e.getMessage()
+                );
+
+                ctx.status(500);
+                ctx.json(Map.of("erro", "Erro interno do servidor"));
             });
 
             // Rota inicial
@@ -65,12 +155,28 @@ public class Api {
                                 );
 
                         if (usuario == null) {
+
+                            registrarSeguro(
+                                    arquivoLog,
+                                    "access.log",
+                                    "Tentativa de login sem sucesso: " +
+                                    request.getEmail()
+                            );
+
                             ctx.status(401);
                             return;
                         }
 
                         String token =
                                 sessaoService.criarSessao(usuario);
+
+                        registrarSeguro(
+                                arquivoLog,
+                                "access.log",
+                                "Usuário " + usuario.getId() +
+                                " (" + usuario.getNome() +
+                                ") realizou login."
+                        );
 
                         ctx.json(
                                 Map.of(
@@ -153,9 +259,33 @@ public class Api {
 
                         projeto.setUsuarioId(usuario.getId());
 
-                        service.adicionar(projeto);
+                        try {
+
+                            service.adicionar(projeto);
+
+                        } catch (IllegalArgumentException e) {
+
+                            registrarSeguro(
+                                    arquivoLog,
+                                    "error.log",
+                                    "Erro ao cadastrar projeto '" +
+                                    projeto.getNome() + "': " +
+                                    e.getMessage()
+                            );
+
+                            ctx.status(400);
+                            ctx.json(Map.of("erro", e.getMessage()));
+                            return;
+                        }
 
                         service.salvar();
+
+                        logService.adicionar(
+                                usuario.getId(),
+                                "Inclusão",
+                                "Projeto '" + projeto.getNome() +
+                                "' (ID: " + projeto.getId() + ") criado."
+                        );
 
                         ctx.status(201);
                         ctx.json(projeto);
@@ -179,14 +309,12 @@ public class Api {
                                         ctx.pathParam("id")
                                 );
 
-                        Projeto existente = service.buscarPorId(id);
+                        Projeto existente =
+                                service.buscarPorId(id);
 
-                        if (existente == null) {
-                            ctx.status(404);
-                            return;
-                        }
+                        if (existente == null ||
+                            existente.getUsuarioId() != usuario.getId()) {
 
-                        if (existente.getUsuarioId() != usuario.getId()) {
                             ctx.status(404);
                             return;
                         }
@@ -194,14 +322,25 @@ public class Api {
                         Projeto projeto =
                                 ctx.bodyAsClass(Projeto.class);
 
-                        projeto.setId(id);  
+                        projeto.setId(id);
                         projeto.setUsuarioId(existente.getUsuarioId());
 
                         boolean alterado;
 
                         try {
+
                             alterado = service.alterar(projeto);
+
                         } catch (IllegalArgumentException e) {
+
+                            registrarSeguro(
+                                    arquivoLog,
+                                    "error.log",
+                                    "Erro ao alterar projeto '" +
+                                    existente.getNome() + "' (ID: " +
+                                    id + "): " + e.getMessage()
+                            );
+
                             ctx.status(400);
                             ctx.json(Map.of("erro", e.getMessage()));
                             return;
@@ -213,6 +352,13 @@ public class Api {
                         }
 
                         service.salvar();
+
+                        logService.adicionar(
+                                usuario.getId(),
+                                "Alteração",
+                                "Projeto '" + projeto.getNome() +
+                                "' (ID: " + projeto.getId() + ") alterado."
+                        );
 
                         ctx.json(projeto);
                     }
@@ -235,10 +381,12 @@ public class Api {
                                         ctx.pathParam("id")
                                 );
 
-                        Projeto existente = service.buscarPorId(id);
+                        Projeto existente =
+                                service.buscarPorId(id);
 
                         if (existente == null ||
                             existente.getUsuarioId() != usuario.getId()) {
+
                             ctx.status(404);
                             return;
                         }
@@ -253,6 +401,13 @@ public class Api {
 
                         service.salvar();
 
+                        logService.adicionar(
+                                usuario.getId(),
+                                "Exclusão",
+                                "Projeto '" + existente.getNome() +
+                                "' (ID: " + id + ") excluído."
+                        );
+
                         ctx.status(204);
                     }
             );
@@ -260,15 +415,32 @@ public class Api {
         }).start(7070);
     }
 
+    // Registrar mensagens sem interromper a API caso ocorra erro no log
+    private static void registrarSeguro(
+            ArquivoLog arquivoLog,
+            String arquivo,
+            String mensagem) {
+
+        try {
+
+            arquivoLog.registrar(arquivo, mensagem);
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Erro ao escrever no arquivo " +
+                    arquivo + ": " + e.getMessage()
+            );
+        }
+    }
+
     /* Verifica se a requisição possui um token válido. */
     private static Usuario validarToken(
             Context ctx,
             SessaoService sessaoService) {
 
-        // Recupera o conteúdo do cabeçalho Authorization.
         String authorization = ctx.header("Authorization");
 
-        // Verifica se o cabeçalho existe e começa com Bearer.
         if (authorization == null ||
                 !authorization.startsWith("Bearer ")) {
 
@@ -276,19 +448,15 @@ public class Api {
             return null;
         }
 
-        // Remove a parte "Bearer " e recupera somente o token.
         String token = authorization.substring(7);
 
-        // Procura o usuário associado ao token.
         Usuario usuario = sessaoService.buscarUsuario(token);
 
-        // Verifica se o token corresponde a uma sessão existente.
         if (usuario == null) {
             ctx.status(401);
             return null;
         }
 
-        // Retorna o usuário autenticado.
         return usuario;
     }
 }

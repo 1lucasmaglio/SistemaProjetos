@@ -1,17 +1,22 @@
-
 * {
     box-sizing: border-box;
 }
 
 :root {
-    --azul-escuro: #17243a;
-    --azul-sidebar: #1d2d45;
-    --azul: #3165e6;
-    --fundo: #f3f6fb;
-    --branco: #ffffff;
-    --texto: #2d3748;
-    --cinza: #737d8c;
-    --borda: #e1e6ee;
+    --preto: #171719;
+    --preto-sidebar: #19191b;
+    --fundo: #1c1c1e;
+    --superficie: #242426;
+    --superficie-secundaria: #303033;
+
+    --accento: #0a84ff;
+    --accento-hover: #409cff;
+    --accento-escuro: #0060c7;
+
+    --branco: #f5f5f7;
+    --texto: #e5e5e7;
+    --cinza: #a1a1a6;
+    --borda: #3a3a3c;
 }
 
 html {
@@ -20,7 +25,8 @@ html {
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont,
+             "SF Pro Display", "Segoe UI", sans-serif;
     color: var(--texto);
     background: var(--fundo);
 }
@@ -39,7 +45,8 @@ body {
     flex: 0 0 210px;
     min-height: 100vh;
     padding: 25px 15px;
-    background: var(--azul-sidebar);
+    background: var(--preto-sidebar);
+    border-right: 1px solid var(--borda);
 }
 
 .marca {
@@ -51,34 +58,35 @@ body {
 }
 
 .marca span {
-    color: #aebbd0;
+    color: var(--accento);
 }
 
 .menu {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     margin-top: 40px;
 }
 
 .menu a {
     display: block;
-    padding: 12px;
-    border-radius: 5px;
-    color: #e8edf5;
+    padding: 11px 12px;
+    border-radius: 6px;
+    color: var(--cinza);
     font-size: 14px;
     text-decoration: none;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .menu a:hover {
-    background: rgba(255, 255, 255, 0.09);
+    background: #29292c;
+    color: var(--branco);
 }
 
 .menu a.ativo {
     color: var(--branco);
-    font-weight: 700;
-    background: var(--azul);
+    font-weight: 600;
+    background: #353538;
 }
 
 /* Área da aplicação */
@@ -99,18 +107,18 @@ body {
     justify-content: space-between;
     gap: 16px;
     padding: 15px 25px;
-    background: var(--branco);
+    background: #222224;
     border-bottom: 1px solid var(--borda);
 }
 
 .barra-superior strong {
-    color: var(--azul-escuro);
-    font-size: 20px;
+    color: var(--branco);
+    font-size: 19px;
 }
 
 .barra-superior span {
     color: var(--cinza);
-    font-size: 14px;
+    font-size: 13px;
 }
 
 /* Conteúdo principal */
@@ -128,9 +136,9 @@ main {
 }
 
 .introducao h1 {
-    margin: 0 0 5px;
-    color: var(--azul-escuro);
-    font-size: 25px;
+    margin: 0 0 6px;
+    color: var(--branco);
+    font-size: 24px;
 }
 
 .introducao p {
@@ -154,10 +162,10 @@ main {
     flex-direction: column;
     justify-content: center;
     gap: 8px;
-    padding: 15px;
-    background: var(--branco);
+    padding: 16px;
+    background: var(--superficie);
     border: 1px solid var(--borda);
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .card-estatistica span {
@@ -166,23 +174,26 @@ main {
 }
 
 .card-estatistica strong {
+    color: var(--branco);
     font-size: 25px;
 }
 
+/* Cores dos números dos cards */
+
 .card-estatistica.azul strong {
-    color: #3165e6;
-}
-
-.card-estatistica.verde strong {
-    color: #1e965f;
-}
-
-.card-estatistica.laranja strong {
-    color: #dc9123;
+    color: #0a84ff;
 }
 
 .card-estatistica.roxo strong {
-    color: #7d5ac8;
+    color: #bf5af2;
+}
+
+.card-estatistica.verde strong {
+    color: #30d158;
+}
+
+.card-estatistica.laranja strong {
+    color: #ff9f0a;
 }
 
 /* Painéis */
@@ -190,15 +201,26 @@ main {
 .painel {
     margin-bottom: 22px;
     padding: 20px;
-    background: var(--branco);
+    background: var(--superficie);
     border: 1px solid var(--borda);
-    border-radius: 6px;
+    border-radius: 8px;
+}
+
+.grafico-container {
+    position: relative;
+    height: 300px;
+    margin-top: 18px;
+}
+
+#graficoStatus {
+    max-height: 300px;
 }
 
 .painel h2 {
     margin: 0;
-    color: var(--azul-escuro);
-    font-size: 18px;
+    color: var(--branco);
+    font-size: 17px;
+    font-weight: 600;
 }
 
 /* Formulário */
@@ -213,37 +235,48 @@ main {
 .campo {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
 }
 
 .campo label {
     color: var(--texto);
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .campo input,
 .campo select,
 .controles-lista input {
     width: 100%;
-    min-height: 36px;
+    min-height: 37px;
     padding: 8px 10px;
     color: var(--texto);
-    background: #fff;
-    border: 1px solid #d7dee8;
-    border-radius: 4px;
+    background: var(--superficie-secundaria);
+    border: 1px solid #48484a;
+    border-radius: 6px;
     font: inherit;
     font-size: 13px;
+}
+
+.campo input::placeholder,
+.controles-lista input::placeholder {
+    color: #85858a;
 }
 
 .campo input:focus,
 .campo select:focus,
 .controles-lista input:focus {
-    outline: 2px solid rgba(49, 101, 230, 0.18);
-    border-color: var(--azul);
+    outline: none;
+    border-color: var(--accento);
+    box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.18);
 }
 
-/* Botões do formulário */
+.campo select option {
+    color: var(--texto);
+    background: var(--superficie);
+}
+
+/* Botões */
 
 .acoes-formulario {
     display: flex;
@@ -256,28 +289,46 @@ main {
     min-height: 36px;
     padding: 9px 15px;
     border: 0;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.15s ease;
 }
 
+/* Cadastrar projeto */
+
 .botao-principal {
-    color: var(--branco);
-    background: var(--azul);
+    color: #ffffff;
+    background-color: var(--accento-escuro);
+    border: 1px solid var(--accento-escuro);
 }
 
 .botao-principal:hover {
-    background: #2453c7;
+    color: #ffffff;
+    background-color: var(--accento);
+    border-color: var(--accento);
 }
 
+/* Limpar e Sair */
+
 .botao-secundario {
-    color: #ffffff;
-    background: #be3741;
+    color: #f5e9eb;
+    background-color: #59343b;
+    border: 1px solid #59343b;
 }
 
 .botao-secundario:hover {
-    background: #a92f38;
+    color: #ffffff;
+    background-color: #70434b;
+    border-color: #70434b;
+}
+
+/* Foco */
+
+.botao:focus-visible {
+    outline: 2px solid var(--accento);
+    outline-offset: 3px;
 }
 
 /* Lista de projetos */
@@ -305,8 +356,8 @@ main {
 .tabela-container {
     width: 100%;
     overflow-x: auto;
-    border: 1px solid #ebeff4;
-    border-radius: 4px;
+    border: 1px solid var(--borda);
+    border-radius: 7px;
 }
 
 table {
@@ -317,23 +368,29 @@ table {
 }
 
 thead {
-    background: #f5f7fb;
+    background: #303033;
 }
 
 th,
 td {
     padding: 12px 14px;
-    border-bottom: 1px solid #ebeff4;
+    border-bottom: 1px solid var(--borda);
+    border-right: 1px solid var(--borda);
+}
+
+th:last-child,
+td:last-child {
+    border-right: none;
 }
 
 th {
     color: var(--texto);
-    font-weight: 700;
+    font-weight: 600;
     white-space: nowrap;
 }
 
 td {
-    color: #4c596b;
+    color: #c7c7cc;
     overflow-wrap: anywhere;
 }
 
@@ -342,7 +399,7 @@ tbody tr:last-child td {
 }
 
 tbody tr:hover {
-    background: #fafbfd;
+    background: #303033;
 }
 
 .coluna-id {
@@ -361,29 +418,6 @@ tbody tr:hover {
     text-align: center;
 }
 
-/* Botão de exclusão */
-
-.botao-excluir {
-    padding: 8px 12px;
-    color: var(--branco);
-    background: #be3741;
-    border: 0;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.botao-excluir:hover {
-    background: #e5e7eb;
-    border-radius: 4px;
-}
-
-.botao-editar:hover {
-    background: #e5e7eb;
-    border-radius: 4px;
-}
-
 /* Rodapé */
 
 footer {
@@ -391,8 +425,9 @@ footer {
     justify-content: space-between;
     gap: 12px;
     padding: 18px 25px;
-    color: #cbd4e2;
-    background: var(--azul-escuro);
+    color: var(--cinza);
+    background: var(--preto);
+    border-top: 1px solid var(--borda);
     font-size: 12px;
 }
 
@@ -482,31 +517,33 @@ footer {
     align-items: center;
     justify-content: center;
     padding: 20px;
+    background: var(--fundo);
 }
 
 .painel-login {
     width: 100%;
     max-width: 400px;
     padding: 35px;
-    background: var(--branco);
+    background: var(--superficie);
     border: 1px solid var(--borda);
-    border-radius: 6px;
+    border-radius: 10px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
 }
 
 .marca-login {
     margin-bottom: 30px;
-    color: var(--azul-escuro);
+    color: var(--branco);
     font-size: 21px;
     font-weight: 700;
 }
 
 .marca-login span {
-    color: var(--azul);
+    color: var(--accento);
 }
 
 .painel-login h1 {
     margin: 0 0 8px;
-    color: var(--azul-escuro);
+    color: var(--branco);
     font-size: 25px;
 }
 
@@ -526,9 +563,11 @@ footer {
 }
 
 #mensagemLogin {
-    color: #be3741;
+    color: #e08089;
     font-size: 13px;
 }
+
+/* Ações do usuário */
 
 .acoes-usuario {
     display: flex;
@@ -537,6 +576,7 @@ footer {
 }
 
 /* Popup de edição */
+
 .popup {
     display: none;
     position: fixed;
@@ -545,21 +585,24 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.65);
     justify-content: center;
     align-items: center;
 }
 
 .conteudo-popup {
-    background-color: white;
+    color: var(--texto);
+    background-color: #29292c;
     padding: 30px;
+    border: 1px solid #444447;
     border-radius: 10px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
 }
 
 .conteudo-popup h2 {
+    color: var(--branco);
     margin-top: 0;
     margin-bottom: 20px;
 }
@@ -581,21 +624,54 @@ footer {
     margin-top: 20px;
 }
 
-/* Botões de ação da tabela */
-.botao-editar,
-.botao-excluir {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    padding: 4px 8px;
+/* Navegação entre telas */
+
+.tela {
+    display: none;
 }
 
-.botao-editar {
-    color: #3165E6;
+.tela.ativa {
+    display: block;
 }
 
-.botao-excluir {
-    color: #BE3741;
+/* Organização dos gráficos */
+
+.graficos-superiores {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
 }
 
+@media (max-width: 768px) {
+    .graficos-superiores {
+        grid-template-columns: 1fr;
+    }
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    font-size: 21px;
+    font-weight: 650;
+    color: var(--branco);
+}
+
+.marca img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+#botaoLimpar,
+#botaoSair {
+    color: #000000;
+}
+
+.coluna-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
