@@ -101,7 +101,8 @@ function atualizarGraficoStatus(concluidos, emAndamento, planejados) {
 
             options: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                devicePixelRatio: 3
             }
 
         });
@@ -154,6 +155,7 @@ function atualizarGraficoCategoria(web, software, mobile, outro) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                devicePixelRatio: 3,
 
                 scales: {
                     y: {
@@ -243,6 +245,7 @@ function atualizarGraficoMensal(projetos) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                devicePixelRatio: 3,
 
                 scales: {
                     y: {
