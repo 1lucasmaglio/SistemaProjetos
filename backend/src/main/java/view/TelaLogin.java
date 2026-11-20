@@ -28,6 +28,16 @@ public class TelaLogin extends JFrame {
     private JButton botaoLogin;
     private JLabel mensagemLogin;
 
+    // Cores do tema escuro
+    private final Color FUNDO = new Color(28, 28, 30);
+    private final Color SUPERFICIE = new Color(36, 36, 38);
+    private final Color SUPERFICIE_SECUNDARIA = new Color(48, 48, 51);
+    private final Color TEXTO = new Color(245, 245, 247);
+    private final Color CINZA = new Color(161, 161, 166);
+    private final Color AZUL = new Color(0, 153, 153);
+    private final Color BORDA = new Color(58, 58, 60);
+    private final Color ERRO = new Color(239, 98, 108);
+
     public TelaLogin() {
 
         setTitle("Login - Sistema de Projetos");
@@ -44,24 +54,22 @@ public class TelaLogin extends JFrame {
         botaoLogin = new JButton("Entrar");
 
         mensagemLogin = new JLabel(" ");
-        mensagemLogin.setForeground(Color.decode("#be3741"));
+        mensagemLogin.setForeground(ERRO);
         mensagemLogin.setFont(new Font("Arial", Font.PLAIN, 13));
 
         // Painel principal: fundo da tela
         JPanel painelPrincipal = new JPanel(new GridBagLayout());
 
-        painelPrincipal.setBackground(
-            Color.decode("#f3f6fb")
-        );
+        painelPrincipal.setBackground(FUNDO);
 
-        // Painel branco: cartão de login
+        // Painel: cartão de login
         JPanel painelLogin = new JPanel();
 
         painelLogin.setLayout(
             new BoxLayout(painelLogin, BoxLayout.Y_AXIS)
         );
 
-        painelLogin.setBackground(Color.WHITE);
+        painelLogin.setBackground(SUPERFICIE);
 
         painelLogin.setPreferredSize(
             new Dimension(400, 460)
@@ -69,18 +77,16 @@ public class TelaLogin extends JFrame {
 
         painelLogin.setBorder(
             BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                    Color.decode("#e1e6ee")
-                ),
+                BorderFactory.createLineBorder(BORDA),
                 BorderFactory.createEmptyBorder(35, 35, 35, 35)
             )
         );
 
         // Marca
         JLabel marca = new JLabel(
-            "<html><span style='color:#17243a'>SP </span>"
-            + "<span style='color:#3165e6'>|</span>"
-            + "<span style='color:#17243a'> Projetos</span></html>"
+            "<html><span style='color:#f5f5f7'>SP </span>"
+            + "<span style='color:#009999'>|</span>"
+            + "<span style='color:#f5f5f7'> Projetos</span></html>"
         );
 
         marca.setFont(new Font("Arial", Font.BOLD, 21));
@@ -90,7 +96,7 @@ public class TelaLogin extends JFrame {
         JLabel titulo = new JLabel("Bem-vindo!");
 
         titulo.setFont(new Font("Arial", Font.BOLD, 25));
-        titulo.setForeground(Color.decode("#17243a"));
+        titulo.setForeground(TEXTO);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Descrição
@@ -99,7 +105,7 @@ public class TelaLogin extends JFrame {
         );
 
         descricao.setFont(new Font("Arial", Font.PLAIN, 13));
-        descricao.setForeground(Color.decode("#737d8c"));
+        descricao.setForeground(CINZA);
         descricao.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Labels
@@ -109,8 +115,8 @@ public class TelaLogin extends JFrame {
         labelEmail.setFont(new Font("Arial", Font.BOLD, 12));
         labelSenha.setFont(new Font("Arial", Font.BOLD, 12));
 
-        labelEmail.setForeground(Color.decode("#2d3748"));
-        labelSenha.setForeground(Color.decode("#2d3748"));
+        labelEmail.setForeground(TEXTO);
+        labelSenha.setForeground(TEXTO);
 
         labelEmail.setAlignmentX(Component.LEFT_ALIGNMENT);
         labelSenha.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -119,23 +125,25 @@ public class TelaLogin extends JFrame {
         campoEmail.setFont(new Font("Arial", Font.PLAIN, 13));
         campoSenha.setFont(new Font("Arial", Font.PLAIN, 13));
 
-        campoEmail.setForeground(Color.decode("#2d3748"));
-        campoSenha.setForeground(Color.decode("#2d3748"));
+        campoEmail.setForeground(TEXTO);
+        campoSenha.setForeground(TEXTO);
+
+        campoEmail.setBackground(SUPERFICIE_SECUNDARIA);
+        campoSenha.setBackground(SUPERFICIE_SECUNDARIA);
+
+        campoEmail.setCaretColor(TEXTO);
+        campoSenha.setCaretColor(TEXTO);
 
         campoEmail.setBorder(
             BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                    Color.decode("#d7dee8")
-                ),
+                BorderFactory.createLineBorder(BORDA),
                 BorderFactory.createEmptyBorder(8, 10, 8, 10)
             )
         );
 
         campoSenha.setBorder(
             BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                    Color.decode("#d7dee8")
-                ),
+                BorderFactory.createLineBorder(BORDA),
                 BorderFactory.createEmptyBorder(8, 10, 8, 10)
             )
         );
@@ -153,8 +161,8 @@ public class TelaLogin extends JFrame {
 
         // Estilo do botão
         botaoLogin.setFont(new Font("Arial", Font.BOLD, 12));
-        botaoLogin.setBackground(Color.decode("#3165e6"));
-        botaoLogin.setForeground(Color.WHITE);
+        botaoLogin.setBackground(AZUL);
+        botaoLogin.setForeground(TEXTO);
         botaoLogin.setFocusPainted(false);
         botaoLogin.setBorderPainted(false);
         botaoLogin.setOpaque(true);

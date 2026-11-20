@@ -90,9 +90,9 @@ function atualizarGraficoStatus(concluidos, emAndamento, planejados) {
                     data: dados,
 
                     backgroundColor: [
-                        "#30D158", // Green — completed
-                        "#0A84FF", // Blue — in development
-                        "#8E8E93"  // Gray — planned
+                        "#437C1E", // Concluídos
+                        "#009999", // Em desenvolvimento
+                        "#EF626C"  // Planejados
                     ],
 
                     borderWidth: 0
@@ -142,10 +142,10 @@ function atualizarGraficoCategoria(web, software, mobile, outro) {
                     data: dados,
 
                     backgroundColor: [
-                        "#0A84FF", // Blue — Web
-                        "#BF5AF2", // Purple — Software
-                        "#64D2FF", // Cyan — Mobile
-                        "#FF9F0A"  // Orange — Other
+                        "#009999", // Web
+                        "#437C1E", // Software
+                        "#EF626C", // Mobile
+                        "#EFF6EE"  // Outro
                     ],
 
                     borderWidth: 0
@@ -235,10 +235,10 @@ function atualizarGraficoMensal(projetos) {
                 datasets: [{
                     label: "Projetos criados",
                     data: dados,
-                    borderColor: "#0A84FF",
-                    backgroundColor: "rgba(10, 132, 255, 0.15)",
-                    tension: 0.3,
-                    fill: true
+                    borderColor: "#009999",
+                    backgroundColor: "rgba(0, 153, 153, 0.15)",
+                    pointBackgroundColor: "#EF626C",
+                    pointBorderColor: "#EFF6EE",
                 }]
             },
 
@@ -468,7 +468,26 @@ function exibirProjetos(projetos) {
         colunaCategoria.textContent = projeto.categoria;
 
         const colunaStatus = document.createElement("td");
-        colunaStatus.textContent = projeto.status;
+
+        const etiquetaStatus = document.createElement("span");
+
+        etiquetaStatus.textContent = projeto.status;
+
+        etiquetaStatus.classList.add("status-badge");
+
+        if (projeto.status === "Concluído") {
+            etiquetaStatus.classList.add("status-concluido");
+        }
+
+        if (projeto.status === "Em desenvolvimento") {
+            etiquetaStatus.classList.add("status-andamento");
+        }
+
+        if (projeto.status === "Planejado") {
+            etiquetaStatus.classList.add("status-planejado");
+        }
+
+        colunaStatus.appendChild(etiquetaStatus);
 
         const colunaDataCriacao = document.createElement("td");
         colunaDataCriacao.textContent = formatarData(projeto.dataCriacao);
@@ -479,12 +498,44 @@ function exibirProjetos(projetos) {
         const colunaAcoes = document.createElement("td");
 
         const botaoEditar = document.createElement("button");
-        botaoEditar.textContent = "✎";
         botaoEditar.classList.add("btn", "btn-primary", "btn-sm");
 
+        const iconeEditar = document.createElement("img");
+        iconeEditar.src = "img/icone-editar.png";
+        iconeEditar.alt = "Editar";
+        iconeEditar.classList.add("icone-acao");
+
+        botaoEditar.appendChild(iconeEditar);
+
+        // Quando o mouse entra no botão
+        botaoEditar.addEventListener("mouseenter", function() {
+            iconeEditar.src = "img/icone-editar-hover2.png";
+        });
+
+        // Quando o mouse sai do botão
+        botaoEditar.addEventListener("mouseleave", function() {
+            iconeEditar.src = "img/icone-editar.png";
+        });
+
         const botaoExcluir = document.createElement("button");
-        botaoExcluir.textContent = "✕";
         botaoExcluir.classList.add("btn", "btn-danger", "btn-sm");
+
+        const iconeExcluir = document.createElement("img");
+        iconeExcluir.src = "img/icone-excluir.png";
+        iconeExcluir.alt = "Excluir";
+        iconeExcluir.classList.add("icone-acao");
+
+        botaoExcluir.appendChild(iconeExcluir);
+
+        // Quando o mouse entra no botão
+        botaoExcluir.addEventListener("mouseenter", function() {
+            iconeExcluir.src = "img/icone-excluir-hover1.png";
+        });
+
+        // Quando o mouse sai do botão
+        botaoExcluir.addEventListener("mouseleave", function() {
+            iconeExcluir.src = "img/icone-excluir.png";
+        });
 
         botaoEditar.title = "Editar projeto";
         botaoExcluir.title = "Excluir projeto";

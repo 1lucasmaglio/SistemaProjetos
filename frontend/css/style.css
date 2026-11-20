@@ -10,9 +10,9 @@
     --superficie: #242426;
     --superficie-secundaria: #303033;
 
-    --accento: #0a84ff;
-    --accento-hover: #409cff;
-    --accento-escuro: #0060c7;
+    --accento: #009999;
+    --accento-hover: #00b3b3;
+    --accento-escuro: #01200f;
 
     --branco: #f5f5f7;
     --texto: #e5e5e7;
@@ -59,6 +59,20 @@ body {
     padding: 25px 15px;
     background: var(--preto-sidebar);
     border-right: 1px solid var(--borda);
+    display: flex;
+    flex-direction: column;
+}
+
+/* BAMBU — SIDEBAR */
+
+.leaf-sidebar {
+    display: block;
+    width: 130px;
+    max-width: 100%;
+    height: auto;
+    margin: auto auto 10px;
+    object-fit: contain;
+    image-rendering: pixelated;
 }
 
 .marca {
@@ -169,6 +183,7 @@ main {
     font-size: 14px;
 }
 
+
 /* ========================================
    CARDS ESTATÍSTICOS
    ======================================== */
@@ -181,42 +196,61 @@ main {
 }
 
 .card-estatistica {
-    min-height: 100px;
+    min-height: 75px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
     background: var(--superficie);
     border: 1px solid var(--borda);
     border-radius: 8px;
 }
 
-.card-estatistica span {
-    color: var(--cinza);
-    font-size: 12px;
+.icone-card {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.conteudo-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    min-width: 0;
+    height: 44px;
 }
 
 .card-estatistica strong {
     color: var(--branco);
-    font-size: 25px;
+    font-size: 24px;
+    line-height: 1.1;
+}
+
+.card-estatistica span {
+    color: var(--cinza);
+    font-size: 12px;
+    line-height: 1.2;
 }
 
 .card-estatistica.azul strong {
-    color: #0a84ff;
-}
-
-.card-estatistica.roxo strong {
-    color: #bf5af2;
+    color: #009999;
 }
 
 .card-estatistica.verde strong {
-    color: #30d158;
+    color: #437C1E;
 }
 
 .card-estatistica.laranja strong {
-    color: #ff9f0a;
+    color: #EF626C;
 }
+
+.card-estatistica.roxo strong {
+    color: #EFF6EE;
+}
+
 
 /* ========================================
    PAINÉIS E GRÁFICOS
@@ -626,22 +660,23 @@ footer {
         line-height: 1.5;
     }
 
-    .cards-estatisticas {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
+    .card-estatistica {
+        min-height: 75px;
+        padding: 10px;
+        gap: 8px;
     }
 
-    .card-estatistica {
-        min-height: 85px;
-        padding: 12px;
+    .icone-card {
+        width: 36px;
+        height: 36px;
     }
 
     .card-estatistica span {
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .card-estatistica strong {
-        font-size: 22px;
+        font-size: 20px;
     }
 
     .graficos-superiores {
@@ -809,3 +844,43 @@ footer {
         gap: 22px;
     }
 }
+
+/* ETIQUETAS DE STATUS */
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-concluido {
+    color: #A6D58B;
+    background: rgba(67, 124, 30, 0.20);
+}
+
+.status-andamento {
+    color: #67DADA;
+    background: rgba(0, 153, 153, 0.20);
+}
+
+.status-planejado {
+    color: #EFF6EE;
+    background: rgba(239, 246, 238, 0.10);
+}
+
+.icone-acao {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    display: block;
+}
+
+.botao-editar,
+.botao-excluir {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}   
