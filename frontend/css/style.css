@@ -5,7 +5,7 @@
 
 :root {
     --preto: #171719;
-    --preto-sidebar: #19191b;
+    --preto-sidebar: #0b3b63;
     --fundo: #1c1c1e;
     --superficie: #242426;
     --superficie-secundaria: #303033;
@@ -55,24 +55,17 @@ body {
 .sidebar {
     width: 210px;
     flex: 0 0 210px;
+    height: 100vh;
     min-height: 100vh;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    overflow-y: auto;
     padding: 25px 15px;
-    background: var(--preto-sidebar);
+    background: #000000;
     border-right: 1px solid var(--borda);
     display: flex;
     flex-direction: column;
-}
-
-/* BAMBU — SIDEBAR */
-
-.leaf-sidebar {
-    display: block;
-    width: 130px;
-    max-width: 100%;
-    height: auto;
-    margin: auto auto 10px;
-    object-fit: contain;
-    image-rendering: pixelated;
 }
 
 .marca {
@@ -107,21 +100,84 @@ body {
     display: block;
     padding: 11px 12px;
     border-radius: 6px;
-    color: var(--cinza);
+    color: #c2d0dc;
     font-size: 14px;
     text-decoration: none;
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .menu a:hover {
-    background: #29292c;
+    background: rgba(255, 255, 255, 0.10);
     color: var(--branco);
 }
 
 .menu a.ativo {
     color: var(--branco);
     font-weight: 600;
-    background: #353538;
+    background: rgba(255, 255, 255, 0.14);
+}
+
+/* ========================================
+   INFORMAÇÕES DO USUÁRIO — SIDEBAR
+   ======================================== */
+
+.acoes-usuario {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 5px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.informacoes-usuario {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icone-usuario {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.texto-usuario {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: #ffffff;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+.texto-usuario span:last-child {
+    color: #cbd8e4;
+}
+
+.botao-sair {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    padding: 3px 2px;
+    color: #ffffff;
+    background: transparent;
+    border: none;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.botao-sair:hover {
+    color: #a9dada;
+}
+
+.icone-sair {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
 }
 
 /* ========================================
@@ -147,12 +203,6 @@ body {
 .barra-superior span {
     color: var(--cinza);
     font-size: 13px;
-}
-
-.acoes-usuario {
-    display: flex;
-    align-items: center;
-    gap: 15px;
 }
 
 /* ========================================
@@ -182,7 +232,6 @@ main {
     color: var(--cinza);
     font-size: 14px;
 }
-
 
 /* ========================================
    CARDS ESTATÍSTICOS
@@ -250,7 +299,6 @@ main {
 .card-estatistica.roxo strong {
     color: #EFF6EE;
 }
-
 
 /* ========================================
    PAINÉIS E GRÁFICOS
@@ -344,7 +392,6 @@ main {
 
 /* ========================================
    LAYOUT DOS BOTÕES
-   Bootstrap controla a aparência.
    ======================================== */
 
 .acoes-formulario {
@@ -354,8 +401,7 @@ main {
     margin-top: 18px;
 }
 
-#botaoLimpar,
-#botaoSair {
+#botaoLimpar {
     color: #000000;
 }
 
@@ -601,7 +647,10 @@ footer {
 
     .sidebar {
         width: 100%;
+        height: auto;
         min-height: auto;
+        position: static;
+        overflow-y: visible;
         padding: 12px 15px;
         border-right: none;
         border-bottom: 1px solid var(--borda);
@@ -629,6 +678,16 @@ footer {
         font-size: 12px;
     }
 
+    .acoes-usuario {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 15px;
+        padding: 10px 5px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
     .barra-superior {
         min-height: 55px;
         padding: 12px 15px;
@@ -637,14 +696,6 @@ footer {
 
     .barra-superior strong {
         font-size: 15px;
-    }
-
-    .acoes-usuario {
-        gap: 8px;
-    }
-
-    .barra-superior span {
-        font-size: 11px;
     }
 
     main {
@@ -845,7 +896,9 @@ footer {
     }
 }
 
-/* ETIQUETAS DE STATUS */
+/* ========================================
+   ETIQUETAS DE STATUS
+   ======================================== */
 
 .status-badge {
     display: inline-block;
@@ -883,4 +936,94 @@ footer {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-}   
+}
+
+.paginacao-projetos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+}
+
+.pagina-btn {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid #d5dce3;
+    border-radius: 5px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.pagina-btn:hover:not(:disabled) {
+    background: #e9ecef;
+}
+
+.pagina-btn.pagina-ativa {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.pagina-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.tabela-container table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* PAGINAÇÃO */
+
+.paginacao-projetos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.pagina-btn {
+    min-width: 38px;
+    height: 38px;
+    padding: 0 12px;
+
+    background: #1c1e22;
+    color: #cbd5d1;
+
+    border: 1px solid #343a40;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagina-btn:hover:not(:disabled) {
+    background: #292e32;
+    border-color: #009999;
+    color: #fff;
+}
+
+.pagina-btn.pagina-ativa {
+    background: #437C1E;
+    border-color: #437C1E;
+    color: #fff;
+    font-weight: 600;
+
+    box-shadow: 0 0 10px rgba(67, 124, 30, 0.25);
+}
+
+.pagina-btn:disabled {
+    background: #17191c;
+    color: #626a70;
+    border-color: #292e32;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

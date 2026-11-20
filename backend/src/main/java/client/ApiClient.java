@@ -154,9 +154,14 @@ public class ApiClient {
 
         if (response.statusCode() != 201) {
 
+            Map<String, Object> erro =
+                mapper.readValue(
+                    response.body(),
+                    new TypeReference<Map<String, Object>>() {}
+                );
+
             throw new RuntimeException(
-                "Erro ao cadastrar: " +
-                response.statusCode()
+                erro.get("erro").toString()
             );
         }
 
@@ -205,9 +210,14 @@ public class ApiClient {
 
         if (response.statusCode() != 200) {
 
+            Map<String, Object> erro =
+                mapper.readValue(
+                    response.body(),
+                    new TypeReference<Map<String, Object>>() {}
+                );
+
             throw new RuntimeException(
-                "Erro ao alterar: " +
-                response.statusCode()
+                erro.get("erro").toString()
             );
         }
 

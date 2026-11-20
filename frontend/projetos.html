@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -7,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Projetos</title>
 
-    <!-- Bootstrap Cerulean -->
+    <!-- Bootstrap Slate -->
     <link rel="stylesheet" href="https://bootswatch.com/5/slate/bootstrap.min.css">
 
     <!-- Custom CSS -->
@@ -32,34 +31,51 @@
                 <a href="#configuracoes">Configurações</a>
             </nav>
 
-            <img
-                src="/frontend/img/leaf_08.png"
-                alt="leaf"
-                class="leaf-sidebar"
-            >
+            <!-- INFORMAÇÕES DO USUÁRIO -->
+
+            <div class="acoes-usuario">
+
+                <div class="informacoes-usuario">
+
+                    <img
+                        src="/frontend/img/logo.png"
+                        alt="Ícone de usuário"
+                        class="icone-usuario"
+                    >
+
+                    <div class="texto-usuario">
+                        <span>Usuário</span>
+                        <span id="nomeUsuario">Carregando...</span>
+                    </div>
+
+                </div>
+
+                <button type="button" id="botaoSair" class="botao-sair">
+
+                    <img
+                        src="/frontend/img/icone-sair.png"
+                        alt=""
+                        class="icone-sair"
+                    >
+
+                    <span>Sair</span>
+
+                </button>
+
+            </div>
 
         </aside>
 
         <div class="area-aplicacao">
 
             <header class="barra-superior">
-
                 <strong>Sistema de Projetos</strong>
-
-                <div class="acoes-usuario">
-                    <span id="usuarioAtual">Usuário</span>
-
-                    <button type="button" id="botaoSair"
-                        class="btn btn-secondary botao botao-secundario">
-                        Sair
-                    </button>
-                </div>
-
             </header>
 
             <main>
 
                 <!-- TELA DO DASHBOARD -->
+
                 <section id="telaDashboard" class="tela ativa">
 
                     <section class="introducao">
@@ -67,15 +83,17 @@
                         <p>Acompanhe os indicadores e o desempenho dos seus projetos.</p>
                     </section>
 
-                    <!-- Indicadores -->
+                    <!-- INDICADORES -->
 
                     <section class="cards-estatisticas">
 
                         <article class="card-estatistica azul">
 
-                            <img src="/frontend/img/card-total-projetos.png"
+                            <img
+                                src="/frontend/img/card-total-projetos.png"
                                 alt=""
-                                class="icone-card">
+                                class="icone-card"
+                            >
 
                             <div class="conteudo-card">
                                 <strong id="valorTotal">0</strong>
@@ -86,9 +104,11 @@
 
                         <article class="card-estatistica verde">
 
-                            <img src="/frontend/img/card-concluidos.png"
+                            <img
+                                src="/frontend/img/card-concluidos.png"
                                 alt=""
-                                class="icone-card">
+                                class="icone-card"
+                            >
 
                             <div class="conteudo-card">
                                 <strong id="valorConcluidos">0</strong>
@@ -99,9 +119,11 @@
 
                         <article class="card-estatistica laranja">
 
-                            <img src="/frontend/img/card-em-andamento.png"
+                            <img
+                                src="/frontend/img/card-em-andamento.png"
                                 alt=""
-                                class="icone-card">
+                                class="icone-card"
+                            >
 
                             <div class="conteudo-card">
                                 <strong id="valorAndamento">0</strong>
@@ -112,9 +134,11 @@
 
                         <article class="card-estatistica roxo">
 
-                            <img src="/frontend/img/card-planejados.png"
+                            <img
+                                src="/frontend/img/card-planejados.png"
                                 alt=""
-                                class="icone-card">
+                                class="icone-card"
+                            >
 
                             <div class="conteudo-card">
                                 <strong id="valorPlanejados">0</strong>
@@ -129,6 +153,7 @@
 
                         <section class="painel">
                             <h2>Projetos por status</h2>
+
                             <div class="grafico-container">
                                 <canvas id="graficoStatus"></canvas>
                             </div>
@@ -136,6 +161,7 @@
 
                         <section class="painel">
                             <h2>Projetos por categoria</h2>
+
                             <div class="grafico-container">
                                 <canvas id="graficoCategoria"></canvas>
                             </div>
@@ -145,6 +171,7 @@
 
                     <section class="painel">
                         <h2>Evolução mensal de projetos</h2>
+
                         <div class="grafico-container">
                             <canvas id="graficoMensal"></canvas>
                         </div>
@@ -153,9 +180,11 @@
                 </section>
 
                 <!-- TELA DE PROJETOS -->
+
                 <section id="telaProjetos" class="tela">
 
-                    <!-- Cadastro de projeto -->
+                    <!-- CADASTRO DE PROJETO -->
+
                     <section class="painel" id="cadastro">
 
                         <h2>Cadastro de Projeto</h2>
@@ -166,36 +195,44 @@
 
                                 <div class="campo">
                                     <label for="nome">Nome do projeto</label>
+
                                     <input
                                         type="text"
                                         id="nome"
                                         placeholder="Digite o nome do projeto"
+                                        minlength="3"
+                                        maxlength="100"
                                         required
                                     >
                                 </div>
 
                                 <div class="campo">
                                     <label for="descricao">Descrição</label>
+
                                     <input
                                         type="text"
                                         id="descricao"
                                         placeholder="Descreva o projeto"
+                                        minlength="10"
+                                        maxlength="500"
                                         required
                                     >
                                 </div>
 
                                 <div class="campo">
                                     <label for="categoria">Categoria</label>
+
                                     <select id="categoria" required>
                                         <option value="Web">Web</option>
                                         <option value="Software">Software</option>
                                         <option value="Mobile">Mobile</option>
-                                        <option value="Outro">Outro</option>
+                                        <option value="Desktop">Desktop</option>
                                     </select>
                                 </div>
 
                                 <div class="campo">
                                     <label for="status">Status</label>
+
                                     <select id="status" required>
                                         <option value="Planejado">Planejado</option>
                                         <option value="Em desenvolvimento">Em desenvolvimento</option>
@@ -212,13 +249,19 @@
 
                             <div class="acoes-formulario">
 
-                                <button type="reset" id="botaoLimpar"
-                                    class="btn btn-secondary botao botao-secundario">
+                                <button
+                                    type="reset"
+                                    id="botaoLimpar"
+                                    class="btn btn-secondary botao botao-secundario"
+                                >
                                     Limpar
                                 </button>
 
-                                <button type="submit" id="botaoCadastrar"
-                                    class="btn btn-primary botao botao-principal">
+                                <button
+                                    type="submit"
+                                    id="botaoCadastrar"
+                                    class="btn btn-primary botao botao-principal"
+                                >
                                     Cadastrar projeto
                                 </button>
 
@@ -228,13 +271,15 @@
 
                     </section>
 
-                    <!-- Lista de projetos -->
+                    <!-- LISTA DE PROJETOS -->
+
                     <section class="painel" id="projetos">
 
                         <div class="cabecalho-lista">
 
                             <div>
                                 <h2>Lista de Projetos</h2>
+
                                 <p id="mensagem" role="status">
                                     Carregando projetos...
                                 </p>
@@ -279,11 +324,14 @@
 
                         </div>
 
+                        <div id="paginacaoProjetos" class="paginacao-projetos"></div>
+
                     </section>
 
                 </section>
 
                 <!-- POPUP DE EDIÇÃO -->
+
                 <div id="popupEdicao" class="popup">
 
                     <div class="conteudo-popup">
@@ -294,26 +342,42 @@
 
                             <div class="campo">
                                 <label for="editarNome">Nome do projeto</label>
-                                <input type="text" id="editarNome" required>
+
+                                <input
+                                    type="text"
+                                    id="editarNome"
+                                    minlength="3"
+                                    maxlength="100"
+                                    required
+                                >
                             </div>
 
                             <div class="campo">
                                 <label for="editarDescricao">Descrição</label>
-                                <input type="text" id="editarDescricao" required>
+
+                                <input
+                                    type="text"
+                                    id="editarDescricao"
+                                    minlength="10"
+                                    maxlength="500"
+                                    required
+                                >
                             </div>
 
                             <div class="campo">
                                 <label for="editarCategoria">Categoria</label>
+
                                 <select id="editarCategoria" required>
                                     <option value="Web">Web</option>
                                     <option value="Software">Software</option>
                                     <option value="Mobile">Mobile</option>
-                                    <option value="Outro">Outro</option>
+                                    <option value="Desktop">Desktop</option>
                                 </select>
                             </div>
 
                             <div class="campo">
                                 <label for="editarStatus">Status</label>
+
                                 <select id="editarStatus" required>
                                     <option value="Planejado">Planejado</option>
                                     <option value="Em desenvolvimento">Em desenvolvimento</option>
@@ -328,13 +392,20 @@
 
                             <div class="acoes-formulario">
 
-                            <button type="button" id="botaoCancelarEdicao" class="btn btn-secondary">
-                                Cancelar
-                            </button>
+                                <button
+                                    type="button"
+                                    id="botaoCancelarEdicao"
+                                    class="btn btn-secondary"
+                                >
+                                    Cancelar
+                                </button>
 
-                            <button type="submit" class="btn btn-primary">
-                                Salvar alterações
-                            </button>
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    Salvar alterações
+                                </button>
 
                             </div>
 

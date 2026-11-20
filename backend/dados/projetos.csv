@@ -1,7 +1,7 @@
 id;usuarioId;nome;descricao;categoria;status;dataCriacao;prazo
 1;1;Web teste;Web teste descrição;Web;Em desenvolvimento;2026-11-12;2026-11-25
 3;3;Thiago Almeida teste web;Thiago Almeida teste web descrição;Web;Em desenvolvimento;2026-11-12;2026-11-25
-4;2;Olivia Rodrigo web teste 1 editado;Olivia Rodrigo web teste descrição editado;Web;Planejado;2026-08-12;2026-11-30
+4;2;Olivia Rodrigo web teste 1 editado;Oaaaaaaaaaaaaaaaa;Web;Planejado;2026-08-12;2026-11-30
 5;2;Thiago Almeida teste;Thiago Almeida teste descrição;Web;Concluído;2026-08-14;2026-11-30
 6;2;Thiago Almeida teste projeto;Thiago Almeida teste projeto descrição;Web;Em desenvolvimento;2026-08-15;2026-11-25
 7;2;Projeto teste lucas;Projeto teste lucas descrição;Mobile;Em desenvolvimento;2026-08-15;2026-11-25
@@ -21,3 +21,4 @@ id;usuarioId;nome;descricao;categoria;status;dataCriacao;prazo
 21;2;AAA;A;Web;Planejado;2026-11-20;2026-11-25
 22;2;aaa;aaaaaaaaaaaaaaaaaa;Web;Planejado;2026-11-20;2026-11-20
 23;2;Projeto;iiiiiiiiiiiiii;Web;Planejado;2026-11-20;2026-11-20
+24;2;aaa;aaaaaaaaaaaaaaa;Web;Planejado;2026-11-20;2026-11-24

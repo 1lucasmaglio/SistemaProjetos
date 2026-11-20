@@ -18,3 +18,5 @@
 20/11/2026 14:46:52 - Erro ao cadastrar projeto 'B': O prazo não pode ser uma data passada.
 20/11/2026 14:55:29 - Erro ao cadastrar projeto 'Projeto': O prazo não pode ser uma data passada.
 20/11/2026 14:55:34 - Erro ao cadastrar projeto 'Projeto': O prazo não pode ser uma data passada.
+20/11/2026 18:01:52 - Erro ao cadastrar projeto 'o': O prazo do projeto é obrigatório.
+20/11/2026 18:02:00 - Erro ao cadastrar projeto 'o': O prazo não pode ser uma data passada.

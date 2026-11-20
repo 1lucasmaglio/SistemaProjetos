@@ -26,28 +26,81 @@ public class ProjetoService {
         dao.salvar(projetos);
     }
 
-    public void adicionar(Projeto projeto) {
+    private void validarProjeto(Projeto projeto) {
 
-        LocalDate hoje = LocalDate.now();
+        // 1. Validate name
 
-        projeto.setDataCriacao(hoje);
-
-        validarPrazo(projeto);
-
-        int maiorId = 0;
-
-        for (Projeto p : projetos) {
-
-            if (p.getId() > maiorId) {
-                maiorId = p.getId();
-            }
+        if (projeto.getNome() == null) {
+            throw new IllegalArgumentException(
+                    "O nome do projeto é obrigatório."
+            );
         }
 
-        projeto.setId(maiorId + 1);
-        projetos.add(projeto);
-    }
+        String nome = projeto.getNome().trim();
 
-    private void validarPrazo(Projeto projeto) {
+        if (nome.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "O nome do projeto é obrigatório."
+            );
+        }
+
+        if (nome.length() < 3 || nome.length() > 100) {
+            throw new IllegalArgumentException(
+                    "O nome deve ter entre 3 e 100 caracteres."
+            );
+        }
+
+        projeto.setNome(nome);
+
+
+        // 2. Validate description
+
+        if (projeto.getDescricao() == null) {
+            throw new IllegalArgumentException(
+                    "A descrição do projeto é obrigatória."
+            );
+        }
+
+        String descricao = projeto.getDescricao().trim();
+
+        if (descricao.length() < 10 || descricao.length() > 500) {
+            throw new IllegalArgumentException(
+                    "A descrição deve ter entre 10 e 500 caracteres."
+            );
+        }
+
+        projeto.setDescricao(descricao);
+
+
+        // 3. Validate category
+
+        if (projeto.getCategoria() == null ||
+                !List.of("Software", "Mobile", "Web", "Desktop")
+                        .contains(projeto.getCategoria())) {
+
+            throw new IllegalArgumentException(
+                    "Categoria inválida."
+            );
+        }
+
+
+        // 4. Validate status
+
+        if (projeto.getStatus() == null ||
+                !List.of(
+                        "Planejado",
+                        "Em Desenvolvimento",
+                        "Concluído",
+                        "Cancelado"
+                ).contains(projeto.getStatus())) {
+
+            throw new IllegalArgumentException(
+                    "Status inválido."
+            );
+        }
+
+
+        // 5. Validate deadline
 
         if (projeto.getPrazo() == null) {
             throw new IllegalArgumentException(
@@ -61,11 +114,34 @@ public class ProjetoService {
             );
         }
 
-        if (projeto.getPrazo().isBefore(projeto.getDataCriacao())) {
+        if (projeto.getDataCriacao() != null &&
+                projeto.getPrazo().isBefore(projeto.getDataCriacao())) {
+
             throw new IllegalArgumentException(
                     "O prazo não pode ser anterior à data de criação."
             );
         }
+    }
+
+    public void adicionar(Projeto projeto) {
+
+        LocalDate hoje = LocalDate.now();
+
+        projeto.setDataCriacao(hoje);
+
+        validarProjeto(projeto);
+
+        int maiorId = 0;
+
+        for (Projeto p : projetos) {
+
+            if (p.getId() > maiorId) {
+                maiorId = p.getId();
+            }
+        }
+
+        projeto.setId(maiorId + 1);
+        projetos.add(projeto);
     }
 
     public List<Projeto> listar() {
@@ -152,12 +228,15 @@ public class ProjetoService {
             return false;
         }
 
+        projetoAtualizado.setDataCriacao(projeto.getDataCriacao());
+
+        validarProjeto(projetoAtualizado);
+
         projeto.setNome(projetoAtualizado.getNome());
         projeto.setDescricao(projetoAtualizado.getDescricao());
         projeto.setCategoria(projetoAtualizado.getCategoria());
         projeto.setStatus(projetoAtualizado.getStatus());
         projeto.setPrazo(projetoAtualizado.getPrazo());
-        validarPrazo(projeto);
 
         return true;
     }

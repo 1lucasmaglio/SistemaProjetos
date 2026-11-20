@@ -995,8 +995,7 @@ public class TelaProjetos extends JFrame {
         campoNome.requestFocus();
     }
 
-
-    private void cadastrar() {
+        private void cadastrar() {
 
         String nome = campoNome.getText().trim();
         String descricao = campoDescricao.getText().trim();
@@ -1004,78 +1003,6 @@ public class TelaProjetos extends JFrame {
 
         String categoria = comboCategoria.getSelectedItem().toString();
         String status = comboStatus.getSelectedItem().toString();
-
-        // Validar nome obrigatório
-        if (nome.isBlank()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Informe o nome do projeto."
-            );
-            return;
-        }
-
-        // Validar tamanho mínimo do nome
-        if (nome.length() < 3) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "O nome deve ter pelo menos 3 caracteres."
-            );
-            return;
-        }
-
-        // Validar tamanho máximo do nome
-        if (nome.length() > 100) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "O nome deve ter no máximo 100 caracteres."
-            );
-            return;
-        }
-
-        // Validar descrição obrigatória
-        if (descricao.isBlank()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Adicione a descrição do projeto."
-            );
-            return;
-        }
-
-        // Validar tamanho mínimo da descrição
-        if (descricao.length() < 10) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "A descrição deve ter pelo menos 10 caracteres."
-            );
-            return;
-        }
-
-        // Validar tamanho máximo da descrição
-        if (descricao.length() > 500) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "A descrição deve ter no máximo 500 caracteres."
-            );
-            return;
-        }
-
-        // Validar prazo obrigatório
-        if (prazo == null) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Informe o prazo do projeto."
-            );
-            return;
-        }
-
-        // Validar prazo
-        if (prazo.isBefore(LocalDate.now())) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "O prazo não pode ser anterior à data atual."
-            );
-            return;
-        }
 
         Projeto projeto = new Projeto(
                 nome,
@@ -1086,26 +1013,23 @@ public class TelaProjetos extends JFrame {
         );
 
         try {
+                cliente.cadastrarProjeto(projeto);
 
-            cliente.cadastrarProjeto(projeto);
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Projeto cadastrado com sucesso!"
+                );
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Projeto cadastrado com sucesso!"
-            );
-
-            limparFormulario();
-            carregarTabela();
+                limparFormulario();
+                carregarTabela();
 
         } catch (Exception e) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Erro ao cadastrar projeto: " + e.getMessage()
-            );
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Erro ao cadastrar projeto: " + e.getMessage()
+                );
         }
-    }
-
+        }
 
     private void carregarTabela() {
 

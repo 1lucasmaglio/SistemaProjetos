@@ -39,6 +39,8 @@ formLogin.addEventListener("submit", function(event) {
 
         localStorage.setItem("token", dados.token);
 
+        localStorage.setItem("nomeUsuario", dados.nome);
+
         window.location.href = "/frontend/projetos.html";
 
     })

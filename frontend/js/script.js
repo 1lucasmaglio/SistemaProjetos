@@ -4,6 +4,45 @@ const API_URL = "http://localhost:7070/api/projetos";
 
 const token = localStorage.getItem("token");
 
+/* TRATAMENTO DAS RESPOSTAS DA API */
+
+function processarResposta(response, mensagemPadrao) {
+
+    if (!response.ok) {
+
+        return response.text().then(corpo => {
+
+            let mensagem = mensagemPadrao;
+
+            if (corpo) {
+
+                try {
+                    const dados = JSON.parse(corpo);
+
+                    if (dados.erro) {
+                        mensagem = dados.erro;
+                    }
+
+                } catch (erro) {
+                    // Mantém a mensagem padrão se o corpo não for JSON.
+                }
+
+            }
+
+            throw new Error(mensagem);
+
+        });
+
+    }
+
+    if (response.status === 204) {
+        return null;
+    }
+
+    return response.json();
+}
+
+
 if (!token) {
     window.location.href = "/frontend/login.html";
 }
@@ -57,6 +96,9 @@ linkProjetos.addEventListener("click", function(evento) {
 
 let projetosCarregados = [];
 
+let paginaAtual = 1;
+const projetosPorPagina = 5;
+
 let projetoEmEdicao = null;
 
 
@@ -90,9 +132,9 @@ function atualizarGraficoStatus(concluidos, emAndamento, planejados) {
                     data: dados,
 
                     backgroundColor: [
-                        "#437C1E", // Concluídos
-                        "#009999", // Em desenvolvimento
-                        "#EF626C"  // Planejados
+                        "#437C1E",
+                        "#009999",
+                        "#EF626C"
                     ],
 
                     borderWidth: 0
@@ -115,7 +157,6 @@ function atualizarGraficoStatus(concluidos, emAndamento, planejados) {
 
     }
 }
-
 
 
 /* GRÁFICO DE PROJETOS POR CATEGORIA */
@@ -142,10 +183,10 @@ function atualizarGraficoCategoria(web, software, mobile, outro) {
                     data: dados,
 
                     backgroundColor: [
-                        "#009999", // Web
-                        "#437C1E", // Software
-                        "#EF626C", // Mobile
-                        "#EFF6EE"  // Outro
+                        "#009999",
+                        "#437C1E",
+                        "#EF626C",
+                        "#EFF6EE"
                     ],
 
                     borderWidth: 0
@@ -177,7 +218,6 @@ function atualizarGraficoCategoria(web, software, mobile, outro) {
 
     }
 }
-
 
 
 /* GRÁFICO DE EVOLUÇÃO MENSAL */
@@ -270,7 +310,6 @@ function atualizarGraficoMensal(projetos) {
 }
 
 
-
 /* LISTAGEM DOS PROJETOS */
 
 function listarProjetos() {
@@ -285,13 +324,7 @@ function listarProjetos() {
         }
     })
     .then(response => {
-
-        if (!response.ok) {
-            throw new Error("Erro ao consultar a API.");
-        }
-
-        return response.json();
-
+        return processarResposta(response, "Erro ao consultar a API.");
     })
     .then(projetos => {
 
@@ -306,7 +339,7 @@ function listarProjetos() {
     })
     .catch(erro => {
 
-        mensagem.textContent = "Não foi possível carregar os projetos.";
+        mensagem.textContent = erro.message;
 
         console.error(erro);
 
@@ -346,7 +379,6 @@ function atualizarEstatisticas(projetos) {
 
         if (projeto.categoria === "Web") {
             web++;
-
         }
 
         if (projeto.categoria === "Software") {
@@ -407,7 +439,10 @@ function filtrarProjetos() {
 
     });
 
-    exibirProjetos(projetosFiltrados);
+    projetosFiltradosAtuais = projetosFiltrados;
+    paginaAtual = 1;
+
+    exibirProjetos(projetosFiltradosAtuais);
 }
 
 
@@ -420,6 +455,81 @@ function formatarData(data) {
     return `${String(dia).padStart(2, "0")}/${String(mes).padStart(2, "0")}/${ano}`;
 }
 
+function atualizarPaginacao(totalProjetos) {
+
+    const paginacao = document.getElementById("paginacaoProjetos");
+
+    paginacao.replaceChildren();
+
+    const totalPaginas = Math.ceil(totalProjetos / projetosPorPagina);
+
+    if (totalPaginas <= 1) {
+        return;
+    }
+
+    // Botão de página anterior
+    const botaoAnterior = document.createElement("button");
+    botaoAnterior.type = "button";
+    botaoAnterior.textContent = "‹";
+    botaoAnterior.classList.add("pagina-btn");
+
+    botaoAnterior.disabled = paginaAtual === 1;
+
+    botaoAnterior.addEventListener("click", function() {
+        mudarPagina(paginaAtual - 1);
+    });
+
+    paginacao.appendChild(botaoAnterior);
+
+    // Botões numerados
+    for (let i = 1; i <= totalPaginas; i++) {
+
+        const botaoPagina = document.createElement("button");
+        botaoPagina.type = "button";
+        botaoPagina.textContent = i;
+        botaoPagina.classList.add("pagina-btn");
+
+        if (i === paginaAtual) {
+            botaoPagina.classList.add("pagina-ativa");
+        }
+
+        botaoPagina.addEventListener("click", function() {
+            mudarPagina(i);
+        });
+
+        paginacao.appendChild(botaoPagina);
+    }
+
+    // Botão de próxima página
+    const botaoProximo = document.createElement("button");
+    botaoProximo.type = "button";
+    botaoProximo.textContent = "›";
+    botaoProximo.classList.add("pagina-btn");
+
+    botaoProximo.disabled = paginaAtual === totalPaginas;
+
+    botaoProximo.addEventListener("click", function() {
+        mudarPagina(paginaAtual + 1);
+    });
+
+    paginacao.appendChild(botaoProximo);
+}
+
+
+function mudarPagina(novaPagina) {
+
+    // Saves the current vertical scroll position.
+    const posicaoScroll = window.scrollY;
+
+    // Updates the current page.
+    paginaAtual = novaPagina;
+
+    // Updates the projects table and pagination buttons.
+    exibirProjetos(projetosFiltradosAtuais);
+
+    // Restores the previous scroll position.
+    window.scrollTo(0, posicaoScroll);
+}
 
 /* EXIBIÇÃO DOS PROJETOS NA TABELA */
 
@@ -428,6 +538,8 @@ function exibirProjetos(projetos) {
     const listaProjetos = document.getElementById("listaProjetos");
 
     listaProjetos.replaceChildren();
+
+    atualizarPaginacao(projetos.length);
 
     if (projetos.length === 0) {
 
@@ -454,7 +566,12 @@ function exibirProjetos(projetos) {
         return;
     }
 
-    projetos.forEach(projeto => {
+    const inicio = (paginaAtual - 1) * projetosPorPagina;
+    const fim = inicio + projetosPorPagina;
+
+    const projetosDaPagina = projetos.slice(inicio, fim);
+
+    projetosDaPagina.forEach(projeto => {
 
         const linha = document.createElement("tr");
 
@@ -507,12 +624,10 @@ function exibirProjetos(projetos) {
 
         botaoEditar.appendChild(iconeEditar);
 
-        // Quando o mouse entra no botão
         botaoEditar.addEventListener("mouseenter", function() {
             iconeEditar.src = "img/icone-editar-hover2.png";
         });
 
-        // Quando o mouse sai do botão
         botaoEditar.addEventListener("mouseleave", function() {
             iconeEditar.src = "img/icone-editar.png";
         });
@@ -527,12 +642,10 @@ function exibirProjetos(projetos) {
 
         botaoExcluir.appendChild(iconeExcluir);
 
-        // Quando o mouse entra no botão
         botaoExcluir.addEventListener("mouseenter", function() {
             iconeExcluir.src = "img/icone-excluir-hover1.png";
         });
 
-        // Quando o mouse sai do botão
         botaoExcluir.addEventListener("mouseleave", function() {
             iconeExcluir.src = "img/icone-excluir.png";
         });
@@ -544,15 +657,11 @@ function exibirProjetos(projetos) {
         botaoExcluir.classList.add("botao-excluir");
 
         botaoEditar.addEventListener("click", function() {
-
             editarProjeto(projeto.id);
-
         });
 
         botaoExcluir.addEventListener("click", function() {
-
             excluirProjeto(projeto.id);
-
         });
 
         const containerAcoes = document.createElement("div");
@@ -602,13 +711,7 @@ document.getElementById("formProjeto").addEventListener("submit", function(event
         body: JSON.stringify(projeto)
     })
     .then(response => {
-
-        if (!response.ok) {
-            throw new Error("Erro ao cadastrar o projeto.");
-        }
-
-        return response;
-
+        return processarResposta(response, "Erro ao cadastrar o projeto.");
     })
     .then(() => {
 
@@ -621,7 +724,7 @@ document.getElementById("formProjeto").addEventListener("submit", function(event
     })
     .catch(erro => {
 
-        alert("Não foi possível cadastrar o projeto.");
+        alert(erro.message);
 
         console.error(erro);
 
@@ -646,10 +749,9 @@ function excluirProjeto(id) {
         }
     })
     .then(response => {
-
-        if (!response.ok) {
-            throw new Error("Erro ao excluir o projeto.");
-        }
+        return processarResposta(response, "Erro ao excluir o projeto.");
+    })
+    .then(() => {
 
         alert("Projeto excluído com sucesso!");
 
@@ -658,7 +760,7 @@ function excluirProjeto(id) {
     })
     .catch(erro => {
 
-        alert("Não foi possível excluir o projeto.");
+        alert(erro.message);
 
         console.error(erro);
 
@@ -726,11 +828,7 @@ document.getElementById("formEdicao").addEventListener("submit", function(evento
         body: JSON.stringify(projetoAtualizado)
     })
     .then(response => {
-
-        if (!response.ok) {
-            throw new Error("Erro ao atualizar o projeto.");
-        }
-
+        return processarResposta(response, "Erro ao atualizar o projeto.");
     })
     .then(() => {
 
@@ -743,10 +841,15 @@ document.getElementById("formEdicao").addEventListener("submit", function(evento
     })
     .catch(erro => {
 
-        alert("Não foi possível atualizar o projeto.");
+        alert(erro.message);
 
         console.error(erro);
 
     });
 
 });
+
+const nomeUsuario = localStorage.getItem("nomeUsuario");
+
+document.getElementById("nomeUsuario").textContent =
+    nomeUsuario || "Usuário";
