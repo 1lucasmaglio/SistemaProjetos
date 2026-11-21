@@ -134,7 +134,7 @@ public class ViewChart {
         dados.addValue(5, "Quantidade de projetos", "Web");
         dados.addValue(3, "Quantidade de projetos", "Software");
         dados.addValue(4, "Quantidade de projetos", "Mobile");
-        dados.addValue(2, "Quantidade de projetos", "Outro");
+        dados.addValue(2, "Quantidade de projetos", "Desktop");
 
         return dados;
     }
@@ -194,7 +194,7 @@ public class ViewChart {
                     case "Mobile":
                         return VERMELHO;
 
-                    case "Outro":
+                    case "Desktop":
                         return CLARO;
 
                     default:

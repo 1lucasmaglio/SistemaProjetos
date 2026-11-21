@@ -21,6 +21,7 @@ public class ApiClient {
     private final ObjectMapper mapper;
 
     private String token;
+    private String nomeUsuario;
 
     private final String baseUrl = "http://localhost:7070";
 
@@ -80,6 +81,7 @@ public class ApiClient {
             );
 
         token = (String) resposta.get("token");
+        nomeUsuario = (String) resposta.get("nome");
     }
 
     public List<Projeto> listarProjetos()
@@ -263,5 +265,9 @@ public class ApiClient {
 
     public void limparToken() {
         token = null;
+    }
+
+    public String getNomeUsuario() {
+        return nomeUsuario;
     }
 }

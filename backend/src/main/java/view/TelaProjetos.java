@@ -20,6 +20,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -62,6 +63,9 @@ public class TelaProjetos extends JFrame {
     private static final Font FONTE_NEGRITO =
             new Font("Segoe UI", Font.BOLD, 14);
 
+    private final Preferences preferencias =
+        Preferences.userNodeForPackage(TelaProjetos.class);
+
     private JTextField campoNome;
     private JTextField campoDescricao;
     private JTextField campoBusca;
@@ -69,6 +73,9 @@ public class TelaProjetos extends JFrame {
 
     private JComboBox<String> comboCategoria;
     private JComboBox<String> comboStatus;
+
+    private JComboBox<String> comboTema;
+    private JComboBox<String> comboIdioma;
 
     private JTable tabela;
     private DefaultTableModel modelo;
@@ -99,6 +106,7 @@ public class TelaProjetos extends JFrame {
 
     private JPanel itemDashboard;
     private JPanel itemProjetos;
+    private JPanel itemConfiguracoes;
     private JPanel itemMenuAtivo;
 
     private final Color AZUL_ESCURO = new Color(245, 245, 247);
@@ -150,7 +158,7 @@ public class TelaProjetos extends JFrame {
         tituloSistema.setFont(new Font("Segoe UI", Font.BOLD, 20));
         tituloSistema.setForeground(AZUL_ESCURO);
 
-        JLabel usuario = new JLabel("Usuário");
+        JLabel usuario = new JLabel(cliente.getNomeUsuario());
         usuario.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         usuario.setForeground(CINZA);
 
@@ -160,16 +168,7 @@ public class TelaProjetos extends JFrame {
                 BRANCO
         );
 
-        JPanel painelUsuario = new JPanel(
-                new FlowLayout(FlowLayout.RIGHT, 15, 0)
-        );
-
-        painelUsuario.setBackground(BARRA_SUPERIOR);
-        painelUsuario.add(usuario);
-        painelUsuario.add(botaoSair);
-
         barraSuperior.add(tituloSistema, BorderLayout.WEST);
-        barraSuperior.add(painelUsuario, BorderLayout.EAST);
 
 
         // Menu lateral
@@ -208,15 +207,23 @@ public class TelaProjetos extends JFrame {
         itemDashboard = criarItemMenu("Dashboard", true);
         itemProjetos = criarItemMenu("Projetos", false);
 
-        JPanel itemRelatorios = criarItemMenu("Relatórios", false);
-        JPanel itemConfiguracoes = criarItemMenu("Configurações", false);
+        itemConfiguracoes = criarItemMenu("Configurações", false);
 
         itemMenuAtivo = itemDashboard;
 
         sidebar.add(itemDashboard);
         sidebar.add(itemProjetos);
-        sidebar.add(itemRelatorios);
         sidebar.add(itemConfiguracoes);
+
+        sidebar.add(Box.createVerticalGlue());
+
+        usuario.setAlignmentX(Component.LEFT_ALIGNMENT);
+        botaoSair.setAlignmentX(Component.LEFT_ALIGNMENT);
+        botaoSair.setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
+
+        sidebar.add(usuario);
+        sidebar.add(Box.createVerticalStrut(12));
+        sidebar.add(botaoSair);
 
 
         // Gerenciador de telas
@@ -246,6 +253,18 @@ public class TelaProjetos extends JFrame {
         telaProjetos.setBorder(
                 BorderFactory.createEmptyBorder(25, 25, 25, 25)
         );
+
+        // Tela Configurações
+        JPanel telaConfiguracoes = new JPanel();
+        telaConfiguracoes.setLayout(
+                new BoxLayout(telaConfiguracoes, BoxLayout.Y_AXIS)
+        );
+        telaConfiguracoes.setBackground(FUNDO);
+        telaConfiguracoes.setBorder(
+                BorderFactory.createEmptyBorder(25, 25, 25, 25)
+        );
+
+        criarTelaConfiguracoes(telaConfiguracoes);
 
         JLabel tituloPagina = new JLabel("Dashboard");
         tituloPagina.setFont(new Font("Segoe UI", Font.BOLD, 25));
@@ -444,7 +463,7 @@ public class TelaProjetos extends JFrame {
         campoPrazo = new DatePicker(configuracoes);
 
         comboCategoria = new JComboBox<>(new String[]{
-                "Web", "Software", "Mobile", "Outro"
+                "Web", "Software", "Mobile", "Desktop"
         });
 
         comboStatus = new JComboBox<>(new String[]{
@@ -667,6 +686,7 @@ public class TelaProjetos extends JFrame {
         // Adiciona as telas ao gerenciador.
         painelTelas.add(telaDashboard, "DASHBOARD");
         painelTelas.add(telaProjetos, "PROJETOS");
+        painelTelas.add(telaConfiguracoes, "CONFIGURACOES");
 
         gerenciadorTelas.show(painelTelas, "DASHBOARD");
 
@@ -674,6 +694,7 @@ public class TelaProjetos extends JFrame {
         // Navegação entre telas.
         adicionarEventoMenu(itemDashboard, "DASHBOARD");
         adicionarEventoMenu(itemProjetos, "PROJETOS");
+        adicionarEventoMenu(itemConfiguracoes, "CONFIGURACOES");
 
 
         // Área direita: barra superior + conteúdo.
@@ -688,6 +709,201 @@ public class TelaProjetos extends JFrame {
 
         setContentPane(painelPrincipal);
     }
+
+
+    private void criarTelaConfiguracoes(JPanel tela) {
+
+        // Introdução da tela
+        JLabel titulo = new JLabel("Configurações");
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 25));
+        titulo.setForeground(AZUL_ESCURO);
+        titulo.setAlignmentX(LEFT_ALIGNMENT);
+
+        JLabel subtitulo = new JLabel(
+                "Personalize a aparência e o idioma do sistema."
+        );
+        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        subtitulo.setForeground(CINZA);
+        subtitulo.setAlignmentX(LEFT_ALIGNMENT);
+
+        tela.add(titulo);
+        tela.add(Box.createVerticalStrut(5));
+        tela.add(subtitulo);
+        tela.add(Box.createVerticalStrut(25));
+
+
+        // Painel de aparência
+        JPanel painelAparencia = criarPainelArredondado(
+                new BorderLayout(0, 20),
+                SUPERFICIE,
+                BORDA,
+                20,
+                8
+        );
+
+        painelAparencia.setAlignmentX(LEFT_ALIGNMENT);
+        painelAparencia.setMaximumSize(
+                new Dimension(Integer.MAX_VALUE, 145)
+        );
+
+        JLabel tituloAparencia = new JLabel("Aparência");
+        tituloAparencia.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        tituloAparencia.setForeground(AZUL_ESCURO);
+
+        JLabel descricaoAparencia = new JLabel(
+                "Personalize a aparência do sistema."
+        );
+        descricaoAparencia.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        descricaoAparencia.setForeground(CINZA);
+
+        JPanel cabecalhoAparencia = new JPanel(
+                new BorderLayout(0, 5)
+        );
+        cabecalhoAparencia.setBackground(SUPERFICIE);
+        cabecalhoAparencia.add(
+                tituloAparencia,
+                BorderLayout.NORTH
+        );
+        cabecalhoAparencia.add(
+                descricaoAparencia,
+                BorderLayout.CENTER
+        );
+
+        JLabel textoTema = new JLabel(
+                "<html><b>Tema</b><br>"
+                + "<font color='#A1A1A6'>"
+                + "Escolha entre o modo claro e escuro."
+                + "</font></html>"
+        );
+        textoTema.setForeground(TEXTO);
+        textoTema.setFont(FONTE_NORMAL);
+
+        comboTema = new JComboBox<>(new String[]{
+                "Escuro", "Claro"
+        });
+
+        comboTema.setSelectedItem(
+                preferencias.get("tema", "dark").equals("light")
+                        ? "Claro"
+                        : "Escuro"
+        );
+
+        estilizarCombo(comboTema);
+
+        JPanel opcaoTema = new JPanel(new BorderLayout(15, 0));
+        opcaoTema.setBackground(SUPERFICIE);
+        opcaoTema.add(textoTema, BorderLayout.CENTER);
+        opcaoTema.add(comboTema, BorderLayout.EAST);
+
+        painelAparencia.add(
+                cabecalhoAparencia,
+                BorderLayout.NORTH
+        );
+        painelAparencia.add(
+                opcaoTema,
+                BorderLayout.CENTER
+        );
+
+
+        // Painel de idioma
+        JPanel painelIdioma = criarPainelArredondado(
+                new BorderLayout(0, 20),
+                SUPERFICIE,
+                BORDA,
+                20,
+                8
+        );
+
+        painelIdioma.setAlignmentX(LEFT_ALIGNMENT);
+        painelIdioma.setMaximumSize(
+                new Dimension(Integer.MAX_VALUE, 145)
+        );
+
+        JLabel tituloIdioma = new JLabel("Idioma");
+        tituloIdioma.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        tituloIdioma.setForeground(AZUL_ESCURO);
+
+        JLabel descricaoIdioma = new JLabel(
+                "Defina o idioma utilizado na interface."
+        );
+        descricaoIdioma.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        descricaoIdioma.setForeground(CINZA);
+
+        JPanel cabecalhoIdioma = new JPanel(
+                new BorderLayout(0, 5)
+        );
+        cabecalhoIdioma.setBackground(SUPERFICIE);
+        cabecalhoIdioma.add(
+                tituloIdioma,
+                BorderLayout.NORTH
+        );
+        cabecalhoIdioma.add(
+                descricaoIdioma,
+                BorderLayout.CENTER
+        );
+
+        JLabel textoIdioma = new JLabel(
+                "<html><b>Idioma do sistema</b><br>"
+                + "<font color='#A1A1A6'>"
+                + "Selecione seu idioma preferido."
+                + "</font></html>"
+        );
+        textoIdioma.setForeground(TEXTO);
+        textoIdioma.setFont(FONTE_NORMAL);
+
+        comboIdioma = new JComboBox<>(new String[]{
+                "Português (Brasil)", "English"
+        });
+
+        comboIdioma.setSelectedItem(
+                preferencias.get("idioma", "pt-BR").equals("en")
+                        ? "English"
+                        : "Português (Brasil)"
+        );
+
+        estilizarCombo(comboIdioma);
+
+        JPanel opcaoIdioma = new JPanel(new BorderLayout(15, 0));
+        opcaoIdioma.setBackground(SUPERFICIE);
+        opcaoIdioma.add(textoIdioma, BorderLayout.CENTER);
+        opcaoIdioma.add(comboIdioma, BorderLayout.EAST);
+
+        painelIdioma.add(
+                cabecalhoIdioma,
+                BorderLayout.NORTH
+        );
+        painelIdioma.add(
+                opcaoIdioma,
+                BorderLayout.CENTER
+        );
+
+
+        // Adiciona os dois painéis à tela
+        tela.add(painelAparencia);
+        tela.add(Box.createVerticalStrut(18));
+        tela.add(painelIdioma);
+
+
+        // Salva as preferências quando o usuário altera os seletores
+        comboTema.addActionListener(e -> {
+
+            String tema = comboTema.getSelectedItem().equals("Claro")
+                    ? "light"
+                    : "dark";
+
+            preferencias.put("tema", tema);
+        });
+
+        comboIdioma.addActionListener(e -> {
+
+            String idioma = comboIdioma.getSelectedItem().equals("English")
+                    ? "en"
+                    : "pt-BR";
+
+            preferencias.put("idioma", idioma);
+        });
+    }
+
 
 
     // Cria um painel com fundo e borda arredondados.
@@ -800,7 +1016,8 @@ public class TelaProjetos extends JFrame {
 
         JPanel[] itens = {
                 itemDashboard,
-                itemProjetos
+                itemProjetos,
+                itemConfiguracoes
         };
 
         for (JPanel item : itens) {
@@ -1207,7 +1424,7 @@ public class TelaProjetos extends JFrame {
         prazo.setDate(projeto.getPrazo());
 
         JComboBox<String> categoria = new JComboBox<>(new String[]{
-                "Web", "Software", "Mobile", "Outro"
+                "Web", "Software", "Mobile", "Desktop"
         });
 
         JComboBox<String> status = new JComboBox<>(new String[]{

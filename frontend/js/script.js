@@ -1,8 +1,11 @@
+
 console.log("PROJETOS.JS INICIADO");
 
 const API_URL = "http://localhost:7070/api/projetos";
 
 const token = localStorage.getItem("token");
+
+let idiomaAtual = localStorage.getItem("idioma") || "pt-BR";
 
 /* TRATAMENTO DAS RESPOSTAS DA API */
 
@@ -60,19 +63,23 @@ document.getElementById("botaoSair").addEventListener("click", function() {
 
 const telaDashboard = document.getElementById("telaDashboard");
 const telaProjetos = document.getElementById("telaProjetos");
+const telaConfiguracoes = document.getElementById("telaConfiguracoes");
 
 const linkDashboard = document.getElementById("linkDashboard");
 const linkProjetos = document.getElementById("linkProjetos");
+const linkConfiguracoes = document.getElementById("linkConfiguracoes");
 
 function mostrarTela(telaSelecionada) {
 
-    // Mostra a tela selecionada e esconde a outra.
+    // Mostra a tela selecionada e esconde as outras.
     telaDashboard.classList.toggle("ativa", telaSelecionada === "dashboard");
     telaProjetos.classList.toggle("ativa", telaSelecionada === "projetos");
+    telaConfiguracoes.classList.toggle("ativa", telaSelecionada === "configuracoes");
 
     // Destaca no menu o link da tela que está aberta.
     linkDashboard.classList.toggle("ativo", telaSelecionada === "dashboard");
     linkProjetos.classList.toggle("ativo", telaSelecionada === "projetos");
+    linkConfiguracoes.classList.toggle("ativo", telaSelecionada === "configuracoes");
 }
 
 linkDashboard.addEventListener("click", function(evento) {
@@ -91,6 +98,14 @@ linkProjetos.addEventListener("click", function(evento) {
 
 });
 
+linkConfiguracoes.addEventListener("click", function(evento) {
+
+    evento.preventDefault();
+
+    mostrarTela("configuracoes");
+
+});
+
 
 /* ARMAZENAMENTO DOS PROJETOS */
 
@@ -102,22 +117,22 @@ const projetosPorPagina = 5;
 let projetoEmEdicao = null;
 
 
-/* GRÁFICO DE STATUS */
+/* GRÁFICOS */
 
 let graficoStatus = null;
-
 let graficoCategoria = null;
-
 let graficoMensal = null;
 
 
-function atualizarGraficoStatus(concluidos, emAndamento, planejados) {
+/* GRÁFICO DE STATUS */
+
+function atualizarGraficoStatus(concluidos, emDesenvolvimento, planejados) {
 
     const elementoGraficoStatus = document.getElementById("graficoStatus");
 
     const contextoGrafico = elementoGraficoStatus.getContext("2d");
 
-    const dados = [concluidos, emAndamento, planejados];
+    const dados = [concluidos, emDesenvolvimento, planejados];
 
     if (graficoStatus === null) {
 
@@ -126,7 +141,9 @@ function atualizarGraficoStatus(concluidos, emAndamento, planejados) {
             type: "doughnut",
 
             data: {
-                labels: ["Concluídos", "Em desenvolvimento", "Planejados"],
+                labels: idiomaAtual === "en"
+                    ? ["Completed", "In Progress", "Planned"]
+                    : ["Concluídos", "Em desenvolvimento", "Planejados"],
 
                 datasets: [{
                     data: dados,
@@ -151,6 +168,10 @@ function atualizarGraficoStatus(concluidos, emAndamento, planejados) {
 
     } else {
 
+        graficoStatus.data.labels = idiomaAtual === "en"
+            ? ["Completed", "In Progress", "Planned"]
+            : ["Concluídos", "Em desenvolvimento", "Planejados"];
+
         graficoStatus.data.datasets[0].data = dados;
 
         graficoStatus.update();
@@ -161,13 +182,13 @@ function atualizarGraficoStatus(concluidos, emAndamento, planejados) {
 
 /* GRÁFICO DE PROJETOS POR CATEGORIA */
 
-function atualizarGraficoCategoria(web, software, mobile, outro) {
+function atualizarGraficoCategoria(web, software, mobile, desktop) {
 
     const elementoGraficoCategoria = document.getElementById("graficoCategoria");
 
     const contextoGraficoCategoria = elementoGraficoCategoria.getContext("2d");
 
-    const dados = [web, software, mobile, outro];
+    const dados = [web, software, mobile, desktop];
 
     if (graficoCategoria === null) {
 
@@ -176,10 +197,15 @@ function atualizarGraficoCategoria(web, software, mobile, outro) {
             type: "bar",
 
             data: {
-                labels: ["Web", "Software", "Mobile", "Outro"],
+                labels: [
+                    "Web",
+                    "Software",
+                    "Mobile",
+                    "Desktop"
+                ],
 
                 datasets: [{
-                    label: "Quantidade de projetos",
+                    label: traducoes[idiomaAtual].quantidadeProjetos,
                     data: dados,
 
                     backgroundColor: [
@@ -211,6 +237,16 @@ function atualizarGraficoCategoria(web, software, mobile, outro) {
         });
 
     } else {
+
+        graficoCategoria.data.labels = [
+            "Web",
+            "Software",
+            "Mobile",
+            "Desktop"
+        ];
+
+        graficoCategoria.data.datasets[0].label =
+            traducoes[idiomaAtual].quantidadeProjetos;
 
         graficoCategoria.data.datasets[0].data = dados;
 
@@ -247,11 +283,17 @@ function atualizarGraficoMensal(projetos) {
 
     const meses = Object.keys(contagemPorMes).sort();
 
-    const nomesMeses = [
-        "Janeiro", "Fevereiro", "Março", "Abril",
-        "Maio", "Junho", "Julho", "Agosto",
-        "Setembro", "Outubro", "Novembro", "Dezembro"
-    ];
+    const nomesMeses = idiomaAtual === "en"
+        ? [
+            "January", "February", "March", "April",
+            "May", "June", "July", "August",
+            "September", "October", "November", "December"
+        ]
+        : [
+            "Janeiro", "Fevereiro", "Março", "Abril",
+            "Maio", "Junho", "Julho", "Agosto",
+            "Setembro", "Outubro", "Novembro", "Dezembro"
+        ];
 
     const labels = meses.map(chave => {
 
@@ -273,7 +315,7 @@ function atualizarGraficoMensal(projetos) {
                 labels: labels,
 
                 datasets: [{
-                    label: "Projetos criados",
+                    label: traducoes[idiomaAtual].projetosCriados,
                     data: dados,
                     borderColor: "#009999",
                     backgroundColor: "rgba(0, 153, 153, 0.15)",
@@ -302,6 +344,10 @@ function atualizarGraficoMensal(projetos) {
     } else {
 
         graficoMensal.data.labels = labels;
+
+        graficoMensal.data.datasets[0].label =
+            traducoes[idiomaAtual].projetosCriados;
+
         graficoMensal.data.datasets[0].data = dados;
 
         graficoMensal.update();
@@ -316,7 +362,7 @@ function listarProjetos() {
 
     const mensagem = document.getElementById("mensagem");
 
-    mensagem.textContent = "Carregando projetos...";
+    mensagem.textContent = traducoes[idiomaAtual].carregando;
 
     fetch(API_URL, {
         headers: {
@@ -334,7 +380,7 @@ function listarProjetos() {
 
         filtrarProjetos();
 
-        mensagem.textContent = "Projetos carregados com sucesso.";
+        mensagem.textContent = traducoes[idiomaAtual].carregado;
 
     })
     .catch(erro => {
@@ -353,13 +399,13 @@ function atualizarEstatisticas(projetos) {
 
     let total = 0;
     let concluidos = 0;
-    let emAndamento = 0;
+    let emDesenvolvimento = 0;
     let planejados = 0;
 
     let web = 0;
     let software = 0;
     let mobile = 0;
-    let outro = 0;
+    let desktop = 0;
 
     projetos.forEach(projeto => {
 
@@ -370,7 +416,7 @@ function atualizarEstatisticas(projetos) {
         }
 
         if (projeto.status === "Em desenvolvimento") {
-            emAndamento++;
+            emDesenvolvimento++;
         }
 
         if (projeto.status === "Planejado") {
@@ -389,24 +435,24 @@ function atualizarEstatisticas(projetos) {
             mobile++;
         }
 
-        if (projeto.categoria === "Outro") {
-            outro++;
+        if (projeto.categoria === "Desktop") {
+            desktop++;
         }
 
     });
 
     const valorTotal = document.getElementById("valorTotal");
     const valorConcluidos = document.getElementById("valorConcluidos");
-    const valorAndamento = document.getElementById("valorAndamento");
+    const valorEmDesenvolvimento = document.getElementById("valorEmDesenvolvimento");
     const valorPlanejados = document.getElementById("valorPlanejados");
 
     valorTotal.textContent = total;
     valorConcluidos.textContent = concluidos;
-    valorAndamento.textContent = emAndamento;
+    valorEmDesenvolvimento.textContent = emDesenvolvimento;
     valorPlanejados.textContent = planejados;
 
-    atualizarGraficoStatus(concluidos, emAndamento, planejados);
-    atualizarGraficoCategoria(web, software, mobile, outro);
+    atualizarGraficoStatus(concluidos, emDesenvolvimento, planejados);
+    atualizarGraficoCategoria(web, software, mobile, desktop);
     atualizarGraficoMensal(projetos);
 }
 
@@ -440,6 +486,7 @@ function filtrarProjetos() {
     });
 
     projetosFiltradosAtuais = projetosFiltrados;
+
     paginaAtual = 1;
 
     exibirProjetos(projetosFiltradosAtuais);
@@ -454,6 +501,9 @@ function formatarData(data) {
 
     return `${String(dia).padStart(2, "0")}/${String(mes).padStart(2, "0")}/${ano}`;
 }
+
+
+/* PAGINAÇÃO */
 
 function atualizarPaginacao(totalProjetos) {
 
@@ -531,6 +581,7 @@ function mudarPagina(novaPagina) {
     window.scrollTo(0, posicaoScroll);
 }
 
+
 /* EXIBIÇÃO DOS PROJETOS NA TABELA */
 
 function exibirProjetos(projetos) {
@@ -551,11 +602,11 @@ function exibirProjetos(projetos) {
 
         if (projetosCarregados.length === 0) {
 
-            coluna.textContent = "Nenhum projeto cadastrado.";
+            coluna.textContent = traducoes[idiomaAtual].nenhumCadastrado;
 
         } else {
 
-            coluna.textContent = "Nenhum projeto encontrado.";
+            coluna.textContent = traducoes[idiomaAtual].nenhumEncontrado;
 
         }
 
@@ -588,7 +639,7 @@ function exibirProjetos(projetos) {
 
         const etiquetaStatus = document.createElement("span");
 
-        etiquetaStatus.textContent = projeto.status;
+        etiquetaStatus.textContent = traduzirStatus(projeto.status);
 
         etiquetaStatus.classList.add("status-badge");
 
@@ -619,7 +670,7 @@ function exibirProjetos(projetos) {
 
         const iconeEditar = document.createElement("img");
         iconeEditar.src = "img/icone-editar.png";
-        iconeEditar.alt = "Editar";
+        iconeEditar.alt = idiomaAtual === "en" ? "Edit" : "Editar";
         iconeEditar.classList.add("icone-acao");
 
         botaoEditar.appendChild(iconeEditar);
@@ -637,7 +688,7 @@ function exibirProjetos(projetos) {
 
         const iconeExcluir = document.createElement("img");
         iconeExcluir.src = "img/icone-excluir.png";
-        iconeExcluir.alt = "Excluir";
+        iconeExcluir.alt = idiomaAtual === "en" ? "Delete" : "Excluir";
         iconeExcluir.classList.add("icone-acao");
 
         botaoExcluir.appendChild(iconeExcluir);
@@ -650,8 +701,13 @@ function exibirProjetos(projetos) {
             iconeExcluir.src = "img/icone-excluir.png";
         });
 
-        botaoEditar.title = "Editar projeto";
-        botaoExcluir.title = "Excluir projeto";
+        botaoEditar.title = idiomaAtual === "en"
+            ? "Edit project"
+            : "Editar projeto";
+
+        botaoExcluir.title = idiomaAtual === "en"
+            ? "Delete project"
+            : "Excluir projeto";
 
         botaoEditar.classList.add("botao-editar");
         botaoExcluir.classList.add("botao-excluir");
@@ -715,7 +771,9 @@ document.getElementById("formProjeto").addEventListener("submit", function(event
     })
     .then(() => {
 
-        alert("Projeto cadastrado com sucesso!");
+        alert(idiomaAtual === "en"
+            ? "Project registered successfully!"
+            : "Projeto cadastrado com sucesso!");
 
         document.getElementById("formProjeto").reset();
 
@@ -736,7 +794,11 @@ document.getElementById("formProjeto").addEventListener("submit", function(event
 
 function excluirProjeto(id) {
 
-    const confirmar = confirm("Deseja realmente excluir este projeto?");
+    const confirmar = confirm(
+        idiomaAtual === "en"
+            ? "Are you sure you want to delete this project?"
+            : "Deseja realmente excluir este projeto?"
+    );
 
     if (!confirmar) {
         return;
@@ -753,7 +815,11 @@ function excluirProjeto(id) {
     })
     .then(() => {
 
-        alert("Projeto excluído com sucesso!");
+        alert(
+            idiomaAtual === "en"
+                ? "Project deleted successfully!"
+                : "Projeto excluído com sucesso!"
+        );
 
         listarProjetos();
 
@@ -792,19 +858,6 @@ function editarProjeto(id) {
 }
 
 
-/* INICIALIZAÇÃO */
-
-listarProjetos();
-
-document.getElementById("campoBusca").addEventListener("input", filtrarProjetos);
-
-document.getElementById("botaoCancelarEdicao").addEventListener("click", function() {
-
-    document.getElementById("popupEdicao").style.display = "none";
-
-});
-
-
 /* SALVAR ALTERAÇÕES */
 
 document.getElementById("formEdicao").addEventListener("submit", function(evento) {
@@ -832,7 +885,11 @@ document.getElementById("formEdicao").addEventListener("submit", function(evento
     })
     .then(() => {
 
-        alert("Projeto atualizado com sucesso!");
+        alert(
+            idiomaAtual === "en"
+                ? "Project updated successfully!"
+                : "Projeto atualizado com sucesso!"
+        );
 
         document.getElementById("popupEdicao").style.display = "none";
 
@@ -849,7 +906,384 @@ document.getElementById("formEdicao").addEventListener("submit", function(evento
 
 });
 
+
+/* USUÁRIO */
+
 const nomeUsuario = localStorage.getItem("nomeUsuario");
 
 document.getElementById("nomeUsuario").textContent =
     nomeUsuario || "Usuário";
+
+
+/* CONFIGURAÇÃO DE TEMA */
+
+const seletorTema = document.getElementById("seletorTema");
+
+function aplicarTema(tema) {
+
+    document.body.classList.toggle("tema-claro", tema === "light");
+
+    seletorTema.value = tema;
+
+    localStorage.setItem("tema", tema);
+}   
+
+const temaSalvo = localStorage.getItem("tema") || "dark";
+
+aplicarTema(temaSalvo);
+
+seletorTema.addEventListener("change", function() {
+
+    aplicarTema(seletorTema.value);
+
+});
+
+
+/* CONFIGURAÇÃO DE IDIOMA */
+
+const seletorIdioma = document.getElementById("seletorIdioma");
+
+const traducoes = {
+
+    "pt-BR": {
+        usuario: "Usuário",
+        sair: "Sair",
+        projetos: "Projetos",
+        configuracoes: "Configurações",
+
+        dashboard: "Dashboard",
+        descricaoDashboard: "Acompanhe os indicadores e o desempenho dos seus projetos.",
+        totalProjetos: "Total de Projetos",
+        concluidos: "Concluídos",
+        andamento: "Em Desenvolvimento",
+        planejados: "Planejados",
+
+        status: "Projetos por status",
+        categoria: "Projetos por categoria",
+        evolucao: "Evolução mensal de projetos",
+
+        cadastro: "Cadastro de Projeto",
+        nomeProjeto: "Nome do projeto",
+        descricao: "Descrição",
+        categoriaLabel: "Categoria",
+        statusLabel: "Status",
+        prazo: "Prazo",
+        placeholderNome: "Digite o nome do projeto",
+        placeholderDescricao: "Descreva o projeto",
+        limpar: "Limpar",
+        cadastrar: "Cadastrar projeto",
+
+        lista: "Lista de Projetos",
+        buscar: "Buscar projeto...",
+        nome: "Nome",
+        dataCriacao: "Data de criação",
+        acoes: "Ações",
+
+        nenhumCadastrado: "Nenhum projeto cadastrado.",
+        nenhumEncontrado: "Nenhum projeto encontrado.",
+        carregando: "Carregando projetos...",
+        carregado: "Projetos carregados com sucesso.",
+
+        aparencia: "Aparência",
+        descricaoAparencia: "Personalize a aparência do sistema.",
+        tema: "Tema",
+        descricaoTema: "Escolha entre o modo claro e escuro.",
+        escuro: "Escuro",
+        claro: "Claro",
+
+        idioma: "Idioma",
+        descricaoIdioma: "Defina o idioma utilizado na interface.",
+        idiomaSistema: "Idioma do sistema",
+        selecionarIdioma: "Selecione seu idioma preferido.",
+
+        editar: "Editar Projeto",
+        cancelar: "Cancelar",
+        salvar: "Salvar alterações",
+
+        rodape: "Projeto acadêmico de Análise e Desenvolvimento de Sistemas",
+
+        statusConcluido: "Concluído",
+        statusAndamento: "Em desenvolvimento",
+        statusPlanejado: "Planejado",
+
+        quantidadeProjetos: "Quantidade de projetos",
+        projetosCriados: "Projetos criados"
+    },
+
+    "en": {
+        usuario: "User",
+        sair: "Log out",
+        projetos: "Projects",
+        configuracoes: "Settings",
+
+        dashboard: "Dashboard",
+        descricaoDashboard: "Track your projects' indicators and performance.",
+        totalProjetos: "Total Projects",
+        concluidos: "Completed",
+        andamento: "In Progress",
+        planejados: "Planned",
+
+        status: "Projects by status",
+        categoria: "Projects by category",
+        evolucao: "Monthly Project Progress",
+
+        cadastro: "Project Registration",
+        nomeProjeto: "Project name",
+        descricao: "Description",
+        categoriaLabel: "Category",
+        statusLabel: "Status",
+        prazo: "Deadline",
+        placeholderNome: "Enter the project name",
+        placeholderDescricao: "Describe the project",
+        limpar: "Clear",
+        cadastrar: "Register project",
+
+        lista: "Project List",
+        buscar: "Search projects...",
+        nome: "Name",
+        dataCriacao: "Creation date",
+        acoes: "Actions",
+
+        nenhumCadastrado: "No projects registered.",
+        nenhumEncontrado: "No projects found.",
+        carregando: "Loading projects...",
+        carregado: "Projects loaded successfully.",
+
+        aparencia: "Appearance",
+        descricaoAparencia: "Customize the system's appearance.",
+        tema: "Theme",
+        descricaoTema: "Choose between light and dark mode.",
+        escuro: "Dark",
+        claro: "Light",
+
+        idioma: "Language",
+        descricaoIdioma: "Set the language used in the interface.",
+        idiomaSistema: "System language",
+        selecionarIdioma: "Choose your preferred language.",
+
+        editar: "Edit Project",
+        cancelar: "Cancel",
+        salvar: "Save changes",
+
+        rodape: "Academic project in Systems Analysis and Development",
+
+        statusConcluido: "Completed",
+        statusAndamento: "In Progress",
+        statusPlanejado: "Planned",
+
+        quantidadeProjetos: "Number of projects",
+        projetosCriados: "Projects created"
+    }
+
+};
+
+
+/* TRADUÇÃO DOS STATUS */
+
+function traduzirStatus(status) {
+
+    const textos = traducoes[idiomaAtual];
+
+    if (status === "Concluído") {
+        return textos.statusConcluido;
+    }
+
+    if (status === "Em desenvolvimento") {
+        return textos.statusAndamento;
+    }
+
+    if (status === "Planejado") {
+        return textos.statusPlanejado;
+    }
+
+    return status;
+}
+
+
+/* APLICAÇÃO DO IDIOMA */
+
+function aplicarIdioma(idioma) {
+
+    idiomaAtual = idioma;
+
+    const t = traducoes[idioma];
+
+    // Navegação
+    document.getElementById("linkProjetos").textContent = t.projetos;
+    document.getElementById("linkConfiguracoes").textContent = t.configuracoes;
+    document.querySelector(".texto-usuario span:first-child").textContent = t.usuario;
+    document.querySelector("#botaoSair span").textContent = t.sair;
+
+    // Dashboard
+    document.querySelector("#telaDashboard .introducao h1").textContent = t.dashboard;
+    document.querySelector("#telaDashboard .introducao p").textContent = t.descricaoDashboard;
+
+    const textosCards = document.querySelectorAll(".card-estatistica span");
+
+    textosCards[0].textContent = t.totalProjetos;
+    textosCards[1].textContent = t.concluidos;
+    textosCards[2].textContent = t.andamento;
+    textosCards[3].textContent = t.planejados;
+
+    const titulosGraficos = document.querySelectorAll(".graficos-superiores .painel h2");
+
+    titulosGraficos[0].textContent = t.status;
+    titulosGraficos[1].textContent = t.categoria;
+
+    document.querySelector("#telaDashboard > .painel h2").textContent = t.evolucao;
+
+    // Cadastro
+    document.querySelector("#cadastro h2").textContent = t.cadastro;
+
+    document.querySelector('label[for="nome"]').textContent = t.nomeProjeto;
+    document.querySelector('label[for="descricao"]').textContent = t.descricao;
+    document.querySelector('label[for="categoria"]').textContent = t.categoriaLabel;
+    document.querySelector('label[for="status"]').textContent = t.statusLabel;
+    document.querySelector('label[for="prazo"]').textContent = t.prazo;
+
+    document.getElementById("nome").placeholder = t.placeholderNome;
+    document.getElementById("descricao").placeholder = t.placeholderDescricao;
+
+    document.getElementById("botaoLimpar").textContent = t.limpar;
+    document.getElementById("botaoCadastrar").textContent = t.cadastrar;
+
+    // Lista
+    document.querySelector("#projetos h2").textContent = t.lista;
+    document.getElementById("campoBusca").placeholder = t.buscar;
+    document.getElementById("campoBusca").setAttribute("aria-label", t.buscar);
+
+    const cabecalhos = document.querySelectorAll("#projetos thead th");
+
+    cabecalhos[1].textContent = t.nome;
+    cabecalhos[2].textContent = t.categoriaLabel;
+    cabecalhos[3].textContent = t.statusLabel;
+    cabecalhos[4].textContent = t.dataCriacao;
+    cabecalhos[5].textContent = t.prazo;
+    cabecalhos[6].textContent = t.acoes;
+
+    // Configurações
+    document.querySelector("#telaConfiguracoes .introducao h1").textContent = t.configuracoes;
+
+    document.querySelector("#telaConfiguracoes .introducao p").textContent =
+        idioma === "en"
+            ? "Customize the system's appearance and language."
+            : "Personalize a aparência e o idioma do sistema.";
+
+    const titulosConfiguracao = document.querySelectorAll(".configuracao-cabecalho h2");
+
+    titulosConfiguracao[0].textContent = t.aparencia;
+    titulosConfiguracao[1].textContent = t.idioma;
+
+    const descricoesConfiguracao = document.querySelectorAll(".configuracao-cabecalho p");
+
+    descricoesConfiguracao[0].textContent = t.descricaoAparencia;
+    descricoesConfiguracao[1].textContent = t.descricaoIdioma;
+
+    const textosConfiguracao = document.querySelectorAll(".configuracao-texto strong");
+
+    textosConfiguracao[0].textContent = t.tema;
+    textosConfiguracao[1].textContent = t.idiomaSistema;
+
+    const descricoesOpcoes = document.querySelectorAll(".configuracao-texto span");
+
+    descricoesOpcoes[0].textContent = t.descricaoTema;
+    descricoesOpcoes[1].textContent = t.selecionarIdioma;
+
+    // Opções de tema
+    const opcoesTema = seletorTema.options;
+
+    opcoesTema[0].textContent = t.escuro;
+    opcoesTema[1].textContent = t.claro;
+
+    // Opções de status
+
+    const statusPortugues = ["Planejado", "Em desenvolvimento", "Concluído"];
+    const statusIngles = ["Planned", "In Progress", "Completed"];
+
+    const seletoresStatus = [
+        document.getElementById("status"),
+        document.getElementById("editarStatus")
+    ];
+
+    seletoresStatus.forEach(seletor => {
+
+        Array.from(seletor.options).forEach((opcao, indice) => {
+
+            opcao.textContent = idioma === "en"
+                ? statusIngles[indice]
+                : statusPortugues[indice];
+
+        });
+
+    });
+
+    // Popup de edição
+    document.querySelector("#popupEdicao h2").textContent = t.editar;
+
+    document.querySelector('label[for="editarNome"]').textContent = t.nomeProjeto;
+    document.querySelector('label[for="editarDescricao"]').textContent = t.descricao;
+    document.querySelector('label[for="editarCategoria"]').textContent = t.categoriaLabel;
+    document.querySelector('label[for="editarStatus"]').textContent = t.statusLabel;
+    document.querySelector('label[for="editarPrazo"]').textContent = t.prazo;
+
+    document.getElementById("botaoCancelarEdicao").textContent = t.cancelar;
+
+    document.querySelector("#formEdicao button[type='submit']").textContent = t.salvar;
+
+    // Rodapé
+    document.querySelector("footer span:last-child").textContent = t.rodape;
+
+    // Atualiza os gráficos
+    if (graficoCategoria !== null) {
+
+        graficoCategoria.data.datasets[0].label = t.quantidadeProjetos;
+
+        graficoCategoria.update();
+
+    }
+
+    if (graficoMensal !== null) {
+        atualizarGraficoMensal(projetosCarregados);
+    }
+
+    // Atualiza os projetos exibidos
+    exibirProjetos(
+        typeof projetosFiltradosAtuais !== "undefined"
+            ? projetosFiltradosAtuais
+            : projetosCarregados
+    )
+
+    document.documentElement.lang = idioma;
+
+    localStorage.setItem("idioma", idioma);
+
+    seletorIdioma.value = idioma;
+}
+
+
+/* CARREGA O IDIOMA SALVO */
+
+aplicarIdioma(idiomaAtual);
+
+
+/* DETECTA QUANDO O USUÁRIO MUDA O IDIOMA */
+
+seletorIdioma.addEventListener("change", function() {
+
+    aplicarIdioma(seletorIdioma.value);
+
+});
+
+
+/* INICIALIZAÇÃO */
+
+document.getElementById("campoBusca").addEventListener("input", filtrarProjetos);
+
+document.getElementById("botaoCancelarEdicao").addEventListener("click", function() {
+
+    document.getElementById("popupEdicao").style.display = "none";
+
+});
+
+// Carrega os projetos somente depois que as traduções foram inicializadas.
+listarProjetos();

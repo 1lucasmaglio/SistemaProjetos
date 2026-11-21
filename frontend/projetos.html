@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -27,8 +28,7 @@
             <nav class="menu">
                 <a href="#dashboard" class="ativo" id="linkDashboard">Dashboard</a>
                 <a href="#projetos" id="linkProjetos">Projetos</a>
-                <a href="#relatorios">Relatórios</a>
-                <a href="#configuracoes">Configurações</a>
+                <a href="#configuracoes" id="linkConfiguracoes">Configurações</a>
             </nav>
 
             <!-- INFORMAÇÕES DO USUÁRIO -->
@@ -38,7 +38,7 @@
                 <div class="informacoes-usuario">
 
                     <img
-                        src="/frontend/img/logo.png"
+                        src="/frontend/img/foto.webp"
                         alt="Ícone de usuário"
                         class="icone-usuario"
                     >
@@ -126,8 +126,8 @@
                             >
 
                             <div class="conteudo-card">
-                                <strong id="valorAndamento">0</strong>
-                                <span>Em Andamento</span>
+                                <strong id="valorEmDesenvolvimento">0</strong>
+                                <span>Em desenvolvimento</span>
                             </div>
 
                         </article>
@@ -329,6 +329,70 @@
                     </section>
 
                 </section>
+
+                <!-- TELA DE CONFIGURAÇÕES -->
+
+                <section id="telaConfiguracoes" class="tela">
+
+                    <div class="introducao">
+                        <h1>Configurações</h1>
+                        <p>Personalize a aparência e o idioma do sistema.</p>
+                    </div>
+
+                    <div class="configuracoes-container">
+
+                        <div class="painel-configuracao">
+
+                            <div class="configuracao-cabecalho">
+                                <div>
+                                    <h2>Aparência</h2>
+                                    <p>Personalize a aparência do sistema.</p>
+                                </div>
+                                <span class="configuracao-icone">◐</span>
+                            </div>
+
+                            <div class="configuracao-opcao">
+                                <div class="configuracao-texto">
+                                    <strong>Tema</strong>
+                                    <span>Escolha entre o modo claro e escuro.</span>
+                                </div>
+
+                                <select id="seletorTema">
+                                    <option value="dark">Escuro</option>
+                                    <option value="light">Claro</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="painel-configuracao">
+
+                            <div class="configuracao-cabecalho">
+                                <div>
+                                    <h2>Idioma</h2>
+                                    <p>Defina o idioma utilizado na interface.</p>
+                                </div>
+                                <span class="configuracao-icone">文</span>
+                            </div>
+
+                            <div class="configuracao-opcao">
+                                <div class="configuracao-texto">
+                                    <strong>Idioma do sistema</strong>
+                                    <span>Selecione seu idioma preferido.</span>
+                                </div>
+
+                                <select id="seletorIdioma">
+                                    <option value="pt-BR">Português (Brasil)</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
 
                 <!-- POPUP DE EDIÇÃO -->
 
