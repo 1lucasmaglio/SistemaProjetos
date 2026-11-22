@@ -1,4 +1,3 @@
-
 package view;
 
 import java.awt.BorderLayout;
@@ -13,15 +12,17 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.awt.Cursor;
 import java.util.prefs.Preferences;
 
+import java.awt.RenderingHints;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -48,6 +49,8 @@ import javax.swing.table.TableCellRenderer;
 
 import org.jfree.chart.ChartPanel;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 
@@ -64,7 +67,9 @@ public class TelaProjetos extends JFrame {
             new Font("Segoe UI", Font.BOLD, 14);
 
     private final Preferences preferencias =
-        Preferences.userNodeForPackage(TelaProjetos.class);
+            Preferences.userNodeForPackage(TelaProjetos.class);
+
+    private boolean temaClaro;
 
     private JTextField campoNome;
     private JTextField campoDescricao;
@@ -77,10 +82,13 @@ public class TelaProjetos extends JFrame {
     private JComboBox<String> comboTema;
     private JComboBox<String> comboIdioma;
 
+    private String idiomaAtual;
+
     private JTable tabela;
     private DefaultTableModel modelo;
     private CardLayout gerenciadorTelas;
     private JPanel painelTelas;
+    private String telaAtual = "DASHBOARD";
 
     private JButton botaoCadastrar;
     private JButton botaoLimpar;
@@ -92,14 +100,21 @@ public class TelaProjetos extends JFrame {
     private JLabel valorAndamento;
     private JLabel valorPlanejados;
 
+    private JLabel rotuloDashboard;
+    private JLabel rotuloProjetos;
+    private JLabel rotuloConfiguracoes;
+
     private ApiClient cliente;
 
-    private ViewChart viewChart = new ViewChart();
+    private ViewChart viewChart;
 
     private JPanel subpainelStatus;
     private JPanel subpainelCategoria;
     private JPanel subpainelEvolucao;
+
     private ChartPanel painelGraficoEvolucao;
+    private ChartPanel painelGraficoStatus;
+    private ChartPanel painelGraficoCategoria;
 
     private int linhaHoverAcoes = -1;
     private int botaoHoverAcoes = -1;
@@ -109,21 +124,208 @@ public class TelaProjetos extends JFrame {
     private JPanel itemConfiguracoes;
     private JPanel itemMenuAtivo;
 
-    private final Color AZUL_ESCURO = new Color(245, 245, 247);
-    private final Color AZUL_SIDEBAR = new Color(25, 25, 27);
-    private final Color AZUL = new Color(0, 153, 153);
+    private JLabel tituloConfiguracoes;
+    private JLabel subtituloConfiguracoes;
 
-    private final Color FUNDO = new Color(28, 28, 30);
-    private final Color BRANCO = new Color(245, 245, 247);
-    private final Color TEXTO = new Color(229, 229, 231);
-    private final Color CINZA = new Color(161, 161, 166);
+    private JLabel tituloAparencia;
+    private JLabel descricaoAparencia;
 
-    private final Color SUPERFICIE = new Color(36, 36, 38);
-    private final Color SUPERFICIE_SECUNDARIA = new Color(48, 48, 51);
-    private final Color BORDA = new Color(58, 58, 60);
-    private final Color BARRA_SUPERIOR = new Color(34, 34, 36);
-    private final Color MENU_ATIVO = new Color(53, 53, 56);
-    private final Color MENU_HOVER = new Color(41, 41, 44);
+    private JLabel tituloIdioma;
+    private JLabel descricaoIdioma;
+    private JLabel textoTema;
+    private JLabel textoIdioma;
+
+    private JLabel textoMarca;
+
+    private JLabel tituloDashboard;
+    private JLabel subtituloDashboard;
+    private JLabel tituloFormulario;
+    private JLabel tituloLista;
+
+    private final Map<String, JLabel> rotulosCards =
+            new java.util.HashMap<>();
+
+    private final Map<String, List<JLabel>> rotulosCampos =
+            new java.util.HashMap<>();
+
+    // Cores atualizadas de acordo com o tema selecionado.
+    private Color AZUL_ESCURO;
+    private Color AZUL_SIDEBAR;
+    private Color AZUL;
+
+    private Color FUNDO;
+    private Color BRANCO;
+    private Color TEXTO;
+    private Color CINZA;
+
+    private Color SUPERFICIE;
+    private Color SUPERFICIE_SECUNDARIA;
+    private Color BORDA;
+    private Color BARRA_SUPERIOR;
+    private Color MENU_ATIVO;
+    private Color MENU_HOVER;
+
+
+    private void configurarCores() {
+
+        if (temaClaro) {
+
+            AZUL_ESCURO = new Color(35, 45, 60);
+            AZUL_SIDEBAR = new Color(240, 243, 247);
+            AZUL = new Color(0, 153, 153);
+
+            FUNDO = new Color(247, 248, 250);
+            BRANCO = Color.WHITE;
+            TEXTO = new Color(45, 50, 60);
+            CINZA = new Color(105, 113, 125);
+
+            SUPERFICIE = Color.WHITE;
+            SUPERFICIE_SECUNDARIA = new Color(242, 244, 247);
+            BORDA = new Color(220, 224, 230);
+            BARRA_SUPERIOR = Color.WHITE;
+            MENU_ATIVO = new Color(218, 237, 237);
+            MENU_HOVER = new Color(229, 234, 240);
+
+        } else {
+
+            AZUL_ESCURO = new Color(245, 245, 247);
+            AZUL_SIDEBAR = new Color(25, 25, 27);
+            AZUL = new Color(0, 153, 153);
+
+            FUNDO = new Color(28, 28, 30);
+            BRANCO = new Color(245, 245, 247);
+            TEXTO = new Color(229, 229, 231);
+            CINZA = new Color(161, 161, 166);
+
+            SUPERFICIE = new Color(36, 36, 38);
+            SUPERFICIE_SECUNDARIA = new Color(48, 48, 51);
+            BORDA = new Color(58, 58, 60);
+            BARRA_SUPERIOR = new Color(34, 34, 36);
+            MENU_ATIVO = new Color(53, 53, 56);
+            MENU_HOVER = new Color(41, 41, 44);
+        }
+    }
+
+
+    private final Map<String, Map<String, String>> traducoes = Map.of(
+
+        "pt-BR", Map.ofEntries(
+            Map.entry("usuario", "Usuário"),
+            Map.entry("sair", "Sair"),
+            Map.entry("projetos", "Projetos"),
+            Map.entry("configuracoes", "Configurações"),
+            Map.entry("dashboard", "Dashboard"),
+            Map.entry("descricaoDashboard", "Acompanhe os indicadores e o desempenho dos seus projetos."),
+            Map.entry("totalProjetos", "Total de Projetos"),
+            Map.entry("concluidos", "Concluídos"),
+            Map.entry("emDesenvolvimento", "Em Desenvolvimento"),
+            Map.entry("planejados", "Planejados"),
+            Map.entry("status", "Projetos por status"),
+            Map.entry("categoria", "Projetos por categoria"),
+            Map.entry("evolucao", "Evolução mensal de projetos"),
+            Map.entry("cadastro", "Cadastro de Projeto"),
+            Map.entry("nomeProjeto", "Nome do projeto"),
+            Map.entry("descricao", "Descrição"),
+            Map.entry("categoriaLabel", "Categoria"),
+            Map.entry("statusLabel", "Status"),
+            Map.entry("prazo", "Prazo"),
+            Map.entry("placeholderNome", "Digite o nome do projeto"),
+            Map.entry("placeholderDescricao", "Descreva o projeto"),
+            Map.entry("limpar", "Limpar"),
+            Map.entry("cadastrar", "Cadastrar projeto"),
+            Map.entry("lista", "Lista de Projetos"),
+            Map.entry("buscar", "Buscar projeto..."),
+            Map.entry("nome", "Nome"),
+            Map.entry("dataCriacao", "Data de criação"),
+            Map.entry("acoes", "Ações"),
+            Map.entry("nenhumCadastrado", "Nenhum projeto cadastrado."),
+            Map.entry("nenhumEncontrado", "Nenhum projeto encontrado."),
+            Map.entry("carregando", "Carregando projetos..."),
+            Map.entry("carregado", "Projetos carregados com sucesso."),
+            Map.entry("aparencia", "Aparência"),
+            Map.entry("descricaoAparencia", "Personalize a aparência do sistema."),
+            Map.entry("tema", "Tema"),
+            Map.entry("descricaoTema", "Escolha entre o modo claro e escuro."),
+            Map.entry("escuro", "Escuro"),
+            Map.entry("claro", "Claro"),
+            Map.entry("idioma", "Idioma"),
+            Map.entry("descricaoIdioma", "Defina o idioma utilizado na interface."),
+            Map.entry("idiomaSistema", "Idioma do sistema"),
+            Map.entry("selecionarIdioma", "Selecione seu idioma preferido."),
+            Map.entry("editar", "Editar Projeto"),
+            Map.entry("cancelar", "Cancelar"),
+            Map.entry("salvar", "Salvar alterações"),
+            Map.entry("rodape", "Projeto acadêmico de Análise e Desenvolvimento de Sistemas"),
+            Map.entry("statusConcluido", "Concluído"),
+            Map.entry("statusAndamento", "Em desenvolvimento"),
+            Map.entry("statusPlanejado", "Planejado"),
+            Map.entry("quantidadeProjetos", "Quantidade de projetos"),
+            Map.entry("projetosCriados", "Projetos criados"),
+            Map.entry("subtituloConfiguracoes", "Personalize a aparência e o idioma do sistema."),
+            Map.entry("subtituloDashboard", "Gerencie e acompanhe seus projetos.")
+        ),
+
+        "en", Map.ofEntries(
+            Map.entry("usuario", "User"),
+            Map.entry("sair", "Log out"),
+            Map.entry("projetos", "Projects"),
+            Map.entry("configuracoes", "Settings"),
+            Map.entry("dashboard", "Dashboard"),
+            Map.entry("descricaoDashboard", "Track your projects' indicators and performance."),
+            Map.entry("totalProjetos", "Total Projects"),
+            Map.entry("concluidos", "Completed"),
+            Map.entry("emDesenvolvimento", "In Progress"),
+            Map.entry("planejados", "Planned"),
+            Map.entry("status", "Projects by status"),
+            Map.entry("categoria", "Projects by category"),
+            Map.entry("evolucao", "Monthly Project Progress"),
+            Map.entry("cadastro", "Project Registration"),
+            Map.entry("nomeProjeto", "Project name"),
+            Map.entry("descricao", "Description"),
+            Map.entry("categoriaLabel", "Category"),
+            Map.entry("statusLabel", "Status"),
+            Map.entry("prazo", "Deadline"),
+            Map.entry("placeholderNome", "Enter the project name"),
+            Map.entry("placeholderDescricao", "Describe the project"),
+            Map.entry("limpar", "Clear"),
+            Map.entry("cadastrar", "Register project"),
+            Map.entry("lista", "Project List"),
+            Map.entry("buscar", "Search projects..."),
+            Map.entry("nome", "Name"),
+            Map.entry("dataCriacao", "Creation date"),
+            Map.entry("acoes", "Actions"),
+            Map.entry("nenhumCadastrado", "No projects registered."),
+            Map.entry("nenhumEncontrado", "No projects found."),
+            Map.entry("carregando", "Loading projects..."),
+            Map.entry("carregado", "Projects loaded successfully."),
+            Map.entry("aparencia", "Appearance"),
+            Map.entry("descricaoAparencia", "Customize the system's appearance."),
+            Map.entry("tema", "Theme"),
+            Map.entry("descricaoTema", "Choose between light and dark mode."),
+            Map.entry("escuro", "Dark"),
+            Map.entry("claro", "Light"),
+            Map.entry("idioma", "Language"),
+            Map.entry("descricaoIdioma", "Set the language used in the interface."),
+            Map.entry("idiomaSistema", "System language"),
+            Map.entry("selecionarIdioma", "Choose your preferred language."),
+            Map.entry("editar", "Edit Project"),
+            Map.entry("cancelar", "Cancel"),
+            Map.entry("salvar", "Save changes"),
+            Map.entry("rodape", "Academic project in Systems Analysis and Development"),
+            Map.entry("statusConcluido", "Completed"),
+            Map.entry("statusAndamento", "In Progress"),
+            Map.entry("statusPlanejado", "Planned"),
+            Map.entry("quantidadeProjetos", "Number of projects"),
+            Map.entry("projetosCriados", "Projects created"),
+            Map.entry("subtituloConfiguracoes", "Customize the system's appearance and language."),
+            Map.entry("subtituloDashboard", "Manage and track your projects.")
+        )
+    );
+
+
+    private String traduzir(String chave) {
+        return traducoes.get(idiomaAtual).get(chave);
+    }
 
 
     public TelaProjetos(ApiClient cliente) {
@@ -136,9 +338,51 @@ public class TelaProjetos extends JFrame {
 
         this.cliente = cliente;
 
+        idiomaAtual = preferencias.get("idioma", "pt-BR");
+        temaClaro = preferencias.get("tema", "dark").equals("light");
+
+        configurarCores();
+
+        viewChart = new ViewChart(temaClaro);
+
         criarComponentes();
+        aplicarIdioma();
         criarEventos();
         carregarTabela();
+    }
+
+
+    private void recriarInterface() {
+
+        configurarCores();
+        viewChart = new ViewChart(temaClaro);
+
+        criarComponentes();
+        aplicarIdioma();
+        criarEventos();
+        carregarTabela();
+
+        // Retorna à tela que estava aberta antes da alteração do tema.
+        gerenciadorTelas.show(painelTelas, telaAtual);
+
+        // Atualiza o item selecionado no menu lateral.
+        switch (telaAtual) {
+
+            case "PROJETOS":
+                atualizarMenuAtivo(itemProjetos);
+                break;
+
+            case "CONFIGURACOES":
+                atualizarMenuAtivo(itemConfiguracoes);
+                break;
+
+            default:
+                atualizarMenuAtivo(itemDashboard);
+                break;
+        }
+
+        revalidate();
+        repaint();
     }
 
 
@@ -162,13 +406,35 @@ public class TelaProjetos extends JFrame {
         usuario.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         usuario.setForeground(CINZA);
 
-        botaoSair = criarBotao(
-                "Sair",
-                new Color(190, 55, 65),
-                BRANCO
+        botaoSair = new JButton("Sair");
+
+        ImageIcon iconeSair = new ImageIcon(
+                "frontend/img/icone-sair.png"
         );
 
-        barraSuperior.add(tituloSistema, BorderLayout.WEST);
+        Image imagemSair = iconeSair.getImage().getScaledInstance(
+                26,
+                26,
+                Image.SCALE_SMOOTH
+        );
+
+        botaoSair.setIcon(new ImageIcon(imagemSair));
+
+        botaoSair.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        botaoSair.setForeground(Color.WHITE);
+
+        botaoSair.setBackground(new Color(0, 0, 0, 0));
+        botaoSair.setOpaque(false);
+        botaoSair.setBorderPainted(false);
+        botaoSair.setFocusPainted(false);
+        botaoSair.setContentAreaFilled(false);
+
+        botaoSair.setHorizontalAlignment(SwingConstants.LEFT);
+        botaoSair.setVerticalAlignment(SwingConstants.CENTER);
+        botaoSair.setIconTextGap(12);
+
+        botaoSair.setMargin(new Insets(6, 2, 6, 2));
+        botaoSair.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 
         // Menu lateral
@@ -187,9 +453,9 @@ public class TelaProjetos extends JFrame {
 
         JLabel logo = new JLabel(new ImageIcon(imagemRedimensionada));
 
-        JLabel textoMarca = new JLabel("Projetos");
+        textoMarca = new JLabel("Projetos");
         textoMarca.setFont(new Font("Segoe UI", Font.BOLD, 19));
-        textoMarca.setForeground(BRANCO);
+        textoMarca.setForeground(temaClaro ? AZUL_ESCURO : BRANCO);
 
         JPanel marca = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         marca.setBackground(AZUL_SIDEBAR);
@@ -206,7 +472,6 @@ public class TelaProjetos extends JFrame {
 
         itemDashboard = criarItemMenu("Dashboard", true);
         itemProjetos = criarItemMenu("Projetos", false);
-
         itemConfiguracoes = criarItemMenu("Configurações", false);
 
         itemMenuAtivo = itemDashboard;
@@ -254,6 +519,7 @@ public class TelaProjetos extends JFrame {
                 BorderFactory.createEmptyBorder(25, 25, 25, 25)
         );
 
+
         // Tela Configurações
         JPanel telaConfiguracoes = new JPanel();
         telaConfiguracoes.setLayout(
@@ -266,21 +532,21 @@ public class TelaProjetos extends JFrame {
 
         criarTelaConfiguracoes(telaConfiguracoes);
 
-        JLabel tituloPagina = new JLabel("Dashboard");
-        tituloPagina.setFont(new Font("Segoe UI", Font.BOLD, 25));
-        tituloPagina.setForeground(AZUL_ESCURO);
-        tituloPagina.setAlignmentX(LEFT_ALIGNMENT);
+        tituloDashboard = new JLabel("Dashboard");
+        tituloDashboard.setFont(new Font("Segoe UI", Font.BOLD, 25));
+        tituloDashboard.setForeground(AZUL_ESCURO);
+        tituloDashboard.setAlignmentX(LEFT_ALIGNMENT);
 
-        JLabel subtitulo = new JLabel(
+        subtituloDashboard = new JLabel(
                 "Gerencie e acompanhe seus projetos."
         );
-        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        subtitulo.setForeground(CINZA);
-        subtitulo.setAlignmentX(LEFT_ALIGNMENT);
+        subtituloDashboard.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        subtituloDashboard.setForeground(CINZA);
+        subtituloDashboard.setAlignmentX(LEFT_ALIGNMENT);
 
-        telaDashboard.add(tituloPagina);
+        telaDashboard.add(tituloDashboard);
         telaDashboard.add(Box.createVerticalStrut(5));
-        telaDashboard.add(subtitulo);
+        telaDashboard.add(subtituloDashboard);
         telaDashboard.add(Box.createVerticalStrut(22));
 
 
@@ -295,18 +561,19 @@ public class TelaProjetos extends JFrame {
         valorAndamento = new JLabel("0");
         valorPlanejados = new JLabel("0");
 
+
         painelCards.add(
                 criarCard(
-                        "Total de Projetos",
+                        "totalProjetos",
                         valorTotal,
-                        AZUL,
+                        AZUL_ESCURO,
                         "frontend/img/card-total-projetos.png"
                 )
         );
 
         painelCards.add(
                 criarCard(
-                        "Concluídos",
+                        "concluidos",
                         valorConcluidos,
                         new Color(67, 124, 30),
                         "frontend/img/card-concluidos.png"
@@ -315,50 +582,61 @@ public class TelaProjetos extends JFrame {
 
         painelCards.add(
                 criarCard(
-                        "Em Andamento",
+                        "emDesenvolvimento",
                         valorAndamento,
-                        new Color(239, 98, 108),
-                        "frontend/img/card-em-andamento.png"
+                        new Color(0, 166, 166),
+                        "frontend/img/card-em-desenvolvimento.png"
                 )
         );
 
         painelCards.add(
                 criarCard(
-                        "Planejados",
+                        "planejados",
                         valorPlanejados,
-                        new Color(239, 246, 238),
+                        new Color(240, 91, 103),
                         "frontend/img/card-planejados.png"
                 )
         );
+
 
         telaDashboard.add(painelCards);
         telaDashboard.add(Box.createVerticalStrut(22));
 
 
         // Gráfico de status
-        var dadosStatus = viewChart.criarDadosStatus();
-        var graficoStatus = viewChart.criarGraficoStatus(dadosStatus);
+        var dadosStatus = viewChart.criarDadosStatus(List.of());
 
-        ChartPanel painelGraficoStatus =
-                viewChart.criarPainelGrafico(graficoStatus);
+        var graficoStatus = viewChart.criarGraficoStatus(
+                dadosStatus
+        );
+
+        painelGraficoStatus = viewChart.criarPainelGrafico(
+                graficoStatus
+        );
 
 
         // Gráfico de categorias
-        var dadosCategoria = viewChart.criarDadosCategoria();
-        var graficoCategoria =
-                viewChart.criarGraficoCategoria(dadosCategoria);
+        var dadosCategoria = viewChart.criarDadosCategoria(List.of());
 
-        ChartPanel painelGraficoCategoria =
-                viewChart.criarPainelGrafico(graficoCategoria);
+        var graficoCategoria = viewChart.criarGraficoCategoria(
+                dadosCategoria
+        );
+
+        painelGraficoCategoria = viewChart.criarPainelGrafico(
+                graficoCategoria
+        );
 
 
         // Gráfico de evolução mensal
         var dadosEvolucao = viewChart.criarDadosEvolucao(List.of());
-        var graficoEvolucao =
-                viewChart.criarGraficoEvolucao(dadosEvolucao);
 
-        painelGraficoEvolucao =
-                viewChart.criarPainelGrafico(graficoEvolucao);
+        var graficoEvolucao = viewChart.criarGraficoEvolucao(
+                dadosEvolucao
+        );
+
+        painelGraficoEvolucao = viewChart.criarPainelGrafico(
+                graficoEvolucao
+        );
 
 
         // Subpainel do gráfico de status
@@ -451,7 +729,7 @@ public class TelaProjetos extends JFrame {
                 new Dimension(Integer.MAX_VALUE, 270)
         );
 
-        JLabel tituloFormulario = new JLabel("Cadastro de Projeto");
+        tituloFormulario = new JLabel("Cadastro de Projeto");
         tituloFormulario.setFont(new Font("Segoe UI", Font.BOLD, 18));
         tituloFormulario.setForeground(AZUL_ESCURO);
 
@@ -479,11 +757,11 @@ public class TelaProjetos extends JFrame {
         JPanel campos = new JPanel(new GridLayout(3, 2, 15, 12));
         campos.setBackground(SUPERFICIE);
 
-        campos.add(criarCampoComRotulo("Nome do projeto", campoNome));
-        campos.add(criarCampoComRotulo("Descrição", campoDescricao));
-        campos.add(criarCampoComRotulo("Categoria", comboCategoria));
-        campos.add(criarCampoComRotulo("Status", comboStatus));
-        campos.add(criarCampoComRotulo("Prazo (DD-MM-AAAA)", campoPrazo));
+        campos.add(criarCampoComRotulo("nomeProjeto", campoNome));
+        campos.add(criarCampoComRotulo("descricao", campoDescricao));
+        campos.add(criarCampoComRotulo("categoriaLabel", comboCategoria));
+        campos.add(criarCampoComRotulo("statusLabel", comboStatus));
+        campos.add(criarCampoComRotulo("prazo", campoPrazo));
 
         botaoCadastrar = criarBotao("Cadastrar projeto", AZUL, BRANCO);
 
@@ -524,7 +802,7 @@ public class TelaProjetos extends JFrame {
 
         painelLista.setAlignmentX(LEFT_ALIGNMENT);
 
-        JLabel tituloLista = new JLabel("Lista de Projetos");
+        tituloLista = new JLabel("Lista de Projetos");
         tituloLista.setFont(new Font("Segoe UI", Font.BOLD, 18));
         tituloLista.setForeground(AZUL_ESCURO);
 
@@ -553,12 +831,12 @@ public class TelaProjetos extends JFrame {
         modelo = new DefaultTableModel(
                 new Object[]{
                         "ID",
-                        "Nome",
-                        "Categoria",
-                        "Status",
-                        "Data de criação",
-                        "Prazo",
-                        "Ações"
+                        traduzir("nome"),
+                        traduzir("categoriaLabel"),
+                        traduzir("statusLabel"),
+                        traduzir("dataCriacao"),
+                        traduzir("prazo"),
+                        traduzir("acoes")
                 },
                 0
         ) {
@@ -579,8 +857,12 @@ public class TelaProjetos extends JFrame {
         tabela.setBackground(SUPERFICIE);
         tabela.setGridColor(BORDA);
         tabela.setShowVerticalLines(false);
-        tabela.setSelectionBackground(new Color(53, 53, 56));
-        tabela.setSelectionForeground(BRANCO);
+        tabela.setSelectionBackground(
+                temaClaro
+                        ? new Color(218, 237, 237)
+                        : new Color(53, 53, 56)
+        );
+        tabela.setSelectionForeground(TEXTO);
         tabela.setFillsViewportHeight(true);
 
         tabela.getTableHeader().setFont(
@@ -710,25 +992,24 @@ public class TelaProjetos extends JFrame {
         setContentPane(painelPrincipal);
     }
 
-
-    private void criarTelaConfiguracoes(JPanel tela) {
+        private void criarTelaConfiguracoes(JPanel tela) {
 
         // Introdução da tela
-        JLabel titulo = new JLabel("Configurações");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 25));
-        titulo.setForeground(AZUL_ESCURO);
-        titulo.setAlignmentX(LEFT_ALIGNMENT);
+        tituloConfiguracoes = new JLabel("Configurações");
+        tituloConfiguracoes.setFont(new Font("Segoe UI", Font.BOLD, 25));
+        tituloConfiguracoes.setForeground(AZUL_ESCURO);
+        tituloConfiguracoes.setAlignmentX(LEFT_ALIGNMENT);
 
-        JLabel subtitulo = new JLabel(
+        subtituloConfiguracoes = new JLabel(
                 "Personalize a aparência e o idioma do sistema."
         );
-        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        subtitulo.setForeground(CINZA);
-        subtitulo.setAlignmentX(LEFT_ALIGNMENT);
+        subtituloConfiguracoes.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        subtituloConfiguracoes.setForeground(CINZA);
+        subtituloConfiguracoes.setAlignmentX(LEFT_ALIGNMENT);
 
-        tela.add(titulo);
+        tela.add(tituloConfiguracoes);
         tela.add(Box.createVerticalStrut(5));
-        tela.add(subtitulo);
+        tela.add(subtituloConfiguracoes);
         tela.add(Box.createVerticalStrut(25));
 
 
@@ -746,11 +1027,11 @@ public class TelaProjetos extends JFrame {
                 new Dimension(Integer.MAX_VALUE, 145)
         );
 
-        JLabel tituloAparencia = new JLabel("Aparência");
+        tituloAparencia = new JLabel("Aparência");
         tituloAparencia.setFont(new Font("Segoe UI", Font.BOLD, 18));
         tituloAparencia.setForeground(AZUL_ESCURO);
 
-        JLabel descricaoAparencia = new JLabel(
+        descricaoAparencia = new JLabel(
                 "Personalize a aparência do sistema."
         );
         descricaoAparencia.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -760,16 +1041,10 @@ public class TelaProjetos extends JFrame {
                 new BorderLayout(0, 5)
         );
         cabecalhoAparencia.setBackground(SUPERFICIE);
-        cabecalhoAparencia.add(
-                tituloAparencia,
-                BorderLayout.NORTH
-        );
-        cabecalhoAparencia.add(
-                descricaoAparencia,
-                BorderLayout.CENTER
-        );
+        cabecalhoAparencia.add(tituloAparencia, BorderLayout.NORTH);
+        cabecalhoAparencia.add(descricaoAparencia, BorderLayout.CENTER);
 
-        JLabel textoTema = new JLabel(
+        textoTema = new JLabel(
                 "<html><b>Tema</b><br>"
                 + "<font color='#A1A1A6'>"
                 + "Escolha entre o modo claro e escuro."
@@ -783,9 +1058,7 @@ public class TelaProjetos extends JFrame {
         });
 
         comboTema.setSelectedItem(
-                preferencias.get("tema", "dark").equals("light")
-                        ? "Claro"
-                        : "Escuro"
+                temaClaro ? "Claro" : "Escuro"
         );
 
         estilizarCombo(comboTema);
@@ -795,14 +1068,8 @@ public class TelaProjetos extends JFrame {
         opcaoTema.add(textoTema, BorderLayout.CENTER);
         opcaoTema.add(comboTema, BorderLayout.EAST);
 
-        painelAparencia.add(
-                cabecalhoAparencia,
-                BorderLayout.NORTH
-        );
-        painelAparencia.add(
-                opcaoTema,
-                BorderLayout.CENTER
-        );
+        painelAparencia.add(cabecalhoAparencia, BorderLayout.NORTH);
+        painelAparencia.add(opcaoTema, BorderLayout.CENTER);
 
 
         // Painel de idioma
@@ -819,11 +1086,11 @@ public class TelaProjetos extends JFrame {
                 new Dimension(Integer.MAX_VALUE, 145)
         );
 
-        JLabel tituloIdioma = new JLabel("Idioma");
+        tituloIdioma = new JLabel("Idioma");
         tituloIdioma.setFont(new Font("Segoe UI", Font.BOLD, 18));
         tituloIdioma.setForeground(AZUL_ESCURO);
 
-        JLabel descricaoIdioma = new JLabel(
+        descricaoIdioma = new JLabel(
                 "Defina o idioma utilizado na interface."
         );
         descricaoIdioma.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -833,16 +1100,10 @@ public class TelaProjetos extends JFrame {
                 new BorderLayout(0, 5)
         );
         cabecalhoIdioma.setBackground(SUPERFICIE);
-        cabecalhoIdioma.add(
-                tituloIdioma,
-                BorderLayout.NORTH
-        );
-        cabecalhoIdioma.add(
-                descricaoIdioma,
-                BorderLayout.CENTER
-        );
+        cabecalhoIdioma.add(tituloIdioma, BorderLayout.NORTH);
+        cabecalhoIdioma.add(descricaoIdioma, BorderLayout.CENTER);
 
-        JLabel textoIdioma = new JLabel(
+        textoIdioma = new JLabel(
                 "<html><b>Idioma do sistema</b><br>"
                 + "<font color='#A1A1A6'>"
                 + "Selecione seu idioma preferido."
@@ -868,14 +1129,8 @@ public class TelaProjetos extends JFrame {
         opcaoIdioma.add(textoIdioma, BorderLayout.CENTER);
         opcaoIdioma.add(comboIdioma, BorderLayout.EAST);
 
-        painelIdioma.add(
-                cabecalhoIdioma,
-                BorderLayout.NORTH
-        );
-        painelIdioma.add(
-                opcaoIdioma,
-                BorderLayout.CENTER
-        );
+        painelIdioma.add(cabecalhoIdioma, BorderLayout.NORTH);
+        painelIdioma.add(opcaoIdioma, BorderLayout.CENTER);
 
 
         // Adiciona os dois painéis à tela
@@ -884,26 +1139,130 @@ public class TelaProjetos extends JFrame {
         tela.add(painelIdioma);
 
 
-        // Salva as preferências quando o usuário altera os seletores
+        // Salva e aplica o tema selecionado.
         comboTema.addActionListener(e -> {
 
-            String tema = comboTema.getSelectedItem().equals("Claro")
-                    ? "light"
-                    : "dark";
+            boolean novoTemaClaro =
+                    comboTema.getSelectedItem().equals("Claro");
 
-            preferencias.put("tema", tema);
-        });
+            if (temaClaro != novoTemaClaro) {
 
-        comboIdioma.addActionListener(e -> {
+                temaClaro = novoTemaClaro;
 
-            String idioma = comboIdioma.getSelectedItem().equals("English")
-                    ? "en"
-                    : "pt-BR";
+                preferencias.put(
+                        "tema",
+                        temaClaro ? "light" : "dark"
+                );
 
-            preferencias.put("idioma", idioma);
+                aplicarLookAndFeel();
+                recriarInterface();
+            }
         });
     }
 
+
+    private void aplicarLookAndFeel() {
+
+        try {
+
+            if (temaClaro) {
+                UIManager.setLookAndFeel(new FlatLightLaf());
+            } else {
+                UIManager.setLookAndFeel(new FlatDarkLaf());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void aplicarIdioma() {
+
+        // Settings
+        tituloConfiguracoes.setText(traduzir("configuracoes"));
+        subtituloConfiguracoes.setText(traduzir("subtituloConfiguracoes"));
+
+        tituloAparencia.setText(traduzir("aparencia"));
+        descricaoAparencia.setText(traduzir("descricaoAparencia"));
+
+        tituloIdioma.setText(traduzir("idioma"));
+        descricaoIdioma.setText(traduzir("descricaoIdioma"));
+
+        textoTema.setText(
+                "<html><b>" + traduzir("tema") + "</b><br>"
+                + "<font color='#A1A1A6'>"
+                + traduzir("descricaoTema")
+                + "</font></html>"
+        );
+
+        textoIdioma.setText(
+                "<html><b>" + traduzir("idiomaSistema") + "</b><br>"
+                + "<font color='#A1A1A6'>"
+                + traduzir("selecionarIdioma")
+                + "</font></html>"
+        );
+
+        // Sidebar
+        rotuloDashboard.setText(traduzir("dashboard"));
+        rotuloProjetos.setText(traduzir("projetos"));
+        rotuloConfiguracoes.setText(traduzir("configuracoes"));
+        textoMarca.setText(traduzir("projetos"));
+        botaoSair.setText(traduzir("sair"));
+
+        // Dashboard
+        tituloDashboard.setText(traduzir("dashboard"));
+        subtituloDashboard.setText(traduzir("subtituloDashboard"));
+
+        // Formulário e lista
+        tituloFormulario.setText(traduzir("cadastro"));
+        tituloLista.setText(traduzir("lista"));
+
+        botaoCadastrar.setText(traduzir("cadastrar"));
+        botaoLimpar.setText(traduzir("limpar"));
+        botaoBuscar.setText(traduzir("buscar"));
+
+        campoBusca.setToolTipText(traduzir("buscar"));
+        campoNome.setToolTipText(traduzir("placeholderNome"));
+        campoDescricao.setToolTipText(traduzir("placeholderDescricao"));
+
+        // Cards
+        for (Map.Entry<String, JLabel> entrada : rotulosCards.entrySet()) {
+            entrada.getValue().setText(traduzir(entrada.getKey()));
+        }
+
+        // Rótulos dos campos
+        for (Map.Entry<String, List<JLabel>> entrada : rotulosCampos.entrySet()) {
+            for (JLabel label : entrada.getValue()) {
+                label.setText(traduzir(entrada.getKey()));
+            }
+        }
+
+        // Cabeçalhos da tabela
+        String[] cabecalhos = {
+                "ID",
+                traduzir("nome"),
+                traduzir("categoriaLabel"),
+                traduzir("statusLabel"),
+                traduzir("dataCriacao"),
+                traduzir("prazo"),
+                traduzir("acoes")
+        };
+
+        for (int i = 0; i < cabecalhos.length; i++) {
+            tabela.getColumnModel().getColumn(i).setHeaderValue(cabecalhos[i]);
+        }
+
+        tabela.getTableHeader().repaint();
+
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(180);
+        tabela.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tabela.getColumnModel().getColumn(3).setPreferredWidth(130);
+        tabela.getColumnModel().getColumn(4).setPreferredWidth(130);
+        tabela.getColumnModel().getColumn(5).setPreferredWidth(110);
+        tabela.getColumnModel().getColumn(6).setPreferredWidth(90);
+    }
 
 
     // Cria um painel com fundo e borda arredondados.
@@ -953,6 +1312,14 @@ public class TelaProjetos extends JFrame {
 
         JLabel rotulo = new JLabel(texto);
 
+        if (texto.equals("Dashboard")) {
+            rotuloDashboard = rotulo;
+        } else if (texto.equals("Projetos")) {
+            rotuloProjetos = rotulo;
+        } else if (texto.equals("Configurações")) {
+            rotuloConfiguracoes = rotulo;
+        }
+
         rotulo.setFont(new Font(
                 "Segoe UI",
                 selecionado ? Font.BOLD : Font.PLAIN,
@@ -960,7 +1327,9 @@ public class TelaProjetos extends JFrame {
         ));
 
         rotulo.setForeground(
-                selecionado ? BRANCO : CINZA
+                selecionado
+                        ? (temaClaro ? AZUL_ESCURO : BRANCO)
+                        : CINZA
         );
 
         item.add(rotulo, BorderLayout.CENTER);
@@ -997,11 +1366,12 @@ public class TelaProjetos extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
 
+                telaAtual = tela;
+
                 gerenciadorTelas.show(painelTelas, tela);
                 atualizarMenuAtivo(item);
             }
         };
-        
 
         item.addMouseListener(evento);
 
@@ -1031,7 +1401,9 @@ public class TelaProjetos extends JFrame {
             JLabel rotulo = (JLabel) item.getComponent(0);
 
             rotulo.setForeground(
-                    selecionado ? BRANCO : CINZA
+                    selecionado
+                            ? (temaClaro ? AZUL_ESCURO : BRANCO)
+                            : CINZA
             );
 
             rotulo.setFont(new Font(
@@ -1077,7 +1449,8 @@ public class TelaProjetos extends JFrame {
         valor.setFont(new Font("Segoe UI", Font.BOLD, 24));
         valor.setForeground(cor);
 
-        JLabel rotulo = new JLabel(titulo);
+        JLabel rotulo = new JLabel(traduzir(titulo));
+        rotulosCards.put(titulo, rotulo);
 
         rotulo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         rotulo.setForeground(CINZA);
@@ -1104,16 +1477,20 @@ public class TelaProjetos extends JFrame {
 
 
     private JPanel criarCampoComRotulo(
-            String rotulo,
+            String chave,
             Component campo
     ) {
 
         JPanel painel = new JPanel(new BorderLayout(0, 6));
         painel.setBackground(SUPERFICIE);
 
-        JLabel label = new JLabel(rotulo);
+        JLabel label = new JLabel(traduzir(chave));
         label.setFont(new Font("Segoe UI", Font.BOLD, 12));
         label.setForeground(TEXTO);
+
+        rotulosCampos
+                .computeIfAbsent(chave, k -> new java.util.ArrayList<>())
+                .add(label);
 
         painel.add(label, BorderLayout.NORTH);
         painel.add(campo, BorderLayout.CENTER);
@@ -1151,12 +1528,12 @@ public class TelaProjetos extends JFrame {
         campo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         campo.setForeground(TEXTO);
         campo.setBackground(SUPERFICIE_SECUNDARIA);
-        campo.setCaretColor(BRANCO);
+        campo.setCaretColor(temaClaro ? AZUL_ESCURO : BRANCO);
         campo.setPreferredSize(new Dimension(200, 34));
 
         campo.setBorder(
                 BorderFactory.createCompoundBorder(
-                        new RoundedLineBorder(new Color(72, 72, 74), 6),
+                        new RoundedLineBorder(BORDA, 6),
                         BorderFactory.createEmptyBorder(5, 8, 5, 8)
                 )
         );
@@ -1197,6 +1574,18 @@ public class TelaProjetos extends JFrame {
                 dispose();
             }
         });
+
+        comboIdioma.addActionListener(e -> {
+
+            String idioma = comboIdioma.getSelectedItem().equals("English")
+                    ? "en"
+                    : "pt-BR";
+
+            idiomaAtual = idioma;
+            preferencias.put("idioma", idioma);
+
+            aplicarIdioma();
+        });
     }
 
 
@@ -1212,7 +1601,8 @@ public class TelaProjetos extends JFrame {
         campoNome.requestFocus();
     }
 
-        private void cadastrar() {
+
+    private void cadastrar() {
 
         String nome = campoNome.getText().trim();
         String descricao = campoDescricao.getText().trim();
@@ -1230,23 +1620,26 @@ public class TelaProjetos extends JFrame {
         );
 
         try {
-                cliente.cadastrarProjeto(projeto);
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Projeto cadastrado com sucesso!"
-                );
+            cliente.cadastrarProjeto(projeto);
 
-                limparFormulario();
-                carregarTabela();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Projeto cadastrado com sucesso!"
+            );
+
+            limparFormulario();
+            carregarTabela();
 
         } catch (Exception e) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Erro ao cadastrar projeto: " + e.getMessage()
-                );
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Erro ao cadastrar projeto: " + e.getMessage()
+            );
         }
-        }
+    }
+
 
     private void carregarTabela() {
 
@@ -1256,11 +1649,11 @@ public class TelaProjetos extends JFrame {
 
             List<Projeto> projetos = cliente.listarProjetos();
 
-            atualizarGraficoEvolucao(projetos);
+            atualizarGraficos(projetos);
 
             int total = projetos.size();
             int concluidos = 0;
-            int andamento = 0;
+            int emDesenvolvimento = 0;
             int planejados = 0;
 
             for (Projeto projeto : projetos) {
@@ -1285,7 +1678,7 @@ public class TelaProjetos extends JFrame {
                 } else if (
                         "Em desenvolvimento".equalsIgnoreCase(projeto.getStatus())
                 ) {
-                    andamento++;
+                    emDesenvolvimento++;
 
                 } else if ("Planejado".equalsIgnoreCase(projeto.getStatus())) {
                     planejados++;
@@ -1294,7 +1687,7 @@ public class TelaProjetos extends JFrame {
 
             valorTotal.setText(String.valueOf(total));
             valorConcluidos.setText(String.valueOf(concluidos));
-            valorAndamento.setText(String.valueOf(andamento));
+            valorAndamento.setText(String.valueOf(emDesenvolvimento));
             valorPlanejados.setText(String.valueOf(planejados));
 
         } catch (Exception e) {
@@ -1307,12 +1700,36 @@ public class TelaProjetos extends JFrame {
     }
 
 
-    private void atualizarGraficoEvolucao(List<Projeto> projetos) {
+    private void atualizarGraficos(List<Projeto> projetos) {
 
-        var novosDados = viewChart.criarDadosEvolucao(projetos);
-        var novoGrafico = viewChart.criarGraficoEvolucao(novosDados);
+        // Atualiza os dados do gráfico de status.
+        var novosDadosStatus = viewChart.criarDadosStatus(projetos);
 
-        painelGraficoEvolucao.setChart(novoGrafico);
+        var novoGraficoStatus = viewChart.criarGraficoStatus(
+                novosDadosStatus
+        );
+
+        painelGraficoStatus.setChart(novoGraficoStatus);
+
+
+        // Atualiza os dados do gráfico de categorias.
+        var novosDadosCategoria = viewChart.criarDadosCategoria(projetos);
+
+        var novoGraficoCategoria = viewChart.criarGraficoCategoria(
+                novosDadosCategoria
+        );
+
+        painelGraficoCategoria.setChart(novoGraficoCategoria);
+
+
+        // Atualiza os dados do gráfico de evolução.
+        var novosDadosEvolucao = viewChart.criarDadosEvolucao(projetos);
+
+        var novoGraficoEvolucao = viewChart.criarGraficoEvolucao(
+                novosDadosEvolucao
+        );
+
+        painelGraficoEvolucao.setChart(novoGraficoEvolucao);
     }
 
 
@@ -1443,11 +1860,11 @@ public class TelaProjetos extends JFrame {
         JPanel campos = new JPanel(new GridLayout(5, 1, 10, 14));
         campos.setBackground(SUPERFICIE);
 
-        campos.add(criarCampoComRotulo("Nome do projeto", nome));
-        campos.add(criarCampoComRotulo("Descrição", descricao));
-        campos.add(criarCampoComRotulo("Categoria", categoria));
-        campos.add(criarCampoComRotulo("Status", status));
-        campos.add(criarCampoComRotulo("Prazo (DD-MM-AAAA)", prazo));
+        campos.add(criarCampoComRotulo("nomeProjeto", nome));
+        campos.add(criarCampoComRotulo("descricao", descricao));
+        campos.add(criarCampoComRotulo("categoriaLabel", categoria));
+        campos.add(criarCampoComRotulo("statusLabel", status));
+        campos.add(criarCampoComRotulo("prazo", prazo));
 
         JButton botaoSalvar = criarBotao(
                 "Salvar alterações",
@@ -1897,7 +2314,17 @@ public class TelaProjetos extends JFrame {
 
             try {
 
-                com.formdev.flatlaf.FlatDarkLaf.setup();
+                Preferences preferencias =
+                        Preferences.userNodeForPackage(TelaProjetos.class);
+
+                boolean temaClaro =
+                        preferencias.get("tema", "dark").equals("light");
+
+                if (temaClaro) {
+                    FlatLightLaf.setup();
+                } else {
+                    FlatDarkLaf.setup();
+                }
 
                 UIManager.put(
                         "defaultFont",

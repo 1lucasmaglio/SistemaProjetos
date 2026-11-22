@@ -246,6 +246,7 @@ body {
 main {
     width: 100%;
     max-width: none;
+    min-width: 0;
     margin: 0;
     padding: 25px;
     flex: 1;
@@ -719,6 +720,8 @@ footer {
 
 .tela {
     display: none;
+    width: 100%;
+    min-width: 0;
 }
 
 .tela.ativa {
@@ -923,6 +926,11 @@ body.tema-claro .status-planejado {
         line-height: 1.5;
     }
 
+    .cards-estatisticas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
     .card-estatistica {
         min-height: 75px;
         padding: 10px;
@@ -1016,16 +1024,6 @@ body.tema-claro .status-planejado {
         gap: 6px;
         padding: 15px;
         font-size: 11px;
-    }
-
-    .configuracao-opcao {
-        align-items: stretch;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .configuracao-opcao select {
-        width: 100%;
     }
 }
 
@@ -1149,6 +1147,7 @@ body.tema-claro .status-planejado {
     display: flex;
     flex-direction: column;
     gap: 18px;
+    width: 100%;
     max-width: 850px;
 }
 
@@ -1230,4 +1229,135 @@ body.tema-claro .status-planejado {
 .configuracao-opcao select:focus {
     outline: none;
     border-color: var(--accento);
+}
+
+/* ========================================
+   CORREÇÕES FINAIS — TELAS MOBILE
+   ======================================== */
+
+/*
+   Estas regras ficam no final do arquivo
+   para não serem sobrescritas pelos estilos
+   gerais das configurações.
+*/
+
+@media (max-width: 650px) {
+
+    .area-aplicacao {
+        width: 100%;
+        min-width: 0;
+    }
+
+    main {
+        width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    .tela {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Dashboard */
+
+    .cards-estatisticas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .graficos-superiores {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .painel {
+        min-width: 0;
+    }
+
+    .grafico-container {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Projetos */
+
+    .campos-formulario {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cabecalho-lista {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .controles-lista {
+        width: 100%;
+    }
+
+    .tabela-container {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    /* Configurações */
+
+    .configuracoes-container {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .painel-configuracao {
+        width: 100%;
+        min-width: 0;
+        padding: 16px;
+    }
+
+    .configuracao-cabecalho {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .configuracao-cabecalho p {
+        line-height: 1.5;
+    }
+
+    .configuracao-icone {
+        flex-shrink: 0;
+    }
+
+    .configuracao-opcao {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 16px;
+    }
+
+    .configuracao-opcao select {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* ========================================
+   CELULARES PEQUENOS
+   ======================================== */
+
+@media (max-width: 380px) {
+
+    .cards-estatisticas {
+        grid-template-columns: 1fr;
+    }
+
+    .marca {
+        font-size: 18px;
+    }
+
+    .menu a {
+        padding: 9px 10px;
+        font-size: 13px;
+    }
+
+    .painel-configuracao {
+        padding: 13px;
+    }
 }

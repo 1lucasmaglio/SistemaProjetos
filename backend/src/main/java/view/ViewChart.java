@@ -30,22 +30,21 @@ import org.jfree.data.general.DefaultPieDataset;
 
 import model.Projeto;
 
-
 public class ViewChart {
 
     // ========================================
     // CORES E FONTES
     // ========================================
 
-    private static final Color FUNDO = new Color(36, 36, 38);
-    private static final Color TEXTO = new Color(229, 229, 231);
-    private static final Color CINZA = new Color(161, 161, 166);
-    private static final Color BORDA = new Color(58, 58, 60);
+    private final Color FUNDO;
+    private final Color TEXTO;
+    private final Color CINZA;
+    private final Color BORDA;
 
-    private static final Color VERDE = new Color(67, 124, 30);
-    private static final Color AZUL = new Color(0, 153, 153);
-    private static final Color VERMELHO = new Color(239, 98, 108);
-    private static final Color CLARO = new Color(239, 246, 238);
+    private final Color VERDE = new Color(67, 124, 30);
+    private final Color AZUL = new Color(0, 153, 153);
+    private final Color VERMELHO = new Color(239, 98, 108);
+    private final Color CLARO = new Color(239, 246, 238);
 
     private static final Font FONTE_TITULO =
             new Font("Segoe UI", Font.BOLD, 17);
@@ -58,20 +57,160 @@ public class ViewChart {
 
 
     // ========================================
-    // GRÁFICO DE STATUS
+    // CONSTRUTOR
     // ========================================
 
-    public DefaultPieDataset<String> criarDadosStatus() {
+    public ViewChart(boolean temaClaro) {
+
+        if (temaClaro) {
+
+            FUNDO = new Color(255, 255, 255);
+            TEXTO = new Color(45, 45, 48);
+            CINZA = new Color(110, 110, 115);
+            BORDA = new Color(220, 220, 224);
+
+        } else {
+
+            FUNDO = new Color(36, 36, 38);
+            TEXTO = new Color(229, 229, 231);
+            CINZA = new Color(161, 161, 166);
+            BORDA = new Color(58, 58, 60);
+        }
+    }
+
+
+    // ========================================
+    // DADOS DOS GRÁFICOS
+    // ========================================
+
+    public DefaultPieDataset<String> criarDadosStatus(
+            List<Projeto> projetos
+    ) {
 
         DefaultPieDataset<String> dados = new DefaultPieDataset<>();
 
-        dados.setValue("Concluídos", 1);
-        dados.setValue("Em desenvolvimento", 4);
-        dados.setValue("Planejados", 7);
+        int concluidos = 0;
+        int emDesenvolvimento = 0;
+        int planejados = 0;
+
+        for (Projeto projeto : projetos) {
+
+            String status = projeto.getStatus();
+
+            if (status == null) {
+                continue;
+            }
+
+            if (status.equalsIgnoreCase("Concluído")) {
+                concluidos++;
+
+            } else if (
+                    status.equalsIgnoreCase("Em desenvolvimento")
+            ) {
+                emDesenvolvimento++;
+
+            } else if (status.equalsIgnoreCase("Planejado")) {
+                planejados++;
+            }
+        }
+
+        dados.setValue("Concluídos", concluidos);
+        dados.setValue("Em desenvolvimento", emDesenvolvimento);
+        dados.setValue("Planejados", planejados);
 
         return dados;
     }
 
+
+    public DefaultCategoryDataset criarDadosCategoria(
+            List<Projeto> projetos
+    ) {
+
+        DefaultCategoryDataset dados = new DefaultCategoryDataset();
+
+        Map<String, Integer> contagemPorCategoria = new TreeMap<>();
+
+        for (Projeto projeto : projetos) {
+
+            String categoria = projeto.getCategoria();
+
+            if (categoria == null || categoria.isBlank()) {
+                continue;
+            }
+
+            contagemPorCategoria.put(
+                    categoria,
+                    contagemPorCategoria.getOrDefault(categoria, 0) + 1
+            );
+        }
+
+        for (Map.Entry<String, Integer> entrada :
+                contagemPorCategoria.entrySet()) {
+
+            dados.addValue(
+                    entrada.getValue(),
+                    "Quantidade de projetos",
+                    entrada.getKey()
+            );
+        }
+
+        return dados;
+    }
+
+
+    public DefaultCategoryDataset criarDadosEvolucao(
+            List<Projeto> projetos
+    ) {
+
+        DefaultCategoryDataset dados = new DefaultCategoryDataset();
+
+        Map<YearMonth, Integer> contagemPorMes = new TreeMap<>();
+
+        for (Projeto projeto : projetos) {
+
+            if (projeto.getDataCriacao() == null) {
+                continue;
+            }
+
+            YearMonth mes = YearMonth.from(
+                    projeto.getDataCriacao()
+            );
+
+            contagemPorMes.put(
+                    mes,
+                    contagemPorMes.getOrDefault(mes, 0) + 1
+            );
+        }
+
+        Locale idioma = new Locale("pt", "BR");
+
+        for (Map.Entry<YearMonth, Integer> entrada :
+                contagemPorMes.entrySet()) {
+
+            YearMonth mes = entrada.getKey();
+
+            String nomeMes = mes.getMonth()
+                    .getDisplayName(TextStyle.FULL, idioma);
+
+            nomeMes = nomeMes.substring(0, 1).toUpperCase(idioma)
+                    + nomeMes.substring(1);
+
+            String label = nomeMes + " " + mes.getYear();
+
+            dados.addValue(
+                    entrada.getValue(),
+                    "Projetos criados",
+                    label
+            );
+        }
+
+        return dados;
+    }
+
+
+    // ========================================
+    // GRÁFICO DE STATUS
+    // ========================================
 
     public JFreeChart criarGraficoStatus(
             DefaultPieDataset<String> dados
@@ -85,10 +224,7 @@ public class ViewChart {
                 false
         );
 
-        // Título
         estilizarTitulo(grafico);
-
-        // Legenda
         estilizarLegenda(grafico);
 
         RingPlot plot = (RingPlot) grafico.getPlot();
@@ -96,8 +232,6 @@ public class ViewChart {
         plot.setBackgroundPaint(FUNDO);
         plot.setOutlineVisible(false);
         plot.setShadowPaint(null);
-
-        // Aparência do anel
         plot.setSeparatorsVisible(false);
         plot.setSectionDepth(0.50);
 
@@ -105,12 +239,10 @@ public class ViewChart {
                 new Rectangle2D.Double(-6, -3, 12, 6)
         );
 
-        // Cores das categorias
         plot.setSectionPaint("Concluídos", VERDE);
         plot.setSectionPaint("Em desenvolvimento", AZUL);
         plot.setSectionPaint("Planejados", VERMELHO);
 
-        // Não mostrar valores escritos sobre as fatias.
         plot.setLabelGenerator(null);
 
         grafico.setBackgroundPaint(FUNDO);
@@ -126,19 +258,6 @@ public class ViewChart {
     // ========================================
     // GRÁFICO DE CATEGORIAS
     // ========================================
-
-    public DefaultCategoryDataset criarDadosCategoria() {
-
-        DefaultCategoryDataset dados = new DefaultCategoryDataset();
-
-        dados.addValue(5, "Quantidade de projetos", "Web");
-        dados.addValue(3, "Quantidade de projetos", "Software");
-        dados.addValue(4, "Quantidade de projetos", "Mobile");
-        dados.addValue(2, "Quantidade de projetos", "Desktop");
-
-        return dados;
-    }
-
 
     public JFreeChart criarGraficoCategoria(
             DefaultCategoryDataset dados
@@ -161,7 +280,6 @@ public class ViewChart {
                 new RectangleInsets(12, 20, 12, 20)
         );
 
-        // Título e legenda
         estilizarTitulo(grafico);
         estilizarLegenda(grafico);
 
@@ -169,11 +287,8 @@ public class ViewChart {
 
         plot.setBackgroundPaint(FUNDO);
         plot.setOutlineVisible(false);
-
-        // Linhas horizontais do gráfico
         plot.setRangeGridlinePaint(BORDA);
 
-        // Renderer controla a aparência das barras.
         BarRenderer renderer = new BarRenderer() {
 
             @Override
@@ -211,11 +326,9 @@ public class ViewChart {
 
         plot.setRenderer(renderer);
 
-        // Eixo horizontal: nomes das categorias
         plot.getDomainAxis().setTickLabelPaint(TEXTO);
         plot.getDomainAxis().setTickLabelFont(FONTE_EIXO);
 
-        // Eixo vertical: quantidades
         NumberAxis eixoVertical = (NumberAxis) plot.getRangeAxis();
 
         eixoVertical.setTickLabelPaint(TEXTO);
@@ -234,59 +347,6 @@ public class ViewChart {
     // ========================================
     // GRÁFICO DE EVOLUÇÃO MENSAL
     // ========================================
-
-    public DefaultCategoryDataset criarDadosEvolucao(
-            List<Projeto> projetos
-    ) {
-
-        DefaultCategoryDataset dados = new DefaultCategoryDataset();
-
-        // TreeMap mantém os meses em ordem cronológica.
-        Map<YearMonth, Integer> contagemPorMes = new TreeMap<>();
-
-        // Conta quantos projetos foram criados em cada mês.
-        for (Projeto projeto : projetos) {
-
-            if (projeto.getDataCriacao() != null) {
-
-                YearMonth mes = YearMonth.from(
-                        projeto.getDataCriacao()
-                );
-
-                contagemPorMes.put(
-                        mes,
-                        contagemPorMes.getOrDefault(mes, 0) + 1
-                );
-            }
-        }
-
-        // Nome completo dos meses em português.
-        Locale idioma = new Locale("pt", "BR");
-
-        for (Map.Entry<YearMonth, Integer> entrada :
-                contagemPorMes.entrySet()) {
-
-            YearMonth mes = entrada.getKey();
-
-            String nomeMes = mes.getMonth()
-                    .getDisplayName(TextStyle.FULL, idioma);
-
-            // Primeira letra maiúscula.
-            nomeMes = nomeMes.substring(0, 1).toUpperCase(idioma)
-                    + nomeMes.substring(1);
-
-            String label = nomeMes + " " + mes.getYear();
-
-            dados.addValue(
-                    entrada.getValue(),
-                    "Projetos criados",
-                    label
-            );
-        }
-
-        return dados;
-    }
-
 
     public JFreeChart criarGraficoEvolucao(
             DefaultCategoryDataset dados
@@ -309,7 +369,6 @@ public class ViewChart {
                 new RectangleInsets(12, 20, 12, 20)
         );
 
-        // Título e legenda
         estilizarTitulo(grafico);
         estilizarLegenda(grafico);
 
@@ -317,10 +376,8 @@ public class ViewChart {
 
         plot.setBackgroundPaint(FUNDO);
         plot.setOutlineVisible(false);
-
         plot.setRangeGridlinePaint(BORDA);
 
-        // Eixo vertical: somente números inteiros.
         NumberAxis eixoVertical = (NumberAxis) plot.getRangeAxis();
 
         eixoVertical.setNumberFormatOverride(
@@ -333,11 +390,9 @@ public class ViewChart {
 
         eixoVertical.setAutoRangeIncludesZero(true);
 
-        // Renderer controla a linha e os pontos.
         LineAndShapeRenderer renderer =
                 (LineAndShapeRenderer) plot.getRenderer();
 
-        // Linha principal.
         renderer.setSeriesPaint(0, AZUL);
 
         renderer.setSeriesStroke(
@@ -345,7 +400,6 @@ public class ViewChart {
                 new BasicStroke(2.5f)
         );
 
-        // Mostrar os pontos.
         renderer.setSeriesShapesVisible(0, true);
 
         renderer.setSeriesShape(
@@ -354,16 +408,12 @@ public class ViewChart {
         );
 
         renderer.setSeriesShapesFilled(0, true);
-
-        // Cor interna dos pontos.
         renderer.setUseFillPaint(true);
         renderer.setSeriesFillPaint(0, VERMELHO);
 
-        // Contorno dos pontos.
         renderer.setDrawOutlines(true);
         renderer.setSeriesOutlinePaint(0, CLARO);
 
-        // Textos dos eixos.
         plot.getDomainAxis().setTickLabelPaint(TEXTO);
         plot.getDomainAxis().setTickLabelFont(FONTE_EIXO);
 
@@ -395,10 +445,7 @@ public class ViewChart {
 
     private void estilizarTitulo(JFreeChart grafico) {
 
-        grafico.getTitle().setPaint(
-                new Color(245, 245, 247)
-        );
-
+        grafico.getTitle().setPaint(TEXTO);
         grafico.getTitle().setFont(FONTE_TITULO);
 
         grafico.getTitle().setHorizontalAlignment(

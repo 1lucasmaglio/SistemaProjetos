@@ -182,13 +182,13 @@ function atualizarGraficoStatus(concluidos, emDesenvolvimento, planejados) {
 
 /* GRÁFICO DE PROJETOS POR CATEGORIA */
 
-function atualizarGraficoCategoria(web, software, mobile, desktop) {
+function atualizarGraficoCategoria(desktop, mobile, software, web) {
 
     const elementoGraficoCategoria = document.getElementById("graficoCategoria");
 
     const contextoGraficoCategoria = elementoGraficoCategoria.getContext("2d");
 
-    const dados = [web, software, mobile, desktop];
+    const dados = [desktop, mobile, software, web];
 
     if (graficoCategoria === null) {
 
@@ -198,10 +198,10 @@ function atualizarGraficoCategoria(web, software, mobile, desktop) {
 
             data: {
                 labels: [
-                    "Web",
-                    "Software",
+                    "Desktop",
                     "Mobile",
-                    "Desktop"
+                    "Software",
+                    "Web"
                 ],
 
                 datasets: [{
@@ -209,10 +209,10 @@ function atualizarGraficoCategoria(web, software, mobile, desktop) {
                     data: dados,
 
                     backgroundColor: [
-                        "#009999",
-                        "#437C1E",
+                        "#EFF6EE",
                         "#EF626C",
-                        "#EFF6EE"
+                        "#437C1E",
+                        "#009999"
                     ],
 
                     borderWidth: 0
@@ -239,10 +239,10 @@ function atualizarGraficoCategoria(web, software, mobile, desktop) {
     } else {
 
         graficoCategoria.data.labels = [
-            "Web",
-            "Software",
+            "Desktop",
             "Mobile",
-            "Desktop"
+            "Software",
+            "Web"
         ];
 
         graficoCategoria.data.datasets[0].label =
@@ -452,7 +452,7 @@ function atualizarEstatisticas(projetos) {
     valorPlanejados.textContent = planejados;
 
     atualizarGraficoStatus(concluidos, emDesenvolvimento, planejados);
-    atualizarGraficoCategoria(web, software, mobile, desktop);
+    atualizarGraficoCategoria(desktop, mobile, software, web);
     atualizarGraficoMensal(projetos);
 }
 
