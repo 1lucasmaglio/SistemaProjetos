@@ -410,10 +410,11 @@ public class TelaProjetos extends JFrame {
         tituloSistema.setForeground(AZUL_ESCURO);
         barraSuperior.add(tituloSistema, BorderLayout.WEST);
 
+        
         // Identificação do usuário e botão de saída (mesma organização da web).
         String caminhoFoto = temaClaro
-                ? "frontend/img/foto-claro.webp"
-                : "frontend/img/foto.webp";
+                ? "frontend/img/foto-light.png"
+                : "frontend/img/foto.png";
         ImageIcon iconeUsuarioOriginal = new ImageIcon(caminhoFoto);
         Image iconeUsuarioImagem = iconeUsuarioOriginal.getImage()
                 .getScaledInstance(50, 50, Image.SCALE_SMOOTH);
@@ -444,8 +445,8 @@ public class TelaProjetos extends JFrame {
 
         botaoSair = new JButton("Sair");
         String caminhoIconeSair = temaClaro
-                ? "frontend/img/icone-sair-claro.png"
-                : "frontend/img/icone-sair.png";
+                ? "frontend/img/icone-sair-light.png"
+                : "frontend/img/icone-sair-dark.png";
         ImageIcon iconeSair = new ImageIcon(caminhoIconeSair);
         Image imagemSair = iconeSair.getImage().getScaledInstance(26, 26, Image.SCALE_SMOOTH);
         botaoSair.setIcon(new ImageIcon(imagemSair));
