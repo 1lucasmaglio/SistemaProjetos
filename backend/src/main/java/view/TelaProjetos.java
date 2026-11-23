@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -12,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
@@ -19,10 +21,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.awt.Cursor;
 import java.util.prefs.Preferences;
 
-import java.awt.RenderingHints;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -94,6 +94,13 @@ public class TelaProjetos extends JFrame {
     private JButton botaoLimpar;
     private JButton botaoBuscar;
     private JButton botaoSair;
+    private JLabel rotuloUsuario;
+    private JPanel painelPaginacao;
+    private JPanel painelLista;
+    private JScrollPane scrollTabela;
+    private List<Projeto> projetosFiltrados = new java.util.ArrayList<>();
+    private int paginaAtual = 1;
+    private static final int PROJETOS_POR_PAGINA = 5;
 
     private JLabel valorTotal;
     private JLabel valorConcluidos;
@@ -401,40 +408,58 @@ public class TelaProjetos extends JFrame {
         JLabel tituloSistema = new JLabel("Sistema de Projetos");
         tituloSistema.setFont(new Font("Segoe UI", Font.BOLD, 20));
         tituloSistema.setForeground(AZUL_ESCURO);
+        barraSuperior.add(tituloSistema, BorderLayout.WEST);
+
+        // Identificação do usuário e botão de saída (mesma organização da web).
+        String caminhoFoto = temaClaro
+                ? "frontend/img/foto-claro.webp"
+                : "frontend/img/foto.webp";
+        ImageIcon iconeUsuarioOriginal = new ImageIcon(caminhoFoto);
+        Image iconeUsuarioImagem = iconeUsuarioOriginal.getImage()
+                .getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        JLabel iconeUsuario = new JLabel(new ImageIcon(iconeUsuarioImagem));
+
+        rotuloUsuario = new JLabel(traduzir("usuario"));
+        rotuloUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        rotuloUsuario.setForeground(temaClaro ? CINZA : BRANCO);
 
         JLabel usuario = new JLabel(cliente.getNomeUsuario());
-        usuario.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        usuario.setForeground(CINZA);
+        usuario.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        usuario.setForeground(temaClaro ? TEXTO : BRANCO);
+
+        JPanel textoUsuario = new JPanel();
+        textoUsuario.setLayout(new BoxLayout(textoUsuario, BoxLayout.Y_AXIS));
+        textoUsuario.setOpaque(false);
+        textoUsuario.add(rotuloUsuario);
+        textoUsuario.add(Box.createVerticalStrut(5));
+        textoUsuario.add(usuario);
+
+        JPanel informacoesUsuario = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
+        informacoesUsuario.setOpaque(false);
+        informacoesUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
+        informacoesUsuario.setPreferredSize(new Dimension(180, 55));
+        informacoesUsuario.setMaximumSize(new Dimension(180, 55));
+        informacoesUsuario.add(iconeUsuario);
+        informacoesUsuario.add(textoUsuario);
 
         botaoSair = new JButton("Sair");
-
-        ImageIcon iconeSair = new ImageIcon(
-                "frontend/img/icone-sair.png"
-        );
-
-        Image imagemSair = iconeSair.getImage().getScaledInstance(
-                26,
-                26,
-                Image.SCALE_SMOOTH
-        );
-
+        String caminhoIconeSair = temaClaro
+                ? "frontend/img/icone-sair-claro.png"
+                : "frontend/img/icone-sair.png";
+        ImageIcon iconeSair = new ImageIcon(caminhoIconeSair);
+        Image imagemSair = iconeSair.getImage().getScaledInstance(26, 26, Image.SCALE_SMOOTH);
         botaoSair.setIcon(new ImageIcon(imagemSair));
-
         botaoSair.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        botaoSair.setForeground(Color.WHITE);
-
-        botaoSair.setBackground(new Color(0, 0, 0, 0));
+        botaoSair.setForeground(temaClaro ? TEXTO : BRANCO);
         botaoSair.setOpaque(false);
         botaoSair.setBorderPainted(false);
         botaoSair.setFocusPainted(false);
         botaoSair.setContentAreaFilled(false);
-
         botaoSair.setHorizontalAlignment(SwingConstants.LEFT);
-        botaoSair.setVerticalAlignment(SwingConstants.CENTER);
         botaoSair.setIconTextGap(12);
-
         botaoSair.setMargin(new Insets(6, 2, 6, 2));
         botaoSair.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 
 
         // Menu lateral
@@ -455,7 +480,7 @@ public class TelaProjetos extends JFrame {
 
         textoMarca = new JLabel("Projetos");
         textoMarca.setFont(new Font("Segoe UI", Font.BOLD, 19));
-        textoMarca.setForeground(temaClaro ? AZUL_ESCURO : BRANCO);
+        textoMarca.setForeground(AZUL);
 
         JPanel marca = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         marca.setBackground(AZUL_SIDEBAR);
@@ -482,19 +507,40 @@ public class TelaProjetos extends JFrame {
 
         sidebar.add(Box.createVerticalGlue());
 
-        usuario.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JPanel acoesUsuario = new JPanel();
+        acoesUsuario.setLayout(new BoxLayout(acoesUsuario, BoxLayout.Y_AXIS));
+        acoesUsuario.setOpaque(false);
+        acoesUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
+        acoesUsuario.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 0, 0, temaClaro ? BORDA : new Color(65, 65, 68)),
+                BorderFactory.createEmptyBorder(18, 0, 0, 0)
+        ));
+        informacoesUsuario.setMaximumSize(new Dimension(Integer.MAX_VALUE, 55));
         botaoSair.setAlignmentX(Component.LEFT_ALIGNMENT);
         botaoSair.setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
-
-        sidebar.add(usuario);
-        sidebar.add(Box.createVerticalStrut(12));
-        sidebar.add(botaoSair);
+        acoesUsuario.add(informacoesUsuario);
+        acoesUsuario.add(Box.createVerticalStrut(16));
+        acoesUsuario.add(botaoSair);
+        sidebar.add(acoesUsuario);
 
 
         // Gerenciador de telas
         gerenciadorTelas = new CardLayout();
 
-        painelTelas = new JPanel(gerenciadorTelas);
+        painelTelas = new JPanel(gerenciadorTelas) {
+            private final Image fundo = new ImageIcon(
+                    temaClaro ? "frontend/img/pattern-background-light.png"
+                              : "frontend/img/pattern-background.png"
+            ).getImage();
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (fundo != null) {
+                    g.drawImage(fundo, 0, 0, this);
+                }
+            }
+        };
         painelTelas.setBackground(FUNDO);
 
 
@@ -503,7 +549,7 @@ public class TelaProjetos extends JFrame {
         telaDashboard.setLayout(
                 new BoxLayout(telaDashboard, BoxLayout.Y_AXIS)
         );
-        telaDashboard.setBackground(FUNDO);
+        telaDashboard.setOpaque(false);
         telaDashboard.setBorder(
                 BorderFactory.createEmptyBorder(25, 25, 25, 25)
         );
@@ -514,7 +560,7 @@ public class TelaProjetos extends JFrame {
         telaProjetos.setLayout(
                 new BoxLayout(telaProjetos, BoxLayout.Y_AXIS)
         );
-        telaProjetos.setBackground(FUNDO);
+        telaProjetos.setOpaque(false);
         telaProjetos.setBorder(
                 BorderFactory.createEmptyBorder(25, 25, 25, 25)
         );
@@ -525,7 +571,7 @@ public class TelaProjetos extends JFrame {
         telaConfiguracoes.setLayout(
                 new BoxLayout(telaConfiguracoes, BoxLayout.Y_AXIS)
         );
-        telaConfiguracoes.setBackground(FUNDO);
+        telaConfiguracoes.setOpaque(false);
         telaConfiguracoes.setBorder(
                 BorderFactory.createEmptyBorder(25, 25, 25, 25)
         );
@@ -726,7 +772,7 @@ public class TelaProjetos extends JFrame {
 
         painelFormulario.setAlignmentX(LEFT_ALIGNMENT);
         painelFormulario.setMaximumSize(
-                new Dimension(Integer.MAX_VALUE, 270)
+                new Dimension(Integer.MAX_VALUE, 330)
         );
 
         tituloFormulario = new JLabel("Cadastro de Projeto");
@@ -763,12 +809,16 @@ public class TelaProjetos extends JFrame {
         campos.add(criarCampoComRotulo("statusLabel", comboStatus));
         campos.add(criarCampoComRotulo("prazo", campoPrazo));
 
-        botaoCadastrar = criarBotao("Cadastrar projeto", AZUL, BRANCO);
+        botaoCadastrar = criarBotao(
+                "Cadastrar projeto",
+                new Color(48, 54, 58),
+                BRANCO
+        );
 
         botaoLimpar = criarBotao(
                 "Limpar",
-                SUPERFICIE_SECUNDARIA,
-                TEXTO
+                new Color(112, 120, 126),
+                BRANCO
         );
 
         JPanel botoesFormulario = new JPanel(
@@ -792,7 +842,7 @@ public class TelaProjetos extends JFrame {
 
 
         // Lista de projetos
-        JPanel painelLista = criarPainelArredondado(
+        painelLista = criarPainelArredondado(
                 new BorderLayout(0, 15),
                 SUPERFICIE,
                 BORDA,
@@ -951,7 +1001,7 @@ public class TelaProjetos extends JFrame {
         tabela.getColumnModel().getColumn(5).setPreferredWidth(110);
         tabela.getColumnModel().getColumn(6).setPreferredWidth(90);
 
-        JScrollPane scrollTabela = new JScrollPane(tabela);
+        scrollTabela = new JScrollPane(tabela);
 
         scrollTabela.setBorder(
                 new RoundedLineBorder(BORDA, 7)
@@ -959,8 +1009,16 @@ public class TelaProjetos extends JFrame {
 
         scrollTabela.getViewport().setBackground(SUPERFICIE);
 
+        painelPaginacao = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 4));
+        painelPaginacao.setBackground(SUPERFICIE);
+        atualizarControlesPaginacao();
+
+        JPanel conteudoLista = new JPanel(new BorderLayout(0, 12));
+        conteudoLista.setOpaque(false);
+        conteudoLista.add(scrollTabela, BorderLayout.CENTER);
+        conteudoLista.add(painelPaginacao, BorderLayout.SOUTH);
         painelLista.add(barraLista, BorderLayout.NORTH);
-        painelLista.add(scrollTabela, BorderLayout.CENTER);
+        painelLista.add(conteudoLista, BorderLayout.CENTER);
 
         telaProjetos.add(painelLista);
 
@@ -1209,6 +1267,7 @@ public class TelaProjetos extends JFrame {
         rotuloConfiguracoes.setText(traduzir("configuracoes"));
         textoMarca.setText(traduzir("projetos"));
         botaoSair.setText(traduzir("sair"));
+        rotuloUsuario.setText(traduzir("usuario"));
 
         // Dashboard
         tituloDashboard.setText(traduzir("dashboard"));
@@ -1644,11 +1703,7 @@ public class TelaProjetos extends JFrame {
     private void carregarTabela() {
 
         try {
-
-            modelo.setRowCount(0);
-
             List<Projeto> projetos = cliente.listarProjetos();
-
             atualizarGraficos(projetos);
 
             int total = projetos.size();
@@ -1657,29 +1712,10 @@ public class TelaProjetos extends JFrame {
             int planejados = 0;
 
             for (Projeto projeto : projetos) {
-
-                modelo.addRow(new Object[]{
-                        projeto.getId(),
-                        projeto.getNome(),
-                        projeto.getCategoria(),
-                        projeto.getStatus(),
-                        projeto.getDataCriacao().format(
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                        ),
-                        projeto.getPrazo().format(
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                        ),
-                        ""
-                });
-
                 if ("Concluído".equalsIgnoreCase(projeto.getStatus())) {
                     concluidos++;
-
-                } else if (
-                        "Em desenvolvimento".equalsIgnoreCase(projeto.getStatus())
-                ) {
+                } else if ("Em desenvolvimento".equalsIgnoreCase(projeto.getStatus())) {
                     emDesenvolvimento++;
-
                 } else if ("Planejado".equalsIgnoreCase(projeto.getStatus())) {
                     planejados++;
                 }
@@ -1690,15 +1726,128 @@ public class TelaProjetos extends JFrame {
             valorAndamento.setText(String.valueOf(emDesenvolvimento));
             valorPlanejados.setText(String.valueOf(planejados));
 
-        } catch (Exception e) {
+            projetosFiltrados = new java.util.ArrayList<>(projetos);
+            paginaAtual = 1;
+            atualizarPaginaTabela();
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Erro ao carregar projetos: " + e.getMessage()
-            );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erro ao carregar projetos: " + e.getMessage());
         }
     }
 
+
+    private void atualizarPaginaTabela() {
+        modelo.setRowCount(0);
+        int totalPaginas = Math.max(1, (int) Math.ceil(
+                projetosFiltrados.size() / (double) PROJETOS_POR_PAGINA));
+        paginaAtual = Math.min(Math.max(1, paginaAtual), totalPaginas);
+        int inicio = (paginaAtual - 1) * PROJETOS_POR_PAGINA;
+        int fim = Math.min(inicio + PROJETOS_POR_PAGINA, projetosFiltrados.size());
+
+        for (int i = inicio; i < fim; i++) {
+            Projeto projeto = projetosFiltrados.get(i);
+            modelo.addRow(new Object[]{
+                    projeto.getId(), projeto.getNome(), projeto.getCategoria(),
+                    projeto.getStatus(),
+                    projeto.getDataCriacao().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                    projeto.getPrazo().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                    ""
+            });
+        }
+
+        atualizarControlesPaginacao();
+        ajustarAlturaLista();
+    }
+
+
+    // Mantém a tabela na altura das linhas exibidas, sem espaço vazio até a paginação.
+    private void ajustarAlturaLista() {
+        if (scrollTabela == null || painelLista == null || tabela == null) return;
+
+        int quantidadeLinhas = Math.max(1, tabela.getRowCount());
+        int alturaCabecalho = tabela.getTableHeader().getPreferredSize().height;
+        int alturaLinhas = quantidadeLinhas * tabela.getRowHeight();
+
+        scrollTabela.setPreferredSize(new Dimension(
+                scrollTabela.getPreferredSize().width,
+                alturaCabecalho + alturaLinhas + 2
+        ));
+
+        Dimension tamanhoPreferido = painelLista.getPreferredSize();
+        painelLista.setMaximumSize(new Dimension(
+                Integer.MAX_VALUE,
+                tamanhoPreferido.height
+        ));
+
+        painelLista.revalidate();
+        painelLista.repaint();
+    }
+
+
+    private void mudarPagina(int direcao) {
+        paginaAtual += direcao;
+        atualizarPaginaTabela();
+    }
+
+    // Mostra no máximo cinco números de página, além das setas laterais.
+    private void atualizarControlesPaginacao() {
+        if (painelPaginacao == null) return;
+
+        painelPaginacao.removeAll();
+        int totalPaginas = Math.max(1, (int) Math.ceil(
+                projetosFiltrados.size() / (double) PROJETOS_POR_PAGINA));
+
+        JButton anterior = criarBotaoPaginacao("‹", false);
+        anterior.setEnabled(paginaAtual > 1);
+        anterior.addActionListener(e -> mudarPagina(-1));
+        painelPaginacao.add(anterior);
+
+        int primeira = Math.max(1, paginaAtual - 2);
+        int ultima = Math.min(totalPaginas, primeira + 4);
+        primeira = Math.max(1, ultima - 4);
+
+        for (int numero = primeira; numero <= ultima; numero++) {
+            final int pagina = numero;
+            JButton botaoPagina = criarBotaoPaginacao(
+                    String.valueOf(numero), numero == paginaAtual);
+            botaoPagina.addActionListener(e -> {
+                paginaAtual = pagina;
+                atualizarPaginaTabela();
+            });
+            painelPaginacao.add(botaoPagina);
+        }
+
+        JButton proxima = criarBotaoPaginacao("›", false);
+        proxima.setEnabled(paginaAtual < totalPaginas);
+        proxima.addActionListener(e -> mudarPagina(1));
+        painelPaginacao.add(proxima);
+
+        painelPaginacao.revalidate();
+        painelPaginacao.repaint();
+    }
+
+    private JButton criarBotaoPaginacao(String texto, boolean selecionado) {
+        Color fundo = selecionado ? new Color(53, 137, 35) : SUPERFICIE_SECUNDARIA;
+        JButton botao = new JButton(texto);
+        botao.setPreferredSize(new Dimension(40, 38));
+        botao.setMinimumSize(new Dimension(40, 38));
+        botao.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        botao.setForeground(TEXTO);
+        if (selecionado) botao.setForeground(Color.WHITE);
+        botao.setBackground(fundo);
+        botao.setOpaque(true);
+        botao.setFocusPainted(false);
+        botao.setBorderPainted(true);
+        botao.setBorder(new RoundedLineBorder(selecionado
+                ? fundo : BORDA, 8));
+        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        botao.setEnabled(!("‹".equals(texto) && paginaAtual == 1)
+                && !("›".equals(texto)
+                && paginaAtual >= Math.max(1, (int) Math.ceil(
+                projetosFiltrados.size() / (double) PROJETOS_POR_PAGINA))));
+        return botao;
+    }
 
     private void atualizarGraficos(List<Projeto> projetos) {
 
@@ -1734,49 +1883,26 @@ public class TelaProjetos extends JFrame {
 
 
     private void buscarProjetos() {
-
         String busca = campoBusca.getText().trim().toLowerCase();
-
         try {
+            List<Projeto> todosProjetos = cliente.listarProjetos();
+            projetosFiltrados = new java.util.ArrayList<>();
 
-            modelo.setRowCount(0);
-
-            List<Projeto> projetos = cliente.listarProjetos();
-
-            for (Projeto projeto : projetos) {
-
-                boolean corresponde =
-                        projeto.getNome().toLowerCase().contains(busca)
+            for (Projeto projeto : todosProjetos) {
+                boolean corresponde = busca.isEmpty()
+                        || projeto.getNome().toLowerCase().contains(busca)
                         || projeto.getCategoria().toLowerCase().contains(busca)
                         || projeto.getStatus().toLowerCase().contains(busca);
-
-                if (corresponde) {
-
-                    modelo.addRow(new Object[]{
-                            projeto.getId(),
-                            projeto.getNome(),
-                            projeto.getCategoria(),
-                            projeto.getStatus(),
-                            projeto.getDataCriacao().format(
-                                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ),
-                            projeto.getPrazo().format(
-                                    DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            ),
-                            ""
-                    });
-                }
+                if (corresponde) projetosFiltrados.add(projeto);
             }
 
+            paginaAtual = 1;
+            atualizarPaginaTabela();
         } catch (Exception e) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Erro ao buscar projetos: " + e.getMessage()
-            );
+            JOptionPane.showMessageDialog(this,
+                    "Erro ao buscar projetos: " + e.getMessage());
         }
     }
-
 
     private void editarProjeto(int id) {
 
@@ -1868,14 +1994,14 @@ public class TelaProjetos extends JFrame {
 
         JButton botaoSalvar = criarBotao(
                 "Salvar alterações",
-                AZUL,
+                new Color(48, 54, 58),
                 BRANCO
         );
 
         JButton botaoCancelar = criarBotao(
                 "Cancelar",
-                SUPERFICIE_SECUNDARIA,
-                TEXTO
+                new Color(112, 120, 126),
+                BRANCO
         );
 
         JPanel botoes = new JPanel(

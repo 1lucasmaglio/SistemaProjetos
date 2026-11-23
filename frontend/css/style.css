@@ -1148,7 +1148,7 @@ body.tema-claro .status-planejado {
     flex-direction: column;
     gap: 18px;
     width: 100%;
-    max-width: 850px;
+    max-width: none;
 }
 
 .painel-configuracao {
@@ -1156,6 +1156,8 @@ body.tema-claro .status-planejado {
     background: var(--superficie);
     border: 1px solid var(--borda);
     border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .configuracao-cabecalho {
@@ -1176,18 +1178,6 @@ body.tema-claro .status-planejado {
     margin: 0;
     color: var(--cinza);
     font-size: 13px;
-}
-
-.configuracao-icone {
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--accento);
-    background: rgba(0, 153, 153, 0.12);
-    border-radius: 8px;
-    font-size: 20px;
 }
 
 .configuracao-opcao {

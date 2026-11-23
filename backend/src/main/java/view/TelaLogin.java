@@ -2,14 +2,22 @@ package view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.util.Arrays;
+import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,222 +29,240 @@ import client.ApiClient;
 
 public class TelaLogin extends JFrame {
 
-    private ApiClient cliente;
+    private final ApiClient cliente;
+    private final Preferences preferencias =
+            Preferences.userNodeForPackage(TelaProjetos.class);
 
     private JTextField campoEmail;
     private JPasswordField campoSenha;
     private JButton botaoLogin;
     private JLabel mensagemLogin;
 
-    // Cores do tema escuro
-    private final Color FUNDO = new Color(28, 28, 30);
-    private final Color SUPERFICIE = new Color(36, 36, 38);
-    private final Color SUPERFICIE_SECUNDARIA = new Color(48, 48, 51);
-    private final Color TEXTO = new Color(245, 245, 247);
-    private final Color CINZA = new Color(161, 161, 166);
-    private final Color AZUL = new Color(0, 153, 153);
-    private final Color BORDA = new Color(58, 58, 60);
-    private final Color ERRO = new Color(239, 98, 108);
+    private boolean temaClaro;
+
+    private Color FUNDO;
+    private Color SUPERFICIE;
+    private Color SUPERFICIE_SECUNDARIA;
+    private Color TEXTO;
+    private Color CINZA;
+    private Color AZUL;
+    private Color BORDA;
+    private Color ERRO;
 
     public TelaLogin() {
 
         setTitle("Login - Sistema de Projetos");
-        setSize(520, 600);
+        setSize(560, 680);
+        setMinimumSize(new Dimension(500, 620));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         cliente = new ApiClient();
 
-        // Campos
-        campoEmail = new JTextField();
-        campoSenha = new JPasswordField();
+        temaClaro = preferencias.get("tema", "dark").equals("light");
+        configurarCores();
+        criarComponentes();
+        configurarEventoLogin();
+    }
 
-        botaoLogin = new JButton("Entrar");
+    private void configurarCores() {
 
-        mensagemLogin = new JLabel(" ");
-        mensagemLogin.setForeground(ERRO);
-        mensagemLogin.setFont(new Font("Arial", Font.PLAIN, 13));
+        AZUL = new Color(0, 153, 153);
+        ERRO = new Color(239, 98, 108);
 
-        // Painel principal: fundo da tela
-        JPanel painelPrincipal = new JPanel(new GridBagLayout());
+        if (temaClaro) {
+            FUNDO = new Color(247, 248, 250);
+            SUPERFICIE = Color.WHITE;
+            SUPERFICIE_SECUNDARIA = new Color(242, 244, 247);
+            TEXTO = new Color(45, 50, 60);
+            CINZA = new Color(105, 113, 125);
+            BORDA = new Color(220, 224, 230);
+        } else {
+            FUNDO = new Color(28, 28, 30);
+            SUPERFICIE = new Color(36, 36, 38);
+            SUPERFICIE_SECUNDARIA = new Color(48, 48, 51);
+            TEXTO = new Color(229, 229, 231);
+            CINZA = new Color(161, 161, 166);
+            BORDA = new Color(58, 58, 60);
+        }
+    }
 
+    private void criarComponentes() {
+
+        JPanel painelPrincipal = new JPanel(new GridBagLayout()) {
+            private final Image fundo = new ImageIcon(
+                    temaClaro ? "frontend/img/pattern-background-light.png"
+                              : "frontend/img/pattern-background.png"
+            ).getImage();
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (fundo != null) {
+                    g.drawImage(fundo, 0, 0, this);
+                }
+            }
+        };
         painelPrincipal.setBackground(FUNDO);
 
-        // Painel: cartão de login
         JPanel painelLogin = new JPanel();
-
-        painelLogin.setLayout(
-            new BoxLayout(painelLogin, BoxLayout.Y_AXIS)
-        );
-
+        painelLogin.setLayout(new BoxLayout(painelLogin, BoxLayout.Y_AXIS));
         painelLogin.setBackground(SUPERFICIE);
-
-        painelLogin.setPreferredSize(
-            new Dimension(400, 460)
-        );
-
-        painelLogin.setBorder(
-            BorderFactory.createCompoundBorder(
+        painelLogin.setPreferredSize(new Dimension(430, 520));
+        painelLogin.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDA),
-                BorderFactory.createEmptyBorder(35, 35, 35, 35)
-            )
-        );
+                BorderFactory.createEmptyBorder(38, 38, 38, 38)
+        ));
 
-        // Marca
-        JLabel marca = new JLabel(
-            "<html><span style='color:#f5f5f7'>SP </span>"
-            + "<span style='color:#009999'>|</span>"
-            + "<span style='color:#f5f5f7'> Projetos</span></html>"
-        );
+        // Marca: mesma imagem e identificação visual da tela de projetos.
+        ImageIcon imagemOriginal = new ImageIcon("frontend/img/logo6.png");
+        Image imagemRedimensionada = imagemOriginal.getImage()
+                .getScaledInstance(36, 36, Image.SCALE_SMOOTH);
+        JLabel logo = new JLabel(new ImageIcon(imagemRedimensionada));
 
-        marca.setFont(new Font("Arial", Font.BOLD, 21));
+        JLabel textoMarca = new JLabel("Projetos");
+        textoMarca.setFont(new Font("Segoe UI", Font.BOLD, 21));
+        textoMarca.setForeground(TEXTO);
+
+        JPanel marca = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        marca.setOpaque(false);
         marca.setAlignmentX(Component.LEFT_ALIGNMENT);
+        marca.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        marca.add(logo);
+        marca.add(textoMarca);
 
-        // Título
         JLabel titulo = new JLabel("Bem-vindo!");
-
-        titulo.setFont(new Font("Arial", Font.BOLD, 25));
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
         titulo.setForeground(TEXTO);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Descrição
         JLabel descricao = new JLabel(
-            "Entre com sua conta para acessar seus projetos."
+                "Entre com sua conta para acessar seus projetos."
         );
-
-        descricao.setFont(new Font("Arial", Font.PLAIN, 13));
+        descricao.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         descricao.setForeground(CINZA);
         descricao.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Labels
-        JLabel labelEmail = new JLabel("E-mail");
-        JLabel labelSenha = new JLabel("Senha");
+        JLabel labelEmail = criarLabel("E-mail");
+        JLabel labelSenha = criarLabel("Senha");
 
-        labelEmail.setFont(new Font("Arial", Font.BOLD, 12));
-        labelSenha.setFont(new Font("Arial", Font.BOLD, 12));
+        campoEmail = new JTextField();
+        campoSenha = new JPasswordField();
+        estilizarCampo(campoEmail);
+        estilizarCampo(campoSenha);
 
-        labelEmail.setForeground(TEXTO);
-        labelSenha.setForeground(TEXTO);
+        // Botão principal no mesmo padrão dos botões de ação da TelaProjetos.
+        // O fundo é desenhado manualmente para não depender do Look and Feel do Swing.
+        botaoLogin = new JButton("Entrar") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(
+                        RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON
+                );
 
-        labelEmail.setAlignmentX(Component.LEFT_ALIGNMENT);
-        labelSenha.setAlignmentX(Component.LEFT_ALIGNMENT);
+                Color corBotao = AZUL;
+                if (!isEnabled()) {
+                    corBotao = new Color(100, 145, 145);
+                } else if (getModel().isPressed()) {
+                    corBotao = AZUL.darker();
+                } else if (getModel().isRollover()) {
+                    corBotao = AZUL.brighter();
+                }
 
-        // Estilo dos campos
-        campoEmail.setFont(new Font("Arial", Font.PLAIN, 13));
-        campoSenha.setFont(new Font("Arial", Font.PLAIN, 13));
+                g2.setColor(corBotao);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+                g2.dispose();
 
-        campoEmail.setForeground(TEXTO);
-        campoSenha.setForeground(TEXTO);
-
-        campoEmail.setBackground(SUPERFICIE_SECUNDARIA);
-        campoSenha.setBackground(SUPERFICIE_SECUNDARIA);
-
-        campoEmail.setCaretColor(TEXTO);
-        campoSenha.setCaretColor(TEXTO);
-
-        campoEmail.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDA),
-                BorderFactory.createEmptyBorder(8, 10, 8, 10)
-            )
-        );
-
-        campoSenha.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDA),
-                BorderFactory.createEmptyBorder(8, 10, 8, 10)
-            )
-        );
-
-        campoEmail.setMaximumSize(
-            new Dimension(Integer.MAX_VALUE, 38)
-        );
-
-        campoSenha.setMaximumSize(
-            new Dimension(Integer.MAX_VALUE, 38)
-        );
-
-        campoEmail.setAlignmentX(Component.LEFT_ALIGNMENT);
-        campoSenha.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Estilo do botão
-        botaoLogin.setFont(new Font("Arial", Font.BOLD, 12));
-        botaoLogin.setBackground(AZUL);
-        botaoLogin.setForeground(TEXTO);
+                super.paintComponent(g);
+            }
+        };
+        botaoLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        botaoLogin.setForeground(Color.WHITE);
         botaoLogin.setFocusPainted(false);
         botaoLogin.setBorderPainted(false);
-        botaoLogin.setOpaque(true);
-
+        botaoLogin.setContentAreaFilled(false);
+        botaoLogin.setOpaque(false);
+        botaoLogin.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        botaoLogin.setRolloverEnabled(true);
+        botaoLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoLogin.setAlignmentX(Component.LEFT_ALIGNMENT);
+        botaoLogin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 46));
+        botaoLogin.setPreferredSize(new Dimension(350, 46));
 
-        botaoLogin.setMaximumSize(
-            new Dimension(Integer.MAX_VALUE, 38)
-        );
+        mensagemLogin = new JLabel(" ");
+        mensagemLogin.setForeground(ERRO);
+        mensagemLogin.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        mensagemLogin.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Montagem do cartão
         painelLogin.add(marca);
-        painelLogin.add(Box.createVerticalStrut(30));
-
+        painelLogin.add(Box.createVerticalStrut(38));
         painelLogin.add(titulo);
-        painelLogin.add(Box.createVerticalStrut(8));
-
+        painelLogin.add(Box.createVerticalStrut(10));
         painelLogin.add(descricao);
-        painelLogin.add(Box.createVerticalStrut(30));
-
+        painelLogin.add(Box.createVerticalStrut(38));
         painelLogin.add(labelEmail);
-        painelLogin.add(Box.createVerticalStrut(6));
-
+        painelLogin.add(Box.createVerticalStrut(9));
         painelLogin.add(campoEmail);
-        painelLogin.add(Box.createVerticalStrut(18));
-
+        painelLogin.add(Box.createVerticalStrut(24));
         painelLogin.add(labelSenha);
-        painelLogin.add(Box.createVerticalStrut(6));
-
+        painelLogin.add(Box.createVerticalStrut(9));
         painelLogin.add(campoSenha);
-        painelLogin.add(Box.createVerticalStrut(12));
-
+        painelLogin.add(Box.createVerticalStrut(15));
         painelLogin.add(mensagemLogin);
-        painelLogin.add(Box.createVerticalStrut(8));
-
+        painelLogin.add(Box.createVerticalStrut(12));
         painelLogin.add(botaoLogin);
 
         painelPrincipal.add(painelLogin);
+        setContentPane(painelPrincipal);
+    }
 
-        this.add(painelPrincipal);
+    private JLabel criarLabel(String texto) {
+        JLabel label = new JLabel(texto);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        label.setForeground(TEXTO);
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        return label;
+    }
 
-        // Evento do botão Entrar
+    private void estilizarCampo(JTextField campo) {
+        campo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        campo.setForeground(TEXTO);
+        campo.setBackground(SUPERFICIE_SECUNDARIA);
+        campo.setCaretColor(TEXTO);
+        campo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDA),
+                BorderFactory.createEmptyBorder(10, 12, 10, 12)
+        ));
+        campo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        campo.setPreferredSize(new Dimension(350, 44));
+    }
+
+    private void configurarEventoLogin() {
         botaoLogin.addActionListener(e -> {
+            botaoLogin.setEnabled(false);
 
             try {
-
                 String email = campoEmail.getText();
                 char[] senha = campoSenha.getPassword();
 
                 try {
-
                     cliente.login(email, senha);
-
                 } finally {
-
                     Arrays.fill(senha, '\0');
                     campoSenha.setText("");
-
                 }
 
                 TelaProjetos tela = new TelaProjetos(cliente);
-
                 tela.setVisible(true);
-
                 dispose();
 
             } catch (Exception erro) {
-
                 mensagemLogin.setText(erro.getMessage());
-
+                botaoLogin.setEnabled(true);
             }
-
         });
-
     }
-
 }
