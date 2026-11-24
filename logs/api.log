@@ -1950,3 +1950,85 @@
 23/11/2026 16:00:18 - GET /api/projetos - Status: 200 OK - 0.2746 ms
 23/11/2026 16:00:25 - GET /api/projetos - Status: 200 OK - 0.3355 ms
 23/11/2026 16:00:26 - GET /api/projetos - Status: 200 OK - 0.586 ms
+23/11/2026 20:32:08 - POST /api/login - Status: 200 OK - 90.449104 ms
+23/11/2026 20:32:09 - GET /api/projetos - Status: 200 OK - 1.103 ms
+23/11/2026 20:32:10 - OPTIONS /api/login - Status: 200 OK - 4.3088 ms
+23/11/2026 20:32:10 - POST /api/login - Status: 200 OK - 103.26591 ms
+23/11/2026 20:32:10 - OPTIONS /api/projetos - Status: 200 OK - 0.3455 ms
+23/11/2026 20:32:10 - GET /api/projetos - Status: 200 OK - 4.3514 ms
+23/11/2026 20:34:08 - OPTIONS /api/projetos - Status: 200 OK - 0.4877 ms
+23/11/2026 20:34:08 - GET /api/projetos - Status: 200 OK - 1.8102 ms
+23/11/2026 20:34:38 - GET /api/projetos - Status: 200 OK - 0.5532 ms
+23/11/2026 20:34:47 - GET /api/projetos - Status: 200 OK - 0.3909 ms
+23/11/2026 20:34:48 - GET /api/projetos - Status: 200 OK - 0.2809 ms
+23/11/2026 20:34:50 - GET /api/projetos - Status: 200 OK - 0.3361 ms
+23/11/2026 20:34:52 - GET /api/projetos - Status: 200 OK - 0.3637 ms
+23/11/2026 20:34:53 - GET /api/projetos - Status: 200 OK - 0.2591 ms
+23/11/2026 20:36:38 - OPTIONS /api/projetos - Status: 200 OK - 1.7748 ms
+23/11/2026 20:36:38 - GET /api/projetos - Status: 200 OK - 0.6331 ms
+23/11/2026 20:37:41 - GET /api/projetos - Status: 200 OK - 0.259 ms
+23/11/2026 20:37:42 - GET /api/projetos - Status: 200 OK - 0.2666 ms
+23/11/2026 20:44:11 - GET /api/projetos - Status: 200 OK - 0.6471 ms
+23/11/2026 20:44:28 - GET /api/projetos - Status: 200 OK - 0.4099 ms
+23/11/2026 20:50:08 - OPTIONS /api/login - Status: 200 OK - 0.4253 ms
+23/11/2026 20:50:08 - POST /api/login - Status: 200 OK - 64.872 ms
+23/11/2026 20:50:08 - OPTIONS /api/projetos - Status: 200 OK - 1.9229 ms
+23/11/2026 20:50:08 - GET /api/projetos - Status: 200 OK - 2.1344 ms
+23/11/2026 20:56:12 - OPTIONS /api/projetos - Status: 200 OK - 0.4026 ms
+23/11/2026 20:56:13 - POST /api/projetos - Status: 400 Bad Request - 205.16978 ms
+23/11/2026 20:56:16 - POST /api/projetos - Status: 400 Bad Request - 2.3063 ms
+23/11/2026 20:56:39 - OPTIONS /api/projetos - Status: 200 OK - 0.707 ms
+23/11/2026 20:56:39 - POST /api/projetos - Status: 400 Bad Request - 1.9843 ms
+23/11/2026 20:57:07 - OPTIONS /api/projetos - Status: 200 OK - 0.3114 ms
+23/11/2026 20:57:07 - POST /api/projetos - Status: 400 Bad Request - 1.6917 ms
+23/11/2026 20:57:16 - OPTIONS /api/projetos - Status: 200 OK - 0.4428 ms
+23/11/2026 20:57:16 - POST /api/projetos - Status: 400 Bad Request - 1.5212 ms
+23/11/2026 20:57:51 - OPTIONS /api/projetos - Status: 200 OK - 25.2404 ms
+23/11/2026 20:57:51 - GET /api/projetos - Status: 401 Unauthorized - 0.9104 ms
+23/11/2026 20:58:00 - OPTIONS /api/login - Status: 200 OK - 0.4689 ms
+23/11/2026 20:58:01 - POST /api/login - Status: 200 OK - 333.6496 ms
+23/11/2026 20:58:01 - OPTIONS /api/projetos - Status: 200 OK - 2.6403 ms
+23/11/2026 20:58:01 - GET /api/projetos - Status: 200 OK - 106.1883 ms
+23/11/2026 20:58:08 - OPTIONS /api/projetos - Status: 200 OK - 0.5249 ms
+23/11/2026 20:58:08 - POST /api/projetos - Status: 400 Bad Request - 9.362 ms
+23/11/2026 20:58:32 - OPTIONS /api/projetos - Status: 200 OK - 0.7803 ms
+23/11/2026 20:58:32 - POST /api/projetos - Status: 400 Bad Request - 1.7523 ms
+23/11/2026 20:58:37 - OPTIONS /api/projetos - Status: 200 OK - 0.5106 ms
+23/11/2026 20:58:37 - POST /api/projetos - Status: 201 Created - 18.2294 ms
+23/11/2026 20:58:40 - GET /api/projetos - Status: 200 OK - 4.9141 ms
+23/11/2026 20:58:40 - GET /api/projetos - Status: 200 OK - 1.1431 ms
+23/11/2026 20:59:05 - OPTIONS /api/projetos - Status: 200 OK - 1.3546 ms
+23/11/2026 20:59:05 - POST /api/projetos - Status: 201 Created - 4.1676 ms
+23/11/2026 20:59:07 - GET /api/projetos - Status: 200 OK - 5.1512 ms
+23/11/2026 20:59:07 - GET /api/projetos - Status: 200 OK - 4.7102 ms
+23/11/2026 21:04:51 - OPTIONS /api/login - Status: 200 OK - 1.2751 ms
+23/11/2026 21:04:51 - POST /api/login - Status: 200 OK - 67.6715 ms
+23/11/2026 21:04:51 - OPTIONS /api/projetos - Status: 200 OK - 0.4936 ms
+23/11/2026 21:04:51 - GET /api/projetos - Status: 200 OK - 57.6378 ms
+23/11/2026 21:05:33 - POST /api/login - Status: 200 OK - 62.3631 ms
+23/11/2026 21:05:34 - GET /api/projetos - Status: 200 OK - 0.5298 ms
+23/11/2026 21:06:55 - GET /api/projetos - Status: 200 OK - 0.7631 ms
+23/11/2026 21:06:56 - GET /api/projetos - Status: 200 OK - 0.5263 ms
+23/11/2026 21:06:56 - GET /api/projetos - Status: 200 OK - 0.7072 ms
+23/11/2026 21:07:57 - GET /api/projetos - Status: 200 OK - 0.5032 ms
+23/11/2026 21:08:03 - GET /api/projetos - Status: 200 OK - 0.7192 ms
+23/11/2026 21:08:05 - GET /api/projetos - Status: 200 OK - 0.4526 ms
+23/11/2026 21:08:07 - GET /api/projetos - Status: 200 OK - 0.5657 ms
+23/11/2026 21:09:08 - GET /api/projetos - Status: 200 OK - 0.538 ms
+23/11/2026 21:09:11 - GET /api/projetos - Status: 200 OK - 0.4456 ms
+23/11/2026 21:09:13 - GET /api/projetos - Status: 200 OK - 1.3583 ms
+23/11/2026 21:09:17 - GET /api/projetos - Status: 200 OK - 0.5789 ms
+23/11/2026 21:09:20 - GET /api/projetos - Status: 200 OK - 0.5203 ms
+23/11/2026 21:09:22 - GET /api/projetos - Status: 200 OK - 0.4139 ms
+23/11/2026 21:09:25 - GET /api/projetos - Status: 200 OK - 0.3897 ms
+23/11/2026 21:10:12 - GET /api/projetos - Status: 200 OK - 0.6188 ms
+23/11/2026 21:10:20 - GET /api/projetos - Status: 200 OK - 0.4992 ms
+23/11/2026 21:10:22 - GET /api/projetos - Status: 200 OK - 0.4443 ms
+23/11/2026 21:10:30 - GET /api/projetos - Status: 200 OK - 0.4192 ms
+23/11/2026 21:10:32 - GET /api/projetos - Status: 200 OK - 0.4221 ms
+23/11/2026 21:10:34 - GET /api/projetos - Status: 200 OK - 0.3973 ms
+23/11/2026 21:10:35 - GET /api/projetos - Status: 200 OK - 0.4451 ms
+23/11/2026 21:48:59 - OPTIONS /api/login - Status: 200 OK - 5.1672 ms
+23/11/2026 21:48:59 - POST /api/login - Status: 200 OK - 70.45 ms
+23/11/2026 21:49:00 - OPTIONS /api/projetos - Status: 200 OK - 0.5531 ms
+23/11/2026 21:49:00 - GET /api/projetos - Status: 200 OK - 2.4279 ms
