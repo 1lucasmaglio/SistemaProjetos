@@ -117,22 +117,22 @@ public class TelaLogin extends JFrame {
         // Marca: mesma imagem e identificação visual da tela de projetos.
         ImageIcon imagemOriginal = new ImageIcon("frontend/img/logo6.png");
         Image imagemRedimensionada = imagemOriginal.getImage()
-                .getScaledInstance(36, 36, Image.SCALE_SMOOTH);
+                .getScaledInstance(46, 46, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(imagemRedimensionada));
 
         JLabel textoMarca = new JLabel("Projetos");
-        textoMarca.setFont(new Font("Segoe UI", Font.BOLD, 21));
+        textoMarca.setFont(new Font("Segoe UI", Font.PLAIN, 25));
         textoMarca.setForeground(TEXTO);
 
         JPanel marca = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         marca.setOpaque(false);
         marca.setAlignmentX(Component.LEFT_ALIGNMENT);
-        marca.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        marca.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         marca.add(logo);
         marca.add(textoMarca);
 
         JLabel titulo = new JLabel("Bem-vindo!");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        titulo.setFont(new Font("Segoe UI", Font.PLAIN, 28));
         titulo.setForeground(TEXTO);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -178,7 +178,7 @@ public class TelaLogin extends JFrame {
                 super.paintComponent(g);
             }
         };
-        botaoLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        botaoLogin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         botaoLogin.setForeground(Color.WHITE);
         botaoLogin.setFocusPainted(false);
         botaoLogin.setBorderPainted(false);
@@ -197,7 +197,7 @@ public class TelaLogin extends JFrame {
         mensagemLogin.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         painelLogin.add(marca);
-        painelLogin.add(Box.createVerticalStrut(38));
+        painelLogin.add(Box.createVerticalStrut(10));
         painelLogin.add(titulo);
         painelLogin.add(Box.createVerticalStrut(10));
         painelLogin.add(descricao);
@@ -220,7 +220,7 @@ public class TelaLogin extends JFrame {
 
     private JLabel criarLabel(String texto) {
         JLabel label = new JLabel(texto);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         label.setForeground(TEXTO);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         return label;

@@ -51,7 +51,11 @@ body.tema-claro main {
 }
 
 body.tema-claro .icone-usuario {
-    content: url("/frontend/img/foto-light.png");
+    content: url("/frontend/img/dark-bear.gif");
+}
+
+body.tema-claro .icone-sair {
+    content: url("/frontend/img/icone-sair-dark-bear.gif");
 }
 
 /* ========================================
@@ -64,8 +68,7 @@ html {
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont,
-        "SF Pro Display", "Segoe UI", sans-serif;
+    font-family: "Segoe UI", sans-serif;
     color: var(--texto);
     background: var(--fundo);
 }
@@ -115,7 +118,7 @@ body {
     padding: 12px 12px;
     color: var(--branco);
     font-size: 25px;
-    font-weight: 650;
+    font-weight: 400;
     white-space: nowrap;
 }
 
@@ -155,7 +158,7 @@ body {
 
 .menu a.ativo {
     color: var(--branco);
-    font-weight: 600;
+    font-weight: 560;
     background: rgba(255, 255, 255, 0.14);
 }
 
@@ -232,6 +235,7 @@ body {
 .barra-superior strong {
     color: var(--branco);
     font-size: 19px;
+    font-weight: 400;
 }
 
 .barra-superior span {
@@ -315,6 +319,7 @@ main {
     color: var(--branco);
     font-size: 24px;
     line-height: 1.1;
+    font-weight: 400;
 }
 
 .card-estatistica span {
@@ -355,7 +360,6 @@ main {
     margin: 0;
     color: var(--branco);
     font-size: 17px;
-    font-weight: 600;
 }
 
 .grafico-container {
@@ -394,7 +398,7 @@ main {
 .campo label {
     color: var(--texto);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .campo input,
@@ -512,7 +516,7 @@ td:last-child {
 
 th {
     color: var(--texto);
-    font-weight: 600;
+    font-weight: 400;
     white-space: nowrap;
 }
 
@@ -566,7 +570,7 @@ tbody tr:hover {
     border: 1px solid #343a40;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -581,7 +585,7 @@ tbody tr:hover {
     background: #437C1E;
     border-color: #437C1E;
     color: #fff;
-    font-weight: 600;
+    font-weight: 400;
     box-shadow: 0 0 10px rgba(67, 124, 30, 0.25);
 }
 
@@ -635,7 +639,7 @@ footer {
     margin-bottom: 30px;
     color: var(--branco);
     font-size: 21px;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 .marca-login span {
@@ -737,7 +741,7 @@ footer {
     padding: 5px 10px;
     border-radius: 6px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
     white-space: nowrap;
 }
 
@@ -962,6 +966,7 @@ body.tema-claro .status-planejado {
 
     .painel h2 {
         font-size: 15px;
+        
     }
 
     .grafico-container {
@@ -1172,6 +1177,7 @@ body.tema-claro .status-planejado {
     margin: 0 0 5px;
     color: var(--branco);
     font-size: 16px;
+    font-weight: 600;
 }
 
 .configuracao-cabecalho p {
@@ -1350,4 +1356,15 @@ body.tema-claro .status-planejado {
     .painel-configuracao {
         padding: 13px;
     }
+}
+
+/* Fundo da página de login */
+
+.pagina-login {
+    background-image: url("/frontend/img/pattern-background.png");
+    background-repeat: repeat;
+}
+
+body.tema-claro .pagina-login {
+    background-image: url("/frontend/img/pattern-background-light.png");
 }

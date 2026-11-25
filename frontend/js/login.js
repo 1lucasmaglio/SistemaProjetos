@@ -1,4 +1,10 @@
 
+/* CONFIGURAÇÃO DE TEMA */
+
+const temaSalvo = localStorage.getItem("tema") || "dark";
+
+document.body.classList.toggle("tema-claro", temaSalvo === "light");
+
 const API_URL = "http://localhost:7070/api/login";
 
 const formLogin = document.getElementById("formLogin");

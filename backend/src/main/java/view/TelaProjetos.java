@@ -82,7 +82,8 @@ public class TelaProjetos extends JFrame {
     private JComboBox<String> comboTema;
     private JComboBox<String> comboIdioma;
 
-    private String idiomaAtual;
+    private String idiomaAtual = "pt-BR";
+    private boolean atualizandoIdioma = false;
 
     private JTable tabela;
     private DefaultTableModel modelo;
@@ -95,6 +96,7 @@ public class TelaProjetos extends JFrame {
     private JButton botaoBuscar;
     private JButton botaoSair;
     private JLabel rotuloUsuario;
+    private JLabel tituloSistema;
     private JPanel painelPaginacao;
     private JPanel painelLista;
     private JScrollPane scrollTabela;
@@ -269,7 +271,8 @@ public class TelaProjetos extends JFrame {
             Map.entry("quantidadeProjetos", "Quantidade de projetos"),
             Map.entry("projetosCriados", "Projetos criados"),
             Map.entry("subtituloConfiguracoes", "Personalize a aparência e o idioma do sistema."),
-            Map.entry("subtituloDashboard", "Gerencie e acompanhe seus projetos.")
+            Map.entry("subtituloDashboard", "Gerencie e acompanhe seus projetos."),
+            Map.entry("tituloSistema", "Sistema de Projetos")
         ),
 
         "en", Map.ofEntries(
@@ -325,7 +328,8 @@ public class TelaProjetos extends JFrame {
             Map.entry("quantidadeProjetos", "Number of projects"),
             Map.entry("projetosCriados", "Projects created"),
             Map.entry("subtituloConfiguracoes", "Customize the system's appearance and language."),
-            Map.entry("subtituloDashboard", "Manage and track your projects.")
+            Map.entry("subtituloDashboard", "Manage and track your projects."),
+            Map.entry("tituloSistema", "Project Management System")
         )
     );
 
@@ -337,7 +341,7 @@ public class TelaProjetos extends JFrame {
 
     public TelaProjetos(ApiClient cliente) {
 
-        setTitle("Sistema de Projetos");
+        setTitle(idiomaAtual.equals("en") ? "Project Management System" : "Sistema de Projetos");
         setSize(1200, 760);
         setMinimumSize(new Dimension(950, 650));
         setLocationRelativeTo(null);
@@ -405,27 +409,27 @@ public class TelaProjetos extends JFrame {
                 BorderFactory.createEmptyBorder(15, 25, 15, 25)
         );
 
-        JLabel tituloSistema = new JLabel("Sistema de Projetos");
-        tituloSistema.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        tituloSistema = new JLabel("Sistema de Projetos");
+        tituloSistema.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         tituloSistema.setForeground(AZUL_ESCURO);
         barraSuperior.add(tituloSistema, BorderLayout.WEST);
 
         
         // Identificação do usuário e botão de saída (mesma organização da web).
         String caminhoFoto = temaClaro
-                ? "frontend/img/foto-light.png"
-                : "frontend/img/foto.png";
+                ? "frontend/img/dark-bear.gif"
+                : "frontend/img/light-bear.png";
         ImageIcon iconeUsuarioOriginal = new ImageIcon(caminhoFoto);
         Image iconeUsuarioImagem = iconeUsuarioOriginal.getImage()
                 .getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         JLabel iconeUsuario = new JLabel(new ImageIcon(iconeUsuarioImagem));
 
         rotuloUsuario = new JLabel(traduzir("usuario"));
-        rotuloUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        rotuloUsuario.setFont(new Font("Segoe UI", Font.BOLD, 13));
         rotuloUsuario.setForeground(temaClaro ? CINZA : BRANCO);
 
         JLabel usuario = new JLabel(cliente.getNomeUsuario());
-        usuario.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        usuario.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         usuario.setForeground(temaClaro ? TEXTO : BRANCO);
 
         JPanel textoUsuario = new JPanel();
@@ -445,8 +449,8 @@ public class TelaProjetos extends JFrame {
 
         botaoSair = new JButton("Sair");
         String caminhoIconeSair = temaClaro
-                ? "frontend/img/icone-sair-light.png"
-                : "frontend/img/icone-sair-dark.png";
+                ? "frontend/img/icone-sair-dark-bear.gif"
+                : "frontend/img/icone-sair-light-bear.gif";
         ImageIcon iconeSair = new ImageIcon(caminhoIconeSair);
         Image imagemSair = iconeSair.getImage().getScaledInstance(26, 26, Image.SCALE_SMOOTH);
         botaoSair.setIcon(new ImageIcon(imagemSair));
@@ -467,28 +471,28 @@ public class TelaProjetos extends JFrame {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBackground(AZUL_SIDEBAR);
-        sidebar.setPreferredSize(new Dimension(210, 0));
+        sidebar.setPreferredSize(new Dimension(260, 0));
         sidebar.setBorder(
-                BorderFactory.createEmptyBorder(25, 15, 20, 15)
+                BorderFactory.createEmptyBorder(25, 22, 20, 15)
         );
 
         ImageIcon imagemOriginal = new ImageIcon("frontend/img/logo6.png");
 
         Image imagemRedimensionada = imagemOriginal.getImage()
-                .getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+                .getScaledInstance(46, 46, Image.SCALE_SMOOTH);
 
         JLabel logo = new JLabel(new ImageIcon(imagemRedimensionada));
 
         textoMarca = new JLabel("Projetos");
-        textoMarca.setFont(new Font("Segoe UI", Font.BOLD, 19));
+        textoMarca.setFont(new Font("Segoe UI", Font.PLAIN, 25));
         textoMarca.setForeground(AZUL);
 
         JPanel marca = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         marca.setBackground(AZUL_SIDEBAR);
         marca.setAlignmentX(LEFT_ALIGNMENT);
-        marca.setPreferredSize(new Dimension(180, 32));
-        marca.setMaximumSize(new Dimension(180, 32));
-        marca.setMinimumSize(new Dimension(180, 32));
+        marca.setPreferredSize(new Dimension(230, 46));
+        marca.setMaximumSize(new Dimension(230, 46));
+        marca.setMinimumSize(new Dimension(230, 46));
 
         marca.add(logo);
         marca.add(textoMarca);
@@ -580,7 +584,7 @@ public class TelaProjetos extends JFrame {
         criarTelaConfiguracoes(telaConfiguracoes);
 
         tituloDashboard = new JLabel("Dashboard");
-        tituloDashboard.setFont(new Font("Segoe UI", Font.BOLD, 25));
+        tituloDashboard.setFont(new Font("Segoe UI", Font.PLAIN, 25));
         tituloDashboard.setForeground(AZUL_ESCURO);
         tituloDashboard.setAlignmentX(LEFT_ALIGNMENT);
 
@@ -777,7 +781,7 @@ public class TelaProjetos extends JFrame {
         );
 
         tituloFormulario = new JLabel("Cadastro de Projeto");
-        tituloFormulario.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        tituloFormulario.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         tituloFormulario.setForeground(AZUL_ESCURO);
 
         campoNome = new JTextField();
@@ -854,7 +858,7 @@ public class TelaProjetos extends JFrame {
         painelLista.setAlignmentX(LEFT_ALIGNMENT);
 
         tituloLista = new JLabel("Lista de Projetos");
-        tituloLista.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        tituloLista.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         tituloLista.setForeground(AZUL_ESCURO);
 
         campoBusca = new JTextField(18);
@@ -907,7 +911,8 @@ public class TelaProjetos extends JFrame {
         tabela.setForeground(TEXTO);
         tabela.setBackground(SUPERFICIE);
         tabela.setGridColor(BORDA);
-        tabela.setShowVerticalLines(false);
+        tabela.setShowVerticalLines(true);
+        tabela.setShowHorizontalLines(true);
         tabela.setSelectionBackground(
                 temaClaro
                         ? new Color(218, 237, 237)
@@ -917,7 +922,7 @@ public class TelaProjetos extends JFrame {
         tabela.setFillsViewportHeight(true);
 
         tabela.getTableHeader().setFont(
-                new Font("Segoe UI", Font.BOLD, 13)
+                new Font("Segoe UI", Font.PLAIN, 13)
         );
 
         tabela.getTableHeader().setBackground(SUPERFICIE_SECUNDARIA);
@@ -1055,7 +1060,7 @@ public class TelaProjetos extends JFrame {
 
         // Introdução da tela
         tituloConfiguracoes = new JLabel("Configurações");
-        tituloConfiguracoes.setFont(new Font("Segoe UI", Font.BOLD, 25));
+        tituloConfiguracoes.setFont(new Font("Segoe UI", Font.PLAIN, 25));
         tituloConfiguracoes.setForeground(AZUL_ESCURO);
         tituloConfiguracoes.setAlignmentX(LEFT_ALIGNMENT);
 
@@ -1087,7 +1092,7 @@ public class TelaProjetos extends JFrame {
         );
 
         tituloAparencia = new JLabel("Aparência");
-        tituloAparencia.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        tituloAparencia.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         tituloAparencia.setForeground(AZUL_ESCURO);
 
         descricaoAparencia = new JLabel(
@@ -1113,11 +1118,11 @@ public class TelaProjetos extends JFrame {
         textoTema.setFont(FONTE_NORMAL);
 
         comboTema = new JComboBox<>(new String[]{
-                "Escuro", "Claro"
+                traduzir("escuro"), traduzir("claro")
         });
 
         comboTema.setSelectedItem(
-                temaClaro ? "Claro" : "Escuro"
+                temaClaro ? traduzir("claro") : traduzir("escuro")
         );
 
         estilizarCombo(comboTema);
@@ -1146,7 +1151,7 @@ public class TelaProjetos extends JFrame {
         );
 
         tituloIdioma = new JLabel("Idioma");
-        tituloIdioma.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        tituloIdioma.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         tituloIdioma.setForeground(AZUL_ESCURO);
 
         descricaoIdioma = new JLabel(
@@ -1201,8 +1206,18 @@ public class TelaProjetos extends JFrame {
         // Salva e aplica o tema selecionado.
         comboTema.addActionListener(e -> {
 
+            if (atualizandoIdioma) {
+                return;
+            }
+
+            Object itemSelecionado = comboTema.getSelectedItem();
+
+            if (itemSelecionado == null) {
+                return;
+            }
+
             boolean novoTemaClaro =
-                    comboTema.getSelectedItem().equals("Claro");
+                    itemSelecionado.equals(traduzir("claro"));
 
             if (temaClaro != novoTemaClaro) {
 
@@ -1239,6 +1254,10 @@ public class TelaProjetos extends JFrame {
     private void aplicarIdioma() {
 
         // Settings
+
+        setTitle(traduzir("tituloSistema"));
+        tituloSistema.setText(traduzir("tituloSistema"));
+
         tituloConfiguracoes.setText(traduzir("configuracoes"));
         subtituloConfiguracoes.setText(traduzir("subtituloConfiguracoes"));
 
@@ -1261,6 +1280,19 @@ public class TelaProjetos extends JFrame {
                 + traduzir("selecionarIdioma")
                 + "</font></html>"
         );
+
+        // Atualiza as opções do tema conforme o idioma.
+        atualizandoIdioma = true;
+
+        comboTema.removeAllItems();
+        comboTema.addItem(traduzir("escuro"));
+        comboTema.addItem(traduzir("claro"));
+
+        comboTema.setSelectedItem(
+                temaClaro ? traduzir("claro") : traduzir("escuro")
+        );
+
+        atualizandoIdioma = false;
 
         // Sidebar
         rotuloDashboard.setText(traduzir("dashboard"));
@@ -1506,7 +1538,7 @@ public class TelaProjetos extends JFrame {
 
         conteudo.setBackground(SUPERFICIE);
 
-        valor.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        valor.setFont(new Font("Segoe UI", Font.PLAIN, 24));
         valor.setForeground(cor);
 
         JLabel rotulo = new JLabel(traduzir(titulo));
@@ -1545,7 +1577,7 @@ public class TelaProjetos extends JFrame {
         painel.setBackground(SUPERFICIE);
 
         JLabel label = new JLabel(traduzir(chave));
-        label.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         label.setForeground(TEXTO);
 
         rotulosCampos
@@ -1567,7 +1599,7 @@ public class TelaProjetos extends JFrame {
 
         JButton botao = new JButton(texto);
 
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        botao.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         botao.setBackground(fundo);
         botao.setForeground(frente);
         botao.setFocusPainted(false);
@@ -1833,7 +1865,7 @@ public class TelaProjetos extends JFrame {
         JButton botao = new JButton(texto);
         botao.setPreferredSize(new Dimension(40, 38));
         botao.setMinimumSize(new Dimension(40, 38));
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        botao.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         botao.setForeground(TEXTO);
         if (selecionado) botao.setForeground(Color.WHITE);
         botao.setBackground(fundo);
@@ -1955,7 +1987,7 @@ public class TelaProjetos extends JFrame {
         painel.setPreferredSize(new Dimension(560, 500));
 
         JLabel titulo = new JLabel("Editar Projeto");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titulo.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         titulo.setForeground(AZUL_ESCURO);
 
         JTextField nome = new JTextField(projeto.getNome());
@@ -2162,6 +2194,10 @@ public class TelaProjetos extends JFrame {
                 int linha,
                 int coluna
         ) {
+            
+            setBorder(BorderFactory.createMatteBorder(
+                    0, 0, 1, 1, BORDA
+            ));
 
             boolean linhaEmHover = linha == linhaHoverAcoes;
 

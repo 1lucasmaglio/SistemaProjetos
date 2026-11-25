@@ -47,7 +47,7 @@ public class ViewChart {
     private final Color CLARO = new Color(239, 246, 238);
 
     private static final Font FONTE_TITULO =
-            new Font("Segoe UI", Font.BOLD, 17);
+            new Font("Segoe UI", Font.PLAIN, 17);
 
     private static final Font FONTE_LEGENDA =
             new Font("Segoe UI", Font.PLAIN, 12);
