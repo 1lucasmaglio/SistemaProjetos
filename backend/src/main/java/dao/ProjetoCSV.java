@@ -26,8 +26,7 @@ public class ProjetoCSV {
 
         for (Projeto projeto : projetos) {
 
-            String linha =
-                    projeto.getId() + ";" +
+            String linha = projeto.getId() + ";" +
                     projeto.getUsuarioId() + ";" +
                     projeto.getNome() + ";" +
                     projeto.getDescricao() + ";" +
@@ -71,8 +70,7 @@ public class ProjetoCSV {
                     nome,
                     descricao,
                     categoria,
-                    status
-            );
+                    status);
 
             projeto.setUsuarioId(usuarioId);
             projeto.setDataCriacao(dataCriacao);

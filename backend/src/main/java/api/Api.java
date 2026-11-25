@@ -14,6 +14,7 @@ import service.LogService;
 import service.ProjetoService;
 import service.SessaoService;
 import service.UsuarioService;
+import model.CadastroRequest;
 
 public class Api {
 
@@ -23,8 +24,7 @@ public class Api {
         ArquivoLog arquivoLog = new ArquivoLog();
 
         // Carregar projetos
-        ProjetoService service =
-                new ProjetoService();
+        ProjetoService service = new ProjetoService();
 
         try {
 
@@ -36,8 +36,7 @@ public class Api {
                     arquivoLog,
                     "error.log",
                     "Erro ao carregar projetos do CSV: " +
-                    e.getMessage()
-            );
+                            e.getMessage());
 
             throw e;
         }
@@ -45,8 +44,7 @@ public class Api {
         LogService logService = new LogService();
 
         // Carregar usuários
-        UsuarioService usuarioService =
-                new UsuarioService();
+        UsuarioService usuarioService = new UsuarioService();
 
         try {
 
@@ -58,14 +56,12 @@ public class Api {
                     arquivoLog,
                     "error.log",
                     "Erro ao carregar usuários do CSV: " +
-                    e.getMessage()
-            );
+                            e.getMessage());
 
             throw e;
         }
 
-        SessaoService sessaoService =
-                new SessaoService();
+        SessaoService sessaoService = new SessaoService();
 
         var app = Javalin.create(config -> {
 
@@ -83,10 +79,9 @@ public class Api {
                         arquivoLog,
                         "api.log",
                         ctx.method() + " " +
-                        ctx.path() +
-                        " - Status: " + ctx.status() +
-                        " - " + ms + " ms"
-                );
+                                ctx.path() +
+                                " - Status: " + ctx.status() +
+                                " - " + ms + " ms");
             });
 
             // Registrar inicialização e encerramento
@@ -95,8 +90,7 @@ public class Api {
                 registrarSeguro(
                         arquivoLog,
                         "application.log",
-                        "API iniciada na porta 7070."
-                );
+                        "API iniciada na porta 7070.");
             });
 
             config.events.serverStopping(() -> {
@@ -104,8 +98,7 @@ public class Api {
                 registrarSeguro(
                         arquivoLog,
                         "application.log",
-                        "API sendo encerrada."
-                );
+                        "API sendo encerrada.");
             });
 
             // Registrar erros inesperados
@@ -115,16 +108,14 @@ public class Api {
                         arquivoLog,
                         "error.log",
                         "Erro inesperado: " +
-                        e.getClass().getSimpleName() +
-                        " - " + e.getMessage()
-                );
+                                e.getClass().getSimpleName() +
+                                " - " + e.getMessage());
 
                 registrarSeguro(
                         arquivoLog,
                         "application.log",
                         "Erro geral na aplicação: " +
-                        e.getMessage()
-                );
+                                e.getMessage());
 
                 ctx.status(500);
                 ctx.json(Map.of("erro", "Erro interno do servidor"));
@@ -135,24 +126,19 @@ public class Api {
                     "/",
                     ctx -> {
                         ctx.result(
-                                "API Sistema de Projetos"
-                        );
-                    }
-            );
+                                "API Sistema de Projetos");
+                    });
 
             // Login
             config.routes.post(
                     "/api/login",
                     ctx -> {
 
-                        LoginRequest request =
-                                ctx.bodyAsClass(LoginRequest.class);
+                        LoginRequest request = ctx.bodyAsClass(LoginRequest.class);
 
-                        Usuario usuario =
-                                usuarioService.login(
-                                        request.getEmail(),
-                                        request.getSenha()
-                                );
+                        Usuario usuario = usuarioService.login(
+                                request.getEmail(),
+                                request.getSenha());
 
                         if (usuario == null) {
 
@@ -160,73 +146,96 @@ public class Api {
                                     arquivoLog,
                                     "access.log",
                                     "Tentativa de login sem sucesso: " +
-                                    request.getEmail()
-                            );
+                                            request.getEmail());
 
                             ctx.status(401);
                             return;
                         }
 
-                        String token =
-                                sessaoService.criarSessao(usuario);
+                        String token = sessaoService.criarSessao(usuario);
 
                         registrarSeguro(
                                 arquivoLog,
                                 "access.log",
                                 "Usuário " + usuario.getId() +
-                                " (" + usuario.getNome() +
-                                ") realizou login."
-                        );
+                                        " (" + usuario.getNome() +
+                                        ") realizou login.");
 
                         ctx.json(
                                 Map.of(
                                         "token", token,
                                         "id", usuario.getId(),
                                         "nome", usuario.getNome(),
-                                        "email", usuario.getEmail()
-                                )
-                        );
-                    }
-            );
+                                        "email", usuario.getEmail()));
+                    });
+
+            // Cadastro
+            config.routes.post(
+                    "/api/cadastro",
+                    ctx -> {
+
+                        CadastroRequest request = ctx.bodyAsClass(CadastroRequest.class);
+
+                        try {
+
+                            Usuario usuario = usuarioService.cadastrar(
+                                    request.getNome(),
+                                    request.getEmail(),
+                                    request.getSenha());
+
+                            // Registrar criação da conta
+                            registrarSeguro(
+                                    arquivoLog,
+                                    "application.log",
+                                    "Conta criada: " + usuario.getEmail());
+
+                            ctx.status(201);
+
+                            ctx.json(
+                                    Map.of(
+                                            "id", usuario.getId(),
+                                            "nome", usuario.getNome(),
+                                            "email", usuario.getEmail()));
+
+                        } catch (IllegalArgumentException e) {
+
+                            ctx.status(409);
+                            ctx.json(
+                                    Map.of("erro", e.getMessage()));
+                        }
+                    });
 
             // Listar projetos
             config.routes.get(
                     "/api/projetos",
                     ctx -> {
 
-                        Usuario usuario =
-                                validarToken(ctx, sessaoService);
+                        Usuario usuario = validarToken(ctx, sessaoService);
 
                         if (usuario == null) {
                             return;
                         }
 
-                        List<Projeto> projetos =
-                                service.listarPorUsuario(usuario.getId());
+                        List<Projeto> projetos = service.listarPorUsuario(usuario.getId());
 
                         ctx.json(projetos);
-                    }
-            );
+                    });
 
             // Buscar projeto por ID
             config.routes.get(
                     "/api/projetos/{id}",
                     ctx -> {
 
-                        Usuario usuario =
-                                validarToken(ctx, sessaoService);
+                        Usuario usuario = validarToken(ctx, sessaoService);
 
                         if (usuario == null) {
                             return;
                         }
 
-                        int id =
-                                Integer.parseInt(
-                                        ctx.pathParam("id")
-                                );
+                        int id = Integer.parseInt(
+                                ctx.pathParam("id"));
 
-                        Projeto projeto =
-                                service.buscarPorId(id);
+                        Projeto projeto = service.buscarPorId(id);
 
                         if (projeto == null) {
                             ctx.status(404);
@@ -239,23 +248,20 @@ public class Api {
                         }
 
                         ctx.json(projeto);
-                    }
-            );
+                    });
 
             // Cadastrar projeto
             config.routes.post(
                     "/api/projetos",
                     ctx -> {
 
-                        Usuario usuario =
-                                validarToken(ctx, sessaoService);
+                        Usuario usuario = validarToken(ctx, sessaoService);
 
                         if (usuario == null) {
                             return;
                         }
 
-                        Projeto projeto =
-                                ctx.bodyAsClass(Projeto.class);
+                        Projeto projeto = ctx.bodyAsClass(Projeto.class);
 
                         projeto.setUsuarioId(usuario.getId());
 
@@ -269,9 +275,8 @@ public class Api {
                                     arquivoLog,
                                     "error.log",
                                     "Erro ao cadastrar projeto '" +
-                                    projeto.getNome() + "': " +
-                                    e.getMessage()
-                            );
+                                            projeto.getNome() + "': " +
+                                            e.getMessage());
 
                             ctx.status(400);
                             ctx.json(Map.of("erro", e.getMessage()));
@@ -284,43 +289,36 @@ public class Api {
                                 usuario.getId(),
                                 "Inclusão",
                                 "Projeto '" + projeto.getNome() +
-                                "' (ID: " + projeto.getId() + ") criado."
-                        );
+                                        "' (ID: " + projeto.getId() + ") criado.");
 
                         ctx.status(201);
                         ctx.json(projeto);
-                    }
-            );
+                    });
 
             // Alterar projeto
             config.routes.put(
                     "/api/projetos/{id}",
                     ctx -> {
 
-                        Usuario usuario =
-                                validarToken(ctx, sessaoService);
+                        Usuario usuario = validarToken(ctx, sessaoService);
 
                         if (usuario == null) {
                             return;
                         }
 
-                        int id =
-                                Integer.parseInt(
-                                        ctx.pathParam("id")
-                                );
+                        int id = Integer.parseInt(
+                                ctx.pathParam("id"));
 
-                        Projeto existente =
-                                service.buscarPorId(id);
+                        Projeto existente = service.buscarPorId(id);
 
                         if (existente == null ||
-                            existente.getUsuarioId() != usuario.getId()) {
+                                existente.getUsuarioId() != usuario.getId()) {
 
                             ctx.status(404);
                             return;
                         }
 
-                        Projeto projeto =
-                                ctx.bodyAsClass(Projeto.class);
+                        Projeto projeto = ctx.bodyAsClass(Projeto.class);
 
                         projeto.setId(id);
                         projeto.setUsuarioId(existente.getUsuarioId());
@@ -337,9 +335,8 @@ public class Api {
                                     arquivoLog,
                                     "error.log",
                                     "Erro ao alterar projeto '" +
-                                    existente.getNome() + "' (ID: " +
-                                    id + "): " + e.getMessage()
-                            );
+                                            existente.getNome() + "' (ID: " +
+                                            id + "): " + e.getMessage());
 
                             ctx.status(400);
                             ctx.json(Map.of("erro", e.getMessage()));
@@ -357,42 +354,35 @@ public class Api {
                                 usuario.getId(),
                                 "Alteração",
                                 "Projeto '" + projeto.getNome() +
-                                "' (ID: " + projeto.getId() + ") alterado."
-                        );
+                                        "' (ID: " + projeto.getId() + ") alterado.");
 
                         ctx.json(projeto);
-                    }
-            );
+                    });
 
             // Excluir projeto
             config.routes.delete(
                     "/api/projetos/{id}",
                     ctx -> {
 
-                        Usuario usuario =
-                                validarToken(ctx, sessaoService);
+                        Usuario usuario = validarToken(ctx, sessaoService);
 
                         if (usuario == null) {
                             return;
                         }
 
-                        int id =
-                                Integer.parseInt(
-                                        ctx.pathParam("id")
-                                );
+                        int id = Integer.parseInt(
+                                ctx.pathParam("id"));
 
-                        Projeto existente =
-                                service.buscarPorId(id);
+                        Projeto existente = service.buscarPorId(id);
 
                         if (existente == null ||
-                            existente.getUsuarioId() != usuario.getId()) {
+                                existente.getUsuarioId() != usuario.getId()) {
 
                             ctx.status(404);
                             return;
                         }
 
-                        boolean removido =
-                                service.removerPorId(id);
+                        boolean removido = service.removerPorId(id);
 
                         if (!removido) {
                             ctx.status(404);
@@ -405,12 +395,10 @@ public class Api {
                                 usuario.getId(),
                                 "Exclusão",
                                 "Projeto '" + existente.getNome() +
-                                "' (ID: " + id + ") excluído."
-                        );
+                                        "' (ID: " + id + ") excluído.");
 
                         ctx.status(204);
-                    }
-            );
+                    });
 
         }).start(7070);
     }
@@ -429,8 +417,7 @@ public class Api {
 
             System.err.println(
                     "Erro ao escrever no arquivo " +
-                    arquivo + ": " + e.getMessage()
-            );
+                            arquivo + ": " + e.getMessage());
         }
     }
 

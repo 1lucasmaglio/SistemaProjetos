@@ -14,7 +14,7 @@ public class Log {
     }
 
     public Log(LocalDateTime dataHora, int usuarioId,
-               String tipo, String descricao) {
+            String tipo, String descricao) {
 
         this.dataHora = dataHora;
         this.usuarioId = usuarioId;

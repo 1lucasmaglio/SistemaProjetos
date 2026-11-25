@@ -1,4 +1,3 @@
-
 /* CONFIGURAÇÃO DE TEMA */
 
 const temaSalvo = localStorage.getItem("tema") || "dark";
@@ -9,53 +8,43 @@ const API_URL = "http://localhost:7070/api/login";
 
 const formLogin = document.getElementById("formLogin");
 
-formLogin.addEventListener("submit", function(event) {
+formLogin.addEventListener("submit", function (event) {
+  event.preventDefault();
 
-    event.preventDefault();
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
 
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
+  const dadosLogin = {
+    email: email,
+    senha: senha,
+  };
 
-    const dadosLogin = {
-        email: email,
-        senha: senha
-    };
+  fetch(API_URL, {
+    method: "POST",
 
-    fetch(API_URL, {
+    headers: {
+      "Content-Type": "application/json",
+    },
 
-        method: "POST",
+    body: JSON.stringify(dadosLogin),
+  })
+    .then(function (resposta) {
+      if (!resposta.ok) {
+        throw new Error("E-mail ou senha incorretos.");
+      }
 
-        headers: {
-            "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify(dadosLogin)
-
+      return resposta.json();
     })
-    .then(function(resposta) {
+    .then(function (dados) {
+      localStorage.setItem("token", dados.token);
 
-        if (!resposta.ok) {
-            throw new Error("E-mail ou senha incorretos.");
-        }
+      localStorage.setItem("nomeUsuario", dados.nome);
 
-        return resposta.json();
-
+      window.location.href = "/frontend/projetos.html";
     })
-    .then(function(dados) {
+    .catch(function (erro) {
+      const mensagem = document.getElementById("mensagemLogin");
 
-        localStorage.setItem("token", dados.token);
-
-        localStorage.setItem("nomeUsuario", dados.nome);
-
-        window.location.href = "/frontend/projetos.html";
-
-    })
-    .catch(function(erro) {
-
-        const mensagem = document.getElementById("mensagemLogin");
-
-        mensagem.textContent = erro.message;
-
+      mensagem.textContent = erro.message;
     });
-
 });

@@ -17,15 +17,13 @@ public class LogService {
     public void adicionar(
             int usuarioId,
             String tipo,
-            String descricao
-    ) throws Exception {
+            String descricao) throws Exception {
 
         Log log = new Log(
                 LocalDateTime.now().withNano(0),
                 usuarioId,
                 tipo,
-                descricao
-        );
+                descricao);
 
         dao.registrar("audit.log", log);
     }

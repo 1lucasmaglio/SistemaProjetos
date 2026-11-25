@@ -1,496 +1,430 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sistema de Projetos</title>
 
     <!-- Bootstrap Slate -->
-    <link rel="stylesheet" href="https://bootswatch.com/5/slate/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/5/slate/bootstrap.min.css"
+    />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/frontend/css/style.css">
-</head>
+    <link rel="stylesheet" href="/frontend/css/style.css" />
+  </head>
 
-<body>
-
+  <body>
     <div class="layout">
-
-        <aside class="sidebar">
-
-            <div class="marca">
-                <img src="/frontend/img/logo6.png" alt="Logo">
-                <span>Projetos</span>
-            </div>
-
-            <nav class="menu">
-                <a href="#dashboard" class="ativo" id="linkDashboard">Dashboard</a>
-                <a href="#projetos" id="linkProjetos">Projetos</a>
-                <a href="#configuracoes" id="linkConfiguracoes">Configurações</a>
-            </nav>
-
-            <!-- INFORMAÇÕES DO USUÁRIO -->
-
-            <div class="acoes-usuario">
-
-                <div class="informacoes-usuario">
-
-                    <img
-                        src="/frontend/img/light-bear.png"
-                        alt="Ícone de usuário"
-                        class="icone-usuario"
-                    >
-
-                    <div class="texto-usuario">
-                        <span>Usuário</span>
-                        <span id="nomeUsuario">Carregando...</span>
-                    </div>
-
-                </div>
-
-                <button type="button" id="botaoSair" class="botao-sair">
-
-                    <img
-                        src="/frontend/img/icone-sair-light-bear.gif"
-                        alt=""
-                        class="icone-sair"
-                    >
-
-                    <span>Sair</span>
-
-                </button>
-
-            </div>
-
-        </aside>
-
-        <div class="area-aplicacao">
-
-            <header class="barra-superior">
-                <strong>Sistema de Projetos</strong>
-            </header>
-
-            <main>
-
-                <!-- TELA DO DASHBOARD -->
-
-                <section id="telaDashboard" class="tela ativa">
-
-                    <section class="introducao">
-                        <h1>Dashboard</h1>
-                        <p>Acompanhe os indicadores e o desempenho dos seus projetos.</p>
-                    </section>
-
-                    <!-- INDICADORES -->
-
-                    <section class="cards-estatisticas">
-
-                        <article class="card-estatistica azul">
-
-                            <img
-                                src="/frontend/img/card-total-projetos.png"
-                                alt=""
-                                class="icone-card"
-                            >
-
-                            <div class="conteudo-card">
-                                <strong id="valorTotal">0</strong>
-                                <span>Total de Projetos</span>
-                            </div>
-
-                        </article>
-
-                        <article class="card-estatistica verde">
-
-                            <img
-                                src="/frontend/img/card-concluidos.png"
-                                alt=""
-                                class="icone-card"
-                            >
-
-                            <div class="conteudo-card">
-                                <strong id="valorConcluidos">0</strong>
-                                <span>Concluídos</span>
-                            </div>
-
-                        </article>
-
-                        <article class="card-estatistica laranja">
-
-                            <img
-                                src="/frontend/img/card-em-desenvolvimento.png"
-                                alt=""
-                                class="icone-card"
-                            >
-
-                            <div class="conteudo-card">
-                                <strong id="valorEmDesenvolvimento">0</strong>
-                                <span>Em desenvolvimento</span>
-                            </div>
-
-                        </article>
-
-                        <article class="card-estatistica roxo">
-
-                            <img
-                                src="/frontend/img/card-planejados.png"
-                                alt=""
-                                class="icone-card"
-                            >
-
-                            <div class="conteudo-card">
-                                <strong id="valorPlanejados">0</strong>
-                                <span>Planejados</span>
-                            </div>
-
-                        </article>
-
-                    </section>
-
-                    <div class="graficos-superiores">
-
-                        <section class="painel">
-                            <h2>Projetos por status</h2>
-
-                            <div class="grafico-container">
-                                <canvas id="graficoStatus"></canvas>
-                            </div>
-                        </section>
-
-                        <section class="painel">
-                            <h2>Projetos por categoria</h2>
-
-                            <div class="grafico-container">
-                                <canvas id="graficoCategoria"></canvas>
-                            </div>
-                        </section>
-
-                    </div>
-
-                    <section class="painel">
-                        <h2>Evolução mensal de projetos</h2>
-
-                        <div class="grafico-container">
-                            <canvas id="graficoMensal"></canvas>
-                        </div>
-                    </section>
-
-                </section>
-
-                <!-- TELA DE PROJETOS -->
-
-                <section id="telaProjetos" class="tela">
-
-                    <!-- CADASTRO DE PROJETO -->
-
-                    <section class="painel" id="cadastro">
-
-                        <h2>Cadastro de Projeto</h2>
-
-                        <form id="formProjeto">
-
-                            <div class="campos-formulario">
-
-                                <div class="campo">
-                                    <label for="nome">Nome do projeto</label>
-
-                                    <input
-                                        type="text"
-                                        id="nome"
-                                        placeholder="Digite o nome do projeto"
-                                        minlength="3"
-                                        maxlength="100"
-                                        required
-                                    >
-                                </div>
-
-                                <div class="campo">
-                                    <label for="descricao">Descrição</label>
-
-                                    <input
-                                        type="text"
-                                        id="descricao"
-                                        placeholder="Descreva o projeto"
-                                        minlength="10"
-                                        maxlength="500"
-                                        required
-                                    >
-                                </div>
-
-                                <div class="campo">
-                                    <label for="categoria">Categoria</label>
-
-                                    <select id="categoria" required>
-                                        <option value="Web">Web</option>
-                                        <option value="Software">Software</option>
-                                        <option value="Mobile">Mobile</option>
-                                        <option value="Desktop">Desktop</option>
-                                    </select>
-                                </div>
-
-                                <div class="campo">
-                                    <label for="status">Status</label>
-
-                                    <select id="status" required>
-                                        <option value="Planejado">Planejado</option>
-                                        <option value="Em Desenvolvimento">Em desenvolvimento</option>
-                                        <option value="Concluído">Concluído</option>
-                                    </select>
-                                </div>
-
-                                <div class="campo">
-                                    <label for="prazo">Prazo</label>
-                                    <input type="date" id="prazo" required>
-                                </div>
-
-                            </div>
-
-                            <div class="acoes-formulario">
-
-                                <button
-                                    type="reset"
-                                    id="botaoLimpar"
-                                    class="btn btn-secondary botao botao-secundario"
-                                >
-                                    Limpar
-                                </button>
-
-                                <button
-                                    type="submit"
-                                    id="botaoCadastrar"
-                                    class="btn btn-primary botao botao-principal"
-                                >
-                                    Cadastrar projeto
-                                </button>
-
-                            </div>
-
-                        </form>
-
-                    </section>
-
-                    <!-- LISTA DE PROJETOS -->
-
-                    <section class="painel" id="projetos">
-
-                        <div class="cabecalho-lista">
-
-                            <div>
-                                <h2>Lista de Projetos</h2>
-
-                                <p id="mensagem" role="status">
-                                    Carregando projetos...
-                                </p>
-                            </div>
-
-                            <div class="controles-lista">
-                                <input
-                                    type="search"
-                                    id="campoBusca"
-                                    placeholder="Buscar projeto..."
-                                    aria-label="Buscar projetos"
-                                >
-                            </div>
-
-                        </div>
-
-                        <div class="tabela-container">
-
-                            <table>
-
-                                <thead>
-                                    <tr>
-                                        <th class="coluna-id">ID</th>
-                                        <th>Nome</th>
-                                        <th>Categoria</th>
-                                        <th>Status</th>
-                                        <th>Data de criação</th>
-                                        <th>Prazo</th>
-                                        <th class="coluna-acoes">Ações</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody id="listaProjetos">
-                                    <tr>
-                                        <td colspan="7" class="estado-vazio">
-                                            Carregando...
-                                        </td>
-                                    </tr>
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-                        <div id="paginacaoProjetos" class="paginacao-projetos"></div>
-
-                    </section>
-
-                </section>
-
-                <!-- TELA DE CONFIGURAÇÕES -->
-
-                <section id="telaConfiguracoes" class="tela">
-
-                    <div class="introducao">
-                        <h1>Configurações</h1>
-                        <p>Personalize a aparência e o idioma do sistema.</p>
-                    </div>
-
-                    <div class="configuracoes-container">
-
-                        <div class="painel-configuracao">
-
-                            <div class="configuracao-cabecalho">
-                                <div>
-                                    <h2>Aparência</h2>
-                                    <p>Personalize a aparência do sistema.</p>
-                                </div>
-                            </div>
-
-                            <div class="configuracao-opcao">
-                                <div class="configuracao-texto">
-                                    <strong>Tema</strong>
-                                    <span>Escolha entre o modo claro e escuro.</span>
-                                </div>
-
-                                <select id="seletorTema">
-                                    <option value="dark">Escuro</option>
-                                    <option value="light">Claro</option>
-                                </select>
-                            </div>
-
-                        </div>
-
-                        <div class="painel-configuracao">
-
-                            <div class="configuracao-cabecalho">
-                                <div>
-                                    <h2>Idioma</h2>
-                                    <p>Defina o idioma utilizado na interface.</p>
-                                </div>
-                            </div>
-
-                            <div class="configuracao-opcao">
-                                <div class="configuracao-texto">
-                                    <strong>Idioma do sistema</strong>
-                                    <span>Selecione seu idioma preferido.</span>
-                                </div>
-
-                                <select id="seletorIdioma">
-                                    <option value="pt-BR">Português (Brasil)</option>
-                                    <option value="en">English</option>
-                                </select>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- POPUP DE EDIÇÃO -->
-
-                <div id="popupEdicao" class="popup">
-
-                    <div class="conteudo-popup">
-
-                        <h2>Editar Projeto</h2>
-
-                        <form id="formEdicao">
-
-                            <div class="campo">
-                                <label for="editarNome">Nome do projeto</label>
-
-                                <input
-                                    type="text"
-                                    id="editarNome"
-                                    minlength="3"
-                                    maxlength="100"
-                                    required
-                                >
-                            </div>
-
-                            <div class="campo">
-                                <label for="editarDescricao">Descrição</label>
-
-                                <input
-                                    type="text"
-                                    id="editarDescricao"
-                                    minlength="10"
-                                    maxlength="500"
-                                    required
-                                >
-                            </div>
-
-                            <div class="campo">
-                                <label for="editarCategoria">Categoria</label>
-
-                                <select id="editarCategoria" required>
-                                    <option value="Web">Web</option>
-                                    <option value="Software">Software</option>
-                                    <option value="Mobile">Mobile</option>
-                                    <option value="Desktop">Desktop</option>
-                                </select>
-                            </div>
-
-                            <div class="campo">
-                                <label for="editarStatus">Status</label>
-
-                                <select id="editarStatus" required>
-                                    <option value="Planejado">Planejado</option>
-                                    <option value="Em desenvolvimento">Em desenvolvimento</option>
-                                    <option value="Concluído">Concluído</option>
-                                </select>
-                            </div>
-
-                            <div class="campo">
-                                <label for="editarPrazo">Prazo</label>
-                                <input type="date" id="editarPrazo" required>
-                            </div>
-
-                            <div class="acoes-formulario">
-
-                                <button
-                                    type="button"
-                                    id="botaoCancelarEdicao"
-                                    class="btn btn-secondary"
-                                >
-                                    Cancelar
-                                </button>
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary"
-                                >
-                                    Salvar alterações
-                                </button>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-            </main>
-
-            <footer>
-                <span>Sistema de Projetos</span>
-                <span>Projeto acadêmico de Análise e Desenvolvimento de Sistemas</span>
-            </footer>
-
+      <aside class="sidebar">
+        <div class="marca">
+          <img src="/frontend/img/logo6.png" alt="Logo" />
+          <span>PanBoo</span>
         </div>
 
+        <nav class="menu">
+          <a href="#dashboard" class="ativo" id="linkDashboard">Dashboard</a>
+          <a href="#projetos" id="linkProjetos">Projetos</a>
+          <a href="#configuracoes" id="linkConfiguracoes">Configurações</a>
+        </nav>
+
+        <!-- INFORMAÇÕES DO USUÁRIO -->
+
+        <div class="acoes-usuario">
+          <div class="informacoes-usuario">
+            <img
+              src="/frontend/img/light-bear.png"
+              alt="Ícone de usuário"
+              class="icone-usuario"
+            />
+
+            <div class="texto-usuario">
+              <span>Usuário</span>
+              <span id="nomeUsuario">Carregando...</span>
+            </div>
+          </div>
+
+          <button type="button" id="botaoSair" class="botao-sair">
+            <img
+              src="/frontend/img/icone-sair-light-bear.gif"
+              alt=""
+              class="icone-sair"
+            />
+
+            <span>Sair</span>
+          </button>
+        </div>
+      </aside>
+
+      <div class="area-aplicacao">
+        <header class="barra-superior">
+          <strong>Sistema de Projetos</strong>
+        </header>
+
+        <main>
+          <!-- TELA DO DASHBOARD -->
+
+          <section id="telaDashboard" class="tela ativa">
+            <section class="introducao">
+              <h1>Dashboard</h1>
+              <p>Acompanhe os indicadores e o desempenho dos seus projetos.</p>
+            </section>
+
+            <!-- INDICADORES -->
+
+            <section class="cards-estatisticas">
+              <article class="card-estatistica azul">
+                <img
+                  src="/frontend/img/card-total-projetos.png"
+                  alt=""
+                  class="icone-card"
+                />
+
+                <div class="conteudo-card">
+                  <strong id="valorTotal">0</strong>
+                  <span>Total de Projetos</span>
+                </div>
+              </article>
+
+              <article class="card-estatistica verde">
+                <img
+                  src="/frontend/img/card-concluidos.png"
+                  alt=""
+                  class="icone-card"
+                />
+
+                <div class="conteudo-card">
+                  <strong id="valorConcluidos">0</strong>
+                  <span>Concluídos</span>
+                </div>
+              </article>
+
+              <article class="card-estatistica laranja">
+                <img
+                  src="/frontend/img/card-em-desenvolvimento.png"
+                  alt=""
+                  class="icone-card"
+                />
+
+                <div class="conteudo-card">
+                  <strong id="valorEmDesenvolvimento">0</strong>
+                  <span>Em desenvolvimento</span>
+                </div>
+              </article>
+
+              <article class="card-estatistica roxo">
+                <img
+                  src="/frontend/img/card-planejados.png"
+                  alt=""
+                  class="icone-card"
+                />
+
+                <div class="conteudo-card">
+                  <strong id="valorPlanejados">0</strong>
+                  <span>Planejados</span>
+                </div>
+              </article>
+            </section>
+
+            <div class="graficos-superiores">
+              <section class="painel">
+                <h2>Projetos por status</h2>
+
+                <div class="grafico-container">
+                  <canvas id="graficoStatus"></canvas>
+                </div>
+              </section>
+
+              <section class="painel">
+                <h2>Projetos por categoria</h2>
+
+                <div class="grafico-container">
+                  <canvas id="graficoCategoria"></canvas>
+                </div>
+              </section>
+            </div>
+
+            <section class="painel">
+              <h2>Evolução mensal de projetos</h2>
+
+              <div class="grafico-container">
+                <canvas id="graficoMensal"></canvas>
+              </div>
+            </section>
+          </section>
+
+          <!-- TELA DE PROJETOS -->
+
+          <section id="telaProjetos" class="tela">
+            <!-- CADASTRO DE PROJETO -->
+
+            <section class="painel" id="cadastro">
+              <h2>Cadastro de Projeto</h2>
+
+              <form id="formProjeto">
+                <div class="campos-formulario">
+                  <div class="campo">
+                    <label for="nome">Nome do projeto</label>
+
+                    <input
+                      type="text"
+                      id="nome"
+                      placeholder="Digite o nome do projeto"
+                      minlength="3"
+                      maxlength="100"
+                      required
+                    />
+                  </div>
+
+                  <div class="campo">
+                    <label for="descricao">Descrição</label>
+
+                    <input
+                      type="text"
+                      id="descricao"
+                      placeholder="Descreva o projeto"
+                      minlength="10"
+                      maxlength="500"
+                      required
+                    />
+                  </div>
+
+                  <div class="campo">
+                    <label for="categoria">Categoria</label>
+
+                    <select id="categoria" required>
+                      <option value="Web">Web</option>
+                      <option value="Software">Software</option>
+                      <option value="Mobile">Mobile</option>
+                      <option value="Desktop">Desktop</option>
+                    </select>
+                  </div>
+
+                  <div class="campo">
+                    <label for="status">Status</label>
+
+                    <select id="status" required>
+                      <option value="Planejado">Planejado</option>
+                      <option value="Em Desenvolvimento">
+                        Em desenvolvimento
+                      </option>
+                      <option value="Concluído">Concluído</option>
+                    </select>
+                  </div>
+
+                  <div class="campo">
+                    <label for="prazo">Prazo</label>
+                    <input type="date" id="prazo" required />
+                  </div>
+                </div>
+
+                <div class="acoes-formulario">
+                  <button
+                    type="reset"
+                    id="botaoLimpar"
+                    class="btn btn-secondary botao botao-secundario"
+                  >
+                    Limpar
+                  </button>
+
+                  <button
+                    type="submit"
+                    id="botaoCadastrar"
+                    class="btn btn-primary botao botao-principal"
+                  >
+                    Cadastrar projeto
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <!-- LISTA DE PROJETOS -->
+
+            <section class="painel" id="projetos">
+              <div class="cabecalho-lista">
+                <div>
+                  <h2>Lista de Projetos</h2>
+
+                  <p id="mensagem" role="status">Carregando projetos...</p>
+                </div>
+
+                <div class="controles-lista">
+                  <input
+                    type="search"
+                    id="campoBusca"
+                    placeholder="Buscar projeto..."
+                    aria-label="Buscar projetos"
+                  />
+                </div>
+              </div>
+
+              <div class="tabela-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th class="coluna-id">ID</th>
+                      <th>Nome</th>
+                      <th>Categoria</th>
+                      <th>Status</th>
+                      <th>Data de criação</th>
+                      <th>Prazo</th>
+                      <th class="coluna-acoes">Ações</th>
+                    </tr>
+                  </thead>
+
+                  <tbody id="listaProjetos">
+                    <tr>
+                      <td colspan="7" class="estado-vazio">Carregando...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div id="paginacaoProjetos" class="paginacao-projetos"></div>
+            </section>
+          </section>
+
+          <!-- TELA DE CONFIGURAÇÕES -->
+
+          <section id="telaConfiguracoes" class="tela">
+            <div class="introducao">
+              <h1>Configurações</h1>
+              <p>Personalize a aparência e o idioma do sistema.</p>
+            </div>
+
+            <div class="configuracoes-container">
+              <div class="painel-configuracao">
+                <div class="configuracao-cabecalho">
+                  <div>
+                    <h2>Aparência</h2>
+                    <p>Personalize a aparência do sistema.</p>
+                  </div>
+                </div>
+
+                <div class="configuracao-opcao">
+                  <div class="configuracao-texto">
+                    <strong>Tema</strong>
+                    <span>Escolha entre o modo claro e escuro.</span>
+                  </div>
+
+                  <select id="seletorTema">
+                    <option value="dark">Escuro</option>
+                    <option value="light">Claro</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="painel-configuracao">
+                <div class="configuracao-cabecalho">
+                  <div>
+                    <h2>Idioma</h2>
+                    <p>Defina o idioma utilizado na interface.</p>
+                  </div>
+                </div>
+
+                <div class="configuracao-opcao">
+                  <div class="configuracao-texto">
+                    <strong>Idioma do sistema</strong>
+                    <span>Selecione seu idioma preferido.</span>
+                  </div>
+
+                  <select id="seletorIdioma">
+                    <option value="pt-BR">Português (Brasil)</option>
+                    <option value="en">English</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- POPUP DE EDIÇÃO -->
+
+          <div id="popupEdicao" class="popup">
+            <div class="conteudo-popup">
+              <h2>Editar Projeto</h2>
+
+              <form id="formEdicao">
+                <div class="campo">
+                  <label for="editarNome">Nome do projeto</label>
+
+                  <input
+                    type="text"
+                    id="editarNome"
+                    minlength="3"
+                    maxlength="100"
+                    required
+                  />
+                </div>
+
+                <div class="campo">
+                  <label for="editarDescricao">Descrição</label>
+
+                  <input
+                    type="text"
+                    id="editarDescricao"
+                    minlength="10"
+                    maxlength="500"
+                    required
+                  />
+                </div>
+
+                <div class="campo">
+                  <label for="editarCategoria">Categoria</label>
+
+                  <select id="editarCategoria" required>
+                    <option value="Web">Web</option>
+                    <option value="Software">Software</option>
+                    <option value="Mobile">Mobile</option>
+                    <option value="Desktop">Desktop</option>
+                  </select>
+                </div>
+
+                <div class="campo">
+                  <label for="editarStatus">Status</label>
+
+                  <select id="editarStatus" required>
+                    <option value="Planejado">Planejado</option>
+                    <option value="Em desenvolvimento">
+                      Em desenvolvimento
+                    </option>
+                    <option value="Concluído">Concluído</option>
+                  </select>
+                </div>
+
+                <div class="campo">
+                  <label for="editarPrazo">Prazo</label>
+                  <input type="date" id="editarPrazo" required />
+                </div>
+
+                <div class="acoes-formulario">
+                  <button
+                    type="button"
+                    id="botaoCancelarEdicao"
+                    class="btn btn-secondary"
+                  >
+                    Cancelar
+                  </button>
+
+                  <button type="submit" class="btn btn-primary">
+                    Salvar alterações
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </main>
+
+        <footer>
+          <span>Sistema de Projetos</span>
+          <span
+            >Projeto acadêmico de Análise e Desenvolvimento de Sistemas</span
+          >
+        </footer>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/frontend/js/script.js"></script>
-
-</body>
-
+  </body>
 </html>

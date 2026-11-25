@@ -30,12 +30,12 @@ import client.ApiClient;
 public class TelaLogin extends JFrame {
 
     private final ApiClient cliente;
-    private final Preferences preferencias =
-            Preferences.userNodeForPackage(TelaProjetos.class);
+    private final Preferences preferencias = Preferences.userNodeForPackage(TelaProjetos.class);
 
     private JTextField campoEmail;
     private JPasswordField campoSenha;
     private JButton botaoLogin;
+    private JButton botaoCadastro;
     private JLabel mensagemLogin;
 
     private boolean temaClaro;
@@ -92,8 +92,8 @@ public class TelaLogin extends JFrame {
         JPanel painelPrincipal = new JPanel(new GridBagLayout()) {
             private final Image fundo = new ImageIcon(
                     temaClaro ? "frontend/img/pattern-background-light.png"
-                              : "frontend/img/pattern-background.png"
-            ).getImage();
+                            : "frontend/img/pattern-background.png")
+                    .getImage();
 
             @Override
             protected void paintComponent(Graphics g) {
@@ -108,11 +108,10 @@ public class TelaLogin extends JFrame {
         JPanel painelLogin = new JPanel();
         painelLogin.setLayout(new BoxLayout(painelLogin, BoxLayout.Y_AXIS));
         painelLogin.setBackground(SUPERFICIE);
-        painelLogin.setPreferredSize(new Dimension(430, 520));
+        painelLogin.setPreferredSize(new Dimension(430, 540));
         painelLogin.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDA),
-                BorderFactory.createEmptyBorder(38, 38, 38, 38)
-        ));
+                BorderFactory.createEmptyBorder(38, 38, 55, 38)));
 
         // Marca: mesma imagem e identificação visual da tela de projetos.
         ImageIcon imagemOriginal = new ImageIcon("frontend/img/logo6.png");
@@ -120,9 +119,9 @@ public class TelaLogin extends JFrame {
                 .getScaledInstance(46, 46, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(imagemRedimensionada));
 
-        JLabel textoMarca = new JLabel("Projetos");
+        JLabel textoMarca = new JLabel("PanBoo");
         textoMarca.setFont(new Font("Segoe UI", Font.PLAIN, 25));
-        textoMarca.setForeground(TEXTO);
+        textoMarca.setForeground(AZUL);
 
         JPanel marca = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         marca.setOpaque(false);
@@ -137,8 +136,7 @@ public class TelaLogin extends JFrame {
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel descricao = new JLabel(
-                "Entre com sua conta para acessar seus projetos."
-        );
+                "Entre com sua conta para acessar seus projetos.");
         descricao.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         descricao.setForeground(CINZA);
         descricao.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -159,8 +157,7 @@ public class TelaLogin extends JFrame {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(
                         RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON
-                );
+                        RenderingHints.VALUE_ANTIALIAS_ON);
 
                 Color corBotao = AZUL;
                 if (!isEnabled()) {
@@ -178,18 +175,25 @@ public class TelaLogin extends JFrame {
                 super.paintComponent(g);
             }
         };
-        botaoLogin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        botaoLogin = new JButton("Entrar");
+        botaoLogin.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         botaoLogin.setForeground(Color.WHITE);
+        botaoLogin.setBackground(new Color(48, 52, 56));
         botaoLogin.setFocusPainted(false);
         botaoLogin.setBorderPainted(false);
-        botaoLogin.setContentAreaFilled(false);
-        botaoLogin.setOpaque(false);
-        botaoLogin.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-        botaoLogin.setRolloverEnabled(true);
         botaoLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoLogin.setAlignmentX(Component.LEFT_ALIGNMENT);
-        botaoLogin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 46));
-        botaoLogin.setPreferredSize(new Dimension(350, 46));
+        botaoLogin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        botaoLogin.setPreferredSize(new Dimension(350, 50));
+        botaoCadastro = new JButton("Não possui uma conta? Cadastre-se");
+        botaoCadastro.setText("<html>Não possui uma conta? <u>Cadastre-se</u></html>");
+        botaoCadastro.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        botaoCadastro.setForeground(Color.WHITE);
+        botaoCadastro.setFocusPainted(false);
+        botaoCadastro.setBorderPainted(false);
+        botaoCadastro.setContentAreaFilled(false);
+        botaoCadastro.setAlignmentX(Component.LEFT_ALIGNMENT);
+        botaoCadastro.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         mensagemLogin = new JLabel(" ");
         mensagemLogin.setForeground(ERRO);
@@ -213,6 +217,8 @@ public class TelaLogin extends JFrame {
         painelLogin.add(mensagemLogin);
         painelLogin.add(Box.createVerticalStrut(12));
         painelLogin.add(botaoLogin);
+        painelLogin.add(Box.createVerticalStrut(15));
+        painelLogin.add(botaoCadastro);
 
         painelPrincipal.add(painelLogin);
         setContentPane(painelPrincipal);
@@ -233,8 +239,7 @@ public class TelaLogin extends JFrame {
         campo.setCaretColor(TEXTO);
         campo.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDA),
-                BorderFactory.createEmptyBorder(10, 12, 10, 12)
-        ));
+                BorderFactory.createEmptyBorder(10, 12, 10, 12)));
         campo.setAlignmentX(Component.LEFT_ALIGNMENT);
         campo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
         campo.setPreferredSize(new Dimension(350, 44));
@@ -263,6 +268,12 @@ public class TelaLogin extends JFrame {
                 mensagemLogin.setText(erro.getMessage());
                 botaoLogin.setEnabled(true);
             }
+        });
+
+        botaoCadastro.addActionListener(e -> {
+            TelaCadastro telaCadastro = new TelaCadastro();
+            telaCadastro.setVisible(true);
+            dispose();
         });
     }
 }

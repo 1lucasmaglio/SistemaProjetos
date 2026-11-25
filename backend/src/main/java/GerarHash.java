@@ -7,9 +7,8 @@ public class GerarHash {
         String senha = "12345";
 
         String hash = BCrypt.hashpw(
-            senha,
-            BCrypt.gensalt(10)
-        );
+                senha,
+                BCrypt.gensalt(10));
 
         System.out.println(hash);
     }

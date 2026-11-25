@@ -8,8 +8,7 @@ import model.Usuario;
 
 public class SessaoService {
 
-    private final Map<String, Usuario> sessoes =
-            new ConcurrentHashMap<>();
+    private final Map<String, Usuario> sessoes = new ConcurrentHashMap<>();
 
     public String criarSessao(Usuario usuario) {
         String token = UUID.randomUUID().toString();

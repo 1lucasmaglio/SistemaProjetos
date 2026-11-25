@@ -32,45 +32,38 @@ public class ProjetoService {
 
         if (projeto.getNome() == null) {
             throw new IllegalArgumentException(
-                    "O nome do projeto é obrigatório."
-            );
+                    "O nome do projeto é obrigatório.");
         }
 
         String nome = projeto.getNome().trim();
 
         if (nome.isEmpty()) {
             throw new IllegalArgumentException(
-                    "O nome do projeto é obrigatório."
-            );
+                    "O nome do projeto é obrigatório.");
         }
 
         if (nome.length() < 3 || nome.length() > 100) {
             throw new IllegalArgumentException(
-                    "O nome deve ter entre 3 e 100 caracteres."
-            );
+                    "O nome deve ter entre 3 e 100 caracteres.");
         }
 
         projeto.setNome(nome);
-
 
         // 2. Validate description
 
         if (projeto.getDescricao() == null) {
             throw new IllegalArgumentException(
-                    "A descrição do projeto é obrigatória."
-            );
+                    "A descrição do projeto é obrigatória.");
         }
 
         String descricao = projeto.getDescricao().trim();
 
         if (descricao.length() < 10 || descricao.length() > 500) {
             throw new IllegalArgumentException(
-                    "A descrição deve ter entre 10 e 500 caracteres."
-            );
+                    "A descrição deve ter entre 10 e 500 caracteres.");
         }
 
         projeto.setDescricao(descricao);
-
 
         // 3. Validate category
 
@@ -79,10 +72,8 @@ public class ProjetoService {
                         .contains(projeto.getCategoria())) {
 
             throw new IllegalArgumentException(
-                    "Categoria inválida."
-            );
+                    "Categoria inválida.");
         }
-
 
         // 4. Validate status
 
@@ -91,35 +82,29 @@ public class ProjetoService {
                         "Planejado",
                         "Em Desenvolvimento",
                         "Concluído",
-                        "Cancelado"
-                ).contains(projeto.getStatus())) {
+                        "Cancelado").contains(projeto.getStatus())) {
 
             throw new IllegalArgumentException(
-                    "Status inválido."
-            );
+                    "Status inválido.");
         }
-
 
         // 5. Validate deadline
 
         if (projeto.getPrazo() == null) {
             throw new IllegalArgumentException(
-                    "O prazo do projeto é obrigatório."
-            );
+                    "O prazo do projeto é obrigatório.");
         }
 
         if (projeto.getPrazo().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException(
-                    "O prazo não pode ser uma data passada."
-            );
+                    "O prazo não pode ser uma data passada.");
         }
 
         if (projeto.getDataCriacao() != null &&
                 projeto.getPrazo().isBefore(projeto.getDataCriacao())) {
 
             throw new IllegalArgumentException(
-                    "O prazo não pode ser anterior à data de criação."
-            );
+                    "O prazo não pode ser anterior à data de criação.");
         }
     }
 
@@ -150,16 +135,16 @@ public class ProjetoService {
 
     public List<Projeto> listarPorUsuario(int usuarioId) {
 
-    List<Projeto> resultado = new ArrayList<>();
+        List<Projeto> resultado = new ArrayList<>();
 
-    for (Projeto projeto : projetos) {
+        for (Projeto projeto : projetos) {
 
-        if (projeto.getUsuarioId() == usuarioId) {
-            resultado.add(projeto);
+            if (projeto.getUsuarioId() == usuarioId) {
+                resultado.add(projeto);
+            }
         }
-    }
 
-    return resultado;
+        return resultado;
     }
 
     public Projeto buscarPorId(int id) {
@@ -221,8 +206,7 @@ public class ProjetoService {
 
     public boolean alterar(Projeto projetoAtualizado) {
 
-        Projeto projeto =
-                buscarPorId(projetoAtualizado.getId());
+        Projeto projeto = buscarPorId(projetoAtualizado.getId());
 
         if (projeto == null) {
             return false;

@@ -1,4 +1,3 @@
-
 package service;
 
 import java.util.ArrayList;
@@ -44,13 +43,16 @@ public class UsuarioService {
     public Usuario cadastrar(
             String nome,
             String email,
-            String senha
-    ) throws Exception {
+            String senha) throws Exception {
+
+        if (!email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+            throw new IllegalArgumentException(
+                    "Digite um email válido.");
+        }
 
         if (buscarPorEmail(email) != null) {
             throw new IllegalArgumentException(
-                "Email já cadastrado."
-            );
+                    "Email já cadastrado.");
         }
 
         int maiorId = 0;
@@ -63,16 +65,14 @@ public class UsuarioService {
         }
 
         String senhaHash = BCrypt.hashpw(
-            senha,
-            BCrypt.gensalt()
-        );
+                senha,
+                BCrypt.gensalt());
 
         Usuario usuario = new Usuario(
-            maiorId + 1,
-            nome,
-            email,
-            senhaHash
-        );
+                maiorId + 1,
+                nome,
+                email,
+                senhaHash);
 
         usuarios.add(usuario);
 
@@ -83,8 +83,7 @@ public class UsuarioService {
 
     public Usuario login(
             String email,
-            String senha
-    ) {
+            String senha) {
 
         Usuario usuario = buscarPorEmail(email);
 
@@ -93,9 +92,8 @@ public class UsuarioService {
         }
 
         boolean senhaCorreta = BCrypt.checkpw(
-            senha,
-            usuario.getSenhaHash()
-        );
+                senha,
+                usuario.getSenhaHash());
 
         if (!senhaCorreta) {
             return null;

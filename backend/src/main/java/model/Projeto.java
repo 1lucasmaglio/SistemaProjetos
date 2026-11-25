@@ -18,7 +18,7 @@ public class Projeto {
     }
 
     public Projeto(int id, String nome, String descricao,
-                   String categoria, String status) {
+            String categoria, String status) {
 
         this.id = id;
         this.nome = nome;
@@ -28,7 +28,7 @@ public class Projeto {
     }
 
     public Projeto(String nome, String descricao,
-                   String categoria, String status) {
+            String categoria, String status) {
 
         this.nome = nome;
         this.descricao = descricao;
@@ -37,11 +37,11 @@ public class Projeto {
     }
 
     public Projeto(String nome, String descricao, String categoria, String status, LocalDate prazo) {
-    this.nome = nome;
-    this.descricao = descricao;
-    this.categoria = categoria;
-    this.status = status;
-    this.prazo = prazo;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.status = status;
+        this.prazo = prazo;
     }
 
     public int getId() {
@@ -68,8 +68,6 @@ public class Projeto {
         this.nome = nome;
     }
 
-
-    
     public String getDescricao() {
         return descricao;
     }

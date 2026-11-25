@@ -91,8 +91,7 @@ public class Main {
                             nome,
                             descricao,
                             categoria,
-                            status
-                    );
+                            status);
 
                     service.adicionar(novoProjeto);
                     service.salvar();
@@ -107,8 +106,7 @@ public class Main {
                     int idAlterar = scanner.nextInt();
                     scanner.nextLine();
 
-                    Projeto projetoExistente =
-                            service.buscarPorId(idAlterar);
+                    Projeto projetoExistente = service.buscarPorId(idAlterar);
 
                     if (projetoExistente == null) {
 
@@ -133,25 +131,21 @@ public class Main {
                                 novoNome,
                                 novaDescricao,
                                 novaCategoria,
-                                novoStatus
-                        );
+                                novoStatus);
 
-                        boolean alterado =
-                                service.alterar(projetoAtualizado);
+                        boolean alterado = service.alterar(projetoAtualizado);
 
                         if (alterado) {
 
                             service.salvar();
 
                             System.out.println(
-                                    "Projeto alterado com sucesso."
-                            );
+                                    "Projeto alterado com sucesso.");
 
                         } else {
 
                             System.out.println(
-                                    "Não foi possível alterar."
-                            );
+                                    "Não foi possível alterar.");
                         }
                     }
 
@@ -160,28 +154,24 @@ public class Main {
                 case 5:
 
                     System.out.print(
-                            "ID do projeto que deseja excluir: "
-                    );
+                            "ID do projeto que deseja excluir: ");
 
                     int idExcluir = scanner.nextInt();
                     scanner.nextLine();
 
-                    boolean removido =
-                            service.removerPorId(idExcluir);
+                    boolean removido = service.removerPorId(idExcluir);
 
                     if (removido) {
 
                         service.salvar();
 
                         System.out.println(
-                                "Projeto excluído com sucesso."
-                        );
+                                "Projeto excluído com sucesso.");
 
                     } else {
 
                         System.out.println(
-                                "Projeto não encontrado."
-                        );
+                                "Projeto não encontrado.");
                     }
 
                     break;
@@ -191,8 +181,7 @@ public class Main {
                     System.out.print("Digite a categoria: ");
                     String categoriaBusca = scanner.nextLine();
 
-                    List<Projeto> porCategoria =
-                            service.buscarPorCategoria(categoriaBusca);
+                    List<Projeto> porCategoria = service.buscarPorCategoria(categoriaBusca);
 
                     for (Projeto projeto : porCategoria) {
                         projeto.exibirDados();
@@ -206,8 +195,7 @@ public class Main {
                     System.out.print("Digite o status: ");
                     String statusBusca = scanner.nextLine();
 
-                    List<Projeto> porStatus =
-                            service.buscarPorStatus(statusBusca);
+                    List<Projeto> porStatus = service.buscarPorStatus(statusBusca);
 
                     for (Projeto projeto : porStatus) {
                         projeto.exibirDados();
