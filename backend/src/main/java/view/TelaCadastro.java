@@ -83,22 +83,18 @@ public class TelaCadastro extends JFrame {
                 BorderFactory.createLineBorder(BORDA),
                 BorderFactory.createEmptyBorder(35, 40, 15, 40)));
 
-        // Logo e identificação visual
-        ImageIcon imagemOriginal = new ImageIcon("frontend/img/logo6.png");
+        // Logo com identificação visual
+        ImageIcon imagemOriginal = new ImageIcon("frontend/img/logoTitle.png");
+
+        int largura = 180;
+        int altura = imagemOriginal.getIconHeight() * largura
+                / imagemOriginal.getIconWidth();
+
         Image imagemRedimensionada = imagemOriginal.getImage()
-                .getScaledInstance(46, 46, Image.SCALE_SMOOTH);
-        JLabel logo = new JLabel(new ImageIcon(imagemRedimensionada));
+                .getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
 
-        JLabel textoMarca = new JLabel("PanBoo");
-        textoMarca.setFont(new Font("Segoe UI", Font.PLAIN, 25));
-        textoMarca.setForeground(AZUL);
-
-        JPanel marca = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        marca.setOpaque(false);
+        JLabel marca = new JLabel(new ImageIcon(imagemRedimensionada));
         marca.setAlignmentX(Component.LEFT_ALIGNMENT);
-        marca.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        marca.add(logo);
-        marca.add(textoMarca);
 
         JLabel titulo = new JLabel("Criar conta");
         titulo.setFont(new Font("Segoe UI", Font.PLAIN, 26));

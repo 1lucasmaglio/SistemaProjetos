@@ -124,7 +124,7 @@ function atualizarGraficoStatus(concluidos, emDesenvolvimento, planejados) {
         labels:
           idiomaAtual === "en"
             ? ["Completed", "In Progress", "Planned"]
-            : ["Concluídos", "Em desenvolvimento", "Planejados"],
+            : ["Concluídos", "Em Desenvolvimento", "Planejados"],
 
         datasets: [
           {
@@ -147,7 +147,7 @@ function atualizarGraficoStatus(concluidos, emDesenvolvimento, planejados) {
     graficoStatus.data.labels =
       idiomaAtual === "en"
         ? ["Completed", "In Progress", "Planned"]
-        : ["Concluídos", "Em desenvolvimento", "Planejados"];
+        : ["Concluídos", "Em Desenvolvimento", "Planejados"];
 
     graficoStatus.data.datasets[0].data = dados;
 
@@ -370,7 +370,7 @@ function atualizarEstatisticas(projetos) {
       concluidos++;
     }
 
-    if (projeto.status === "Em desenvolvimento") {
+    if (projeto.status === "Em Desenvolvimento") {
       emDesenvolvimento++;
     }
 
@@ -582,7 +582,7 @@ function exibirProjetos(projetos) {
       etiquetaStatus.classList.add("status-concluido");
     }
 
-    if (projeto.status === "Em desenvolvimento") {
+    if (projeto.status === "Em Desenvolvimento") {
       etiquetaStatus.classList.add("status-andamento");
     }
 
@@ -913,7 +913,7 @@ const traducoes = {
     rodape: "Projeto acadêmico de Análise e Desenvolvimento de Sistemas",
 
     statusConcluido: "Concluído",
-    statusAndamento: "Em desenvolvimento",
+    statusAndamento: "Em Desenvolvimento",
     statusPlanejado: "Planejado",
 
     quantidadeProjetos: "Quantidade de projetos",
@@ -995,7 +995,7 @@ function traduzirStatus(status) {
     return textos.statusConcluido;
   }
 
-  if (status === "Em desenvolvimento") {
+  if (status === "Em Desenvolvimento") {
     return textos.statusAndamento;
   }
 
@@ -1118,7 +1118,7 @@ function aplicarIdioma(idioma) {
 
   // Opções de status
 
-  const statusPortugues = ["Planejado", "Em desenvolvimento", "Concluído"];
+  const statusPortugues = ["Planejado", "Em Desenvolvimento", "Concluído"];
   const statusIngles = ["Planned", "In Progress", "Completed"];
 
   const seletoresStatus = [

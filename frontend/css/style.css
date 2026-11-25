@@ -29,7 +29,7 @@
 
 body.tema-claro {
   --preto: #e5e5e7;
-  --preto-sidebar: #dedee1;
+  --preto-sidebar: #ffffffc4;
   --fundo: #eeeef0;
   --superficie: #f8f8f9;
   --superficie-secundaria: #e8e8eb;
@@ -1366,4 +1366,24 @@ body.tema-claro .pagina-login {
 #projetos th:first-child,
 #projetos td:first-child {
   text-align: center;
+}
+
+.marca img {
+  width: 220px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Login and registration */
+.sidebar .marca {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.sidebar .marca img {
+    width: 190px;
+    height: auto;
+    object-fit: contain;
 }

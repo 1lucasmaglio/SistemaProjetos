@@ -1,1 +1,5 @@
 id;usuarioId;nome;descricao;categoria;status;dataCriacao;prazo
+1;2;Web teste 1;Web teste 1 descrição;Web;Em Desenvolvimento;2026-11-25;2026-11-25
+2;2;Software teste 1;Software teste 1 descrição;Software;Em Desenvolvimento;2026-11-25;2026-11-30
+3;2;Software teste 2;Software teste 2 descrição;Software;Concluído;2026-11-25;2026-12-25
+4;2;Desktop teste 1;Desktop teste 1 descrição;Desktop;Planejado;2026-11-25;2026-12-31

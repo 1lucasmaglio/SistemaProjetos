@@ -137,7 +137,6 @@ public class TelaProjetos extends JFrame {
         private JLabel textoTema;
         private JLabel textoIdioma;
 
-        private JLabel textoMarca;
 
         private JLabel tituloDashboard;
         private JLabel subtituloDashboard;
@@ -254,18 +253,15 @@ public class TelaProjetos extends JFrame {
                                         Map.entry("editar", "Editar Projeto"),
                                         Map.entry("cancelar", "Cancelar"),
                                         Map.entry("salvar", "Salvar alterações"),
-                                        Map.entry("rodape",
-                                                        "Projeto acadêmico de Análise e Desenvolvimento de Sistemas"),
+                                        Map.entry("rodape", "Projeto acadêmico de Análise e Desenvolvimento de Sistemas"),
                                         Map.entry("statusConcluido", "Concluído"),
                                         Map.entry("statusAndamento", "Em desenvolvimento"),
                                         Map.entry("statusPlanejado", "Planejado"),
                                         Map.entry("quantidadeProjetos", "Quantidade de projetos"),
                                         Map.entry("projetosCriados", "Projetos criados"),
-                                        Map.entry("subtituloConfiguracoes",
-                                                        "Personalize a aparência e o idioma do sistema."),
+                                        Map.entry("subtituloConfiguracoes", "Personalize a aparência e o idioma do sistema."),
                                         Map.entry("subtituloDashboard", "Gerencie e acompanhe seus projetos."),
-                                        Map.entry("tituloSistema", "Sistema de Projetos"),
-                                        Map.entry("projetosMarca", "PanBoo")),
+                                        Map.entry("tituloSistema", "Sistema de Projetos")),
 
                         "en", Map.ofEntries(
                                         Map.entry("usuario", "User"),
@@ -273,8 +269,7 @@ public class TelaProjetos extends JFrame {
                                         Map.entry("projetos", "Projects"),
                                         Map.entry("configuracoes", "Settings"),
                                         Map.entry("dashboard", "Dashboard"),
-                                        Map.entry("descricaoDashboard",
-                                                        "Track your projects' indicators and performance."),
+                                        Map.entry("descricaoDashboard", "Track your projects' indicators and performance."),
                                         Map.entry("totalProjetos", "Total Projects"),
                                         Map.entry("concluidos", "Completed"),
                                         Map.entry("emDesenvolvimento", "In Progress"),
@@ -320,11 +315,9 @@ public class TelaProjetos extends JFrame {
                                         Map.entry("statusPlanejado", "Planned"),
                                         Map.entry("quantidadeProjetos", "Number of projects"),
                                         Map.entry("projetosCriados", "Projects created"),
-                                        Map.entry("subtituloConfiguracoes",
-                                                        "Customize the system's appearance and language."),
+                                        Map.entry("subtituloConfiguracoes", "Customize the system's appearance and language."),
                                         Map.entry("subtituloDashboard", "Manage and track your projects."),
-                                        Map.entry("tituloSistema", "Project Management System"),
-                                        Map.entry("projetosMarca", "PanBoo")));
+                                        Map.entry("tituloSistema", "Project Management System")));
 
         private String traduzir(String chave) {
                 return traducoes.get(idiomaAtual).get(chave);
@@ -460,26 +453,18 @@ public class TelaProjetos extends JFrame {
                 sidebar.setBorder(
                                 BorderFactory.createEmptyBorder(25, 22, 20, 15));
 
-                ImageIcon imagemOriginal = new ImageIcon("frontend/img/logo6.png");
+                ImageIcon imagemOriginal = new ImageIcon("frontend/img/logoTitle.png");
+
+                int largura = 180;
+                int altura = imagemOriginal.getIconHeight() * largura
+                                / imagemOriginal.getIconWidth();
 
                 Image imagemRedimensionada = imagemOriginal.getImage()
-                                .getScaledInstance(46, 46, Image.SCALE_SMOOTH);
+                                .getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
 
-                JLabel logo = new JLabel(new ImageIcon(imagemRedimensionada));
-
-                textoMarca = new JLabel("PanBoo");
-                textoMarca.setFont(new Font("Segoe UI", Font.PLAIN, 25));
-                textoMarca.setForeground(AZUL);
-
-                JPanel marca = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
-                marca.setBackground(AZUL_SIDEBAR);
+                JLabel marca = new JLabel(new ImageIcon(imagemRedimensionada));
                 marca.setAlignmentX(LEFT_ALIGNMENT);
-                marca.setPreferredSize(new Dimension(230, 46));
-                marca.setMaximumSize(new Dimension(230, 46));
-                marca.setMinimumSize(new Dimension(230, 46));
-
-                marca.add(logo);
-                marca.add(textoMarca);
+                marca.setMaximumSize(new Dimension(230, altura));
 
                 sidebar.add(marca);
                 sidebar.add(Box.createVerticalStrut(25));
@@ -736,6 +721,7 @@ public class TelaProjetos extends JFrame {
                 estilizarCombo(comboCategoria);
                 estilizarCombo(comboStatus);
                 estilizarCampo(campoPrazo.getComponentDateTextField());
+                campoPrazo.setPreferredSize(new Dimension(220, 34));
 
                 JPanel campos = new JPanel(new GridLayout(3, 2, 15, 12));
                 campos.setBackground(SUPERFICIE);
@@ -1197,7 +1183,6 @@ public class TelaProjetos extends JFrame {
                 rotuloDashboard.setText(traduzir("dashboard"));
                 rotuloProjetos.setText(traduzir("projetos"));
                 rotuloConfiguracoes.setText(traduzir("configuracoes"));
-                textoMarca.setText(traduzir("projetosMarca"));
                 botaoSair.setText(traduzir("sair"));
                 rotuloUsuario.setText(traduzir("usuario"));
 
