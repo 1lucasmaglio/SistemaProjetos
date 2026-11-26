@@ -12,7 +12,7 @@
     />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/frontend/css/style.css" />
+    <link rel="stylesheet" href="../frontend/css/style.css" />
   </head>
 
   <body>
@@ -20,7 +20,7 @@
       <aside class="sidebar">
         <div class="marca">
           <img
-            src="/frontend/img/logoTitle.png"
+            src="../frontend/img/logoTitle.png"
             alt="PanBoo - Sistema de Projetos"
           />
         </div>
@@ -36,7 +36,7 @@
         <div class="acoes-usuario">
           <div class="informacoes-usuario">
             <img
-              src="/frontend/img/light-bear.png"
+              src="../frontend/img/light-bear.png"
               alt="Ícone de usuário"
               class="icone-usuario"
             />
@@ -49,7 +49,7 @@
 
           <button type="button" id="botaoSair" class="botao-sair">
             <img
-              src="/frontend/img/icone-sair-light-bear.gif"
+              src="../frontend/img/icone-sair-light-bear.gif"
               alt=""
               class="icone-sair"
             />
@@ -78,7 +78,7 @@
             <section class="cards-estatisticas">
               <article class="card-estatistica azul">
                 <img
-                  src="/frontend/img/card-total-projetos.png"
+                  src="../frontend/img/card-total-projetos.png"
                   alt=""
                   class="icone-card"
                 />
@@ -91,7 +91,7 @@
 
               <article class="card-estatistica verde">
                 <img
-                  src="/frontend/img/card-concluidos.png"
+                  src="../frontend/img/card-concluidos.png"
                   alt=""
                   class="icone-card"
                 />
@@ -104,7 +104,7 @@
 
               <article class="card-estatistica laranja">
                 <img
-                  src="/frontend/img/card-em-desenvolvimento.png"
+                  src="../frontend/img/card-em-desenvolvimento.png"
                   alt=""
                   class="icone-card"
                 />
@@ -117,7 +117,7 @@
 
               <article class="card-estatistica roxo">
                 <img
-                  src="/frontend/img/card-planejados.png"
+                  src="../frontend/img/card-planejados.png"
                   alt=""
                   class="icone-card"
                 />
@@ -415,6 +415,27 @@
               </form>
             </div>
           </div>
+
+          <!-- POPUP DE CONFIRMAÇÃO -->
+          <div id="popupConfirmacao" class="popup">
+            <div class="conteudo-popup popup-mensagem">
+              <h2>Confirm</h2>
+
+              <div class="corpo-popup">
+                <p>Are you sure you want to log out?</p>
+              </div>
+
+              <div class="botoes-popup">
+                <button type="button" id="botaoNao" class="botao-popup">
+                  No
+                </button>
+
+                <button type="button" id="botaoSim" class="botao-popup">
+                  Yes
+                </button>
+              </div>
+            </div>
+          </div>
         </main>
 
         <footer>
@@ -427,6 +448,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/frontend/js/script.js"></script>
+    <script src="../frontend/js/script.js"></script>
   </body>
 </html>

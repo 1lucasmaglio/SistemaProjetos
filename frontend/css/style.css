@@ -740,17 +740,14 @@ footer {
 
 .status-concluido {
   color: #a6d58b;
-  background: rgba(67, 124, 30, 0.2);
 }
 
 .status-andamento {
   color: #67dada;
-  background: rgba(0, 153, 153, 0.2);
 }
 
 .status-planejado {
-  color: #eff6ee;
-  background: rgba(239, 246, 238, 0.1);
+  color: #EF626C;
 }
 
 .icone-acao {
@@ -824,8 +821,7 @@ body.tema-claro .card-estatistica.roxo strong {
 /* Status planejado */
 
 body.tema-claro .status-planejado {
-  color: #355f24;
-  background: rgba(67, 124, 30, 0.12);
+  color: #EF626C;
 }
 
 /* ========================================
@@ -1376,14 +1372,65 @@ body.tema-claro .pagina-login {
 
 /* Login and registration */
 .sidebar .marca {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .sidebar .marca img {
-    width: 190px;
-    height: auto;
-    object-fit: contain;
+  width: 190px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ========================================
+   POPUP DE MENSAGEM
+   ======================================== */
+
+.popup-mensagem {
+  color: var(--texto);
+  background-color: var(--superficie);
+  padding: 20px;
+  border: 1px solid #444447;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+.popup-mensagem h2 {
+  color: var(--branco);
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.corpo-popup {
+  padding: 0 3px;
+}
+
+.corpo-popup p {
+  color: var(--texto);
+  font-size: 14px;
+  margin: 0;
+}
+
+.botoes-popup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.botao-popup {
+  background-color: var(--superficie);
+  color: var(--texto);
+  border: 1px solid #444447;
+  padding: 7px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.botao-popup:hover {
+  filter: brightness(1.2);
 }

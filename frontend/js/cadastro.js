@@ -1,3 +1,7 @@
+window.addEventListener("beforeunload", function () {
+  console.log("A página está sendo descarregada.");
+});
+
 /* CONFIGURAÇÃO DE TEMA */
 const temaSalvo = localStorage.getItem("tema") || "dark";
 document.body.classList.toggle("tema-claro", temaSalvo === "light");
@@ -9,6 +13,8 @@ const formCadastro = document.getElementById("formCadastro");
 
 formCadastro.addEventListener("submit", function (evento) {
   evento.preventDefault();
+
+  console.log("Default prevented:", evento.defaultPrevented);
 
   const nome = document.getElementById("nome").value;
   const email = document.getElementById("email").value;
@@ -39,11 +45,20 @@ formCadastro.addEventListener("submit", function (evento) {
       });
     })
     .then(function (dados) {
-      alert("Conta criada com sucesso! Faça login para continuar.");
-      window.location.href = "/frontend/login.html";
+      const popup = document.getElementById("popupCadastro");
+
+      popup.style.display = "flex";
+
+      console.log("Popup aberto:", popup.style.display);
     })
     .catch(function (erro) {
       const mensagem = document.getElementById("mensagemCadastro");
       mensagem.textContent = erro.message;
     });
+});
+
+const botaoIrLogin = document.getElementById("botaoIrLogin");
+
+botaoIrLogin.addEventListener("click", function () {
+  window.location.href = "../frontend/login.html";
 });

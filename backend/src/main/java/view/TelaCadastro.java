@@ -1,11 +1,27 @@
 
 package view;
 
-import java.awt.*;
-import javax.swing.*;
-
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.util.Arrays;
 import java.util.prefs.Preferences;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import client.ApiClient;
 
@@ -23,6 +39,7 @@ public class TelaCadastro extends JFrame {
     private JLabel mensagemCadastro;
 
     private boolean temaClaro;
+    private String idiomaAtual;
 
     private Color FUNDO;
     private Color SUPERFICIE;
@@ -42,6 +59,7 @@ public class TelaCadastro extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         temaClaro = preferencias.get("tema", "dark").equals("light");
+        idiomaAtual = preferencias.get("idioma", "pt-BR");
 
         configurarCores();
         criarComponentes();
@@ -194,6 +212,35 @@ public class TelaCadastro extends JFrame {
         campo.setPreferredSize(new Dimension(350, 44));
     }
 
+    private String traduzirErro(String mensagem) {
+
+        if (mensagem == null) {
+            return idiomaAtual.equals("en")
+                    ? "An unexpected error occurred."
+                    : "Ocorreu um erro inesperado.";
+        }
+
+        if (mensagem.equals("Preencha todos os campos.")) {
+            return idiomaAtual.equals("en")
+                    ? "Please fill in all fields."
+                    : "Preencha todos os campos.";
+        }
+
+        if (mensagem.equals("Digite um email válido.")) {
+            return idiomaAtual.equals("en")
+                    ? "Enter a valid email address."
+                    : "Digite um email válido.";
+        }
+
+        if (mensagem.equals("Email já cadastrado.")) {
+            return idiomaAtual.equals("en")
+                    ? "Email is already registered."
+                    : "Email já cadastrado.";
+        }
+
+        return mensagem;
+    }
+
     private void configurarEventoCadastro() {
 
         botaoCadastrar.addActionListener(e -> {
@@ -203,7 +250,9 @@ public class TelaCadastro extends JFrame {
             char[] senha = campoSenha.getPassword();
 
             if (nome.isEmpty() || email.isEmpty() || senha.length == 0) {
-                mensagemCadastro.setText("Preencha todos os campos.");
+                mensagemCadastro.setText(
+                        traduzirErro("Preencha todos os campos."));
+
                 Arrays.fill(senha, '\0');
                 return;
             }
@@ -226,7 +275,8 @@ public class TelaCadastro extends JFrame {
 
             } catch (Exception ex) {
 
-                mensagemCadastro.setText(ex.getMessage());
+                mensagemCadastro.setText(
+                        traduzirErro(ex.getMessage()));
                 botaoCadastrar.setEnabled(true);
 
             } finally {

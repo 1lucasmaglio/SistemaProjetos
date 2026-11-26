@@ -40,7 +40,7 @@ formLogin.addEventListener("submit", function (event) {
 
       localStorage.setItem("nomeUsuario", dados.nome);
 
-      window.location.href = "/frontend/projetos.html";
+      window.location.href = "../frontend/projetos.html";
     })
     .catch(function (erro) {
       const mensagem = document.getElementById("mensagemLogin");

@@ -19,8 +19,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.labels.PieToolTipGenerator;
-import org.jfree.chart.labels.StandardPieToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.RingPlot;
@@ -43,6 +41,8 @@ public class ViewChart {
         private final Color CINZA;
         private final Color BORDA;
 
+        private final String idiomaAtual;
+
         private final Color VERDE = new Color(67, 124, 30);
         private final Color AZUL = new Color(0, 153, 153);
         private final Color VERMELHO = new Color(239, 98, 108);
@@ -58,7 +58,9 @@ public class ViewChart {
         // CONSTRUTOR
         // ========================================
 
-        public ViewChart(boolean temaClaro) {
+        public ViewChart(boolean temaClaro, String idiomaAtual) {
+
+                this.idiomaAtual = idiomaAtual;
 
                 if (temaClaro) {
 
@@ -108,9 +110,17 @@ public class ViewChart {
                         }
                 }
 
-                dados.setValue("Concluídos", concluidos);
-                dados.setValue("Em desenvolvimento", emDesenvolvimento);
-                dados.setValue("Planejados", planejados);
+                dados.setValue(
+                                idiomaAtual.equals("en") ? "Completed" : "Concluídos",
+                                concluidos);
+
+                dados.setValue(
+                                idiomaAtual.equals("en") ? "In Progress" : "Em desenvolvimento",
+                                emDesenvolvimento);
+
+                dados.setValue(
+                                idiomaAtual.equals("en") ? "Planned" : "Planejados",
+                                planejados);
 
                 return dados;
         }
@@ -139,7 +149,9 @@ public class ViewChart {
 
                         dados.addValue(
                                         entrada.getValue(),
-                                        "Quantidade de projetos",
+                                        idiomaAtual.equals("en")
+                                                        ? "Number of projects"
+                                                        : "Quantidade de projetos",
                                         entrada.getKey());
                 }
 
@@ -167,7 +179,9 @@ public class ViewChart {
                                         contagemPorMes.getOrDefault(mes, 0) + 1);
                 }
 
-                Locale idioma = new Locale("pt", "BR");
+                Locale idioma = idiomaAtual.equals("en")
+                                ? Locale.ENGLISH
+                                : new Locale("pt", "BR");
 
                 for (Map.Entry<YearMonth, Integer> entrada : contagemPorMes.entrySet()) {
 
@@ -183,7 +197,9 @@ public class ViewChart {
 
                         dados.addValue(
                                         entrada.getValue(),
-                                        "Projetos criados",
+                                        idiomaAtual.equals("en")
+                                                        ? "Projects created"
+                                                        : "Projetos criados",
                                         label);
                 }
 
@@ -198,10 +214,12 @@ public class ViewChart {
                         DefaultPieDataset<String> dados) {
 
                 JFreeChart grafico = ChartFactory.createRingChart(
-                                "Projetos por status",
+                                idiomaAtual.equals("en")
+                                                ? "Projects by status"
+                                                : "Projetos por status",
                                 dados,
                                 true,
-                                true,
+                                false,
                                 false);
 
                 estilizarTitulo(grafico);
@@ -218,9 +236,17 @@ public class ViewChart {
                 plot.setLegendItemShape(
                                 new Rectangle2D.Double(-6, -3, 12, 6));
 
-                plot.setSectionPaint("Concluídos", VERDE);
-                plot.setSectionPaint("Em desenvolvimento", AZUL);
-                plot.setSectionPaint("Planejados", VERMELHO);
+                plot.setSectionPaint(
+                                idiomaAtual.equals("en") ? "Completed" : "Concluídos",
+                                VERDE);
+
+                plot.setSectionPaint(
+                                idiomaAtual.equals("en") ? "In Progress" : "Em desenvolvimento",
+                                AZUL);
+
+                plot.setSectionPaint(
+                                idiomaAtual.equals("en") ? "Planned" : "Planejados",
+                                VERMELHO);
 
                 plot.setToolTipGenerator(null);
 
@@ -240,7 +266,9 @@ public class ViewChart {
                         DefaultCategoryDataset dados) {
 
                 JFreeChart grafico = ChartFactory.createBarChart(
-                                "Projetos por categoria",
+                                idiomaAtual.equals("en")
+                                                ? "Projects by category"
+                                                : "Projetos por categoria",
                                 null,
                                 null,
                                 dados,
@@ -284,7 +312,7 @@ public class ViewChart {
                                                 return VERMELHO;
 
                                         case "Desktop":
-                                                return CLARO;
+                                                return new Color(149, 117, 205);
 
                                         default:
                                                 return Color.GRAY;
@@ -323,7 +351,9 @@ public class ViewChart {
                         DefaultCategoryDataset dados) {
 
                 JFreeChart grafico = ChartFactory.createLineChart(
-                                "Evolução mensal de projetos",
+                                idiomaAtual.equals("en")
+                                                ? "Monthly project evolution"
+                                                : "Evolução mensal de projetos",
                                 null,
                                 null,
                                 dados,
@@ -394,7 +424,7 @@ public class ViewChart {
 
                 ChartPanel painel = new ChartPanel(grafico);
 
-                painel.setDisplayToolTips(true);
+                painel.setToolTipText(null);
                 painel.setBackground(FUNDO);
                 painel.setBackground(FUNDO);
                 painel.setMouseWheelEnabled(false);

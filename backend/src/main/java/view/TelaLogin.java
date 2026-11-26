@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -39,6 +38,7 @@ public class TelaLogin extends JFrame {
     private JLabel mensagemLogin;
 
     private boolean temaClaro;
+    private String idiomaAtual;
 
     private Color FUNDO;
     private Color SUPERFICIE;
@@ -60,6 +60,7 @@ public class TelaLogin extends JFrame {
         cliente = new ApiClient();
 
         temaClaro = preferencias.get("tema", "dark").equals("light");
+        idiomaAtual = preferencias.get("idioma", "pt-BR");
         configurarCores();
         criarComponentes();
         configurarEventoLogin();
@@ -241,6 +242,17 @@ public class TelaLogin extends JFrame {
         campo.setPreferredSize(new Dimension(350, 44));
     }
 
+    private String traduzirErro(String mensagem) {
+
+        if (mensagem.equals("E-mail ou senha incorretos.")) {
+            return idiomaAtual.equals("en")
+                    ? "Incorrect email or password."
+                    : "E-mail ou senha incorretos.";
+        }
+
+        return mensagem;
+    }
+
     private void configurarEventoLogin() {
         botaoLogin.addActionListener(e -> {
             botaoLogin.setEnabled(false);
@@ -261,7 +273,8 @@ public class TelaLogin extends JFrame {
                 dispose();
 
             } catch (Exception erro) {
-                mensagemLogin.setText(erro.getMessage());
+                mensagemLogin.setText(
+                        traduzirErro(erro.getMessage()));
                 botaoLogin.setEnabled(true);
             }
         });

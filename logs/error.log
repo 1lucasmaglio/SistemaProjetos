@@ -33,3 +33,50 @@
 25/11/2026 13:52:36 - Erro ao alterar projeto 'Olivia Rodrigo web teste 1 editado' (ID: 4): Status inválido.
 25/11/2026 13:56:50 - Erro ao cadastrar projeto '11111111111111': Status inválido.
 25/11/2026 16:11:40 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+25/11/2026 20:17:00 - Erro ao carregar usuários do CSV: For input string: ""
+25/11/2026 20:26:48 - Erro ao cadastrar projeto 'Tes': O prazo não pode ser uma data passada.
+25/11/2026 20:30:26 - Erro ao alterar projeto 'Web teste 1' (ID: 1): O prazo não pode ser uma data passada.
+25/11/2026 20:30:36 - Erro ao alterar projeto 'Web teste 1' (ID: 1): O prazo não pode ser uma data passada.
+25/11/2026 20:34:11 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+25/11/2026 20:55:52 - Erro ao cadastrar projeto 'Tu': O nome deve ter entre 3 e 100 caracteres.
+25/11/2026 20:56:02 - Erro ao cadastrar projeto 'Lucas': A descrição deve ter entre 10 e 500 caracteres.
+25/11/2026 20:56:27 - Erro ao cadastrar projeto 'Lucas': O prazo não pode ser uma data passada.
+26/11/2026 11:18:25 - Erro ao cadastrar projeto 'testeeeeeeeeeee': Status inválido.
+26/11/2026 13:16:32 - Erro ao cadastrar projeto 'em desenvolvimento': Status inválido.
+26/11/2026 13:16:36 - Erro ao cadastrar projeto 'em desenvolvimento': Status inválido.
+26/11/2026 13:16:38 - Erro ao cadastrar projeto 'em desenvolvimento': Status inválido.
+26/11/2026 13:16:41 - Erro ao cadastrar projeto 'em desenvolvimento': Status inválido.
+26/11/2026 13:16:45 - Erro ao cadastrar projeto 'em desenvolvimento': Status inválido.
+26/11/2026 13:16:55 - Erro ao cadastrar projeto 'em desenvolvimento': Status inválido.
+26/11/2026 13:21:23 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:21:26 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:32:16 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:32:24 - Erro ao cadastrar projeto 'aaaaaaaaa': A descrição deve ter entre 10 e 500 caracteres.
+26/11/2026 13:32:27 - Erro ao cadastrar projeto 'aaaaaaaaa': A descrição deve ter entre 10 e 500 caracteres.
+26/11/2026 13:32:29 - Erro ao cadastrar projeto 'aaaaaaaaa': A descrição deve ter entre 10 e 500 caracteres.
+26/11/2026 13:32:32 - Erro ao cadastrar projeto 'aaaaaaaaa': A descrição deve ter entre 10 e 500 caracteres.
+26/11/2026 13:44:59 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:45:06 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:45:10 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:45:15 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:45:18 - Erro ao cadastrar projeto 'aaaaaaaa': A descrição deve ter entre 10 e 500 caracteres.
+26/11/2026 13:45:42 - Erro ao cadastrar projeto 'aaaaaaaa': A descrição deve ter entre 10 e 500 caracteres.
+26/11/2026 13:47:40 - Erro ao cadastrar projeto 'aaaaaaaa': A descrição deve ter entre 10 e 500 caracteres.
+26/11/2026 13:49:01 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:49:09 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:49:23 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 13:49:27 - Erro ao cadastrar projeto 'aaaaaaaaaaa': A descrição deve ter entre 10 e 500 caracteres.
+26/11/2026 13:49:33 - Erro ao cadastrar projeto 'aaaaaaaaaaa': O prazo não pode ser uma data passada.
+26/11/2026 14:39:05 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 14:43:08 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 15:10:06 - Erro ao cadastrar projeto '': O nome do projeto é obrigatório.
+26/11/2026 15:41:44 - Erro ao cadastrar projeto 'Web teste 1': O prazo não pode ser uma data passada.
+26/11/2026 15:44:05 - Erro ao cadastrar projeto 'Web teste 1': O prazo não pode ser uma data passada.
+26/11/2026 15:46:06 - Erro ao cadastrar projeto 'wwww': O prazo não pode ser uma data passada.
+26/11/2026 15:56:44 - Erro ao cadastrar projeto 'ffffffffffff': O prazo não pode ser uma data passada.
+26/11/2026 17:00:03 - Erro ao cadastrar projeto 'ddddd': O prazo não pode ser uma data passada.
+26/11/2026 17:04:21 - Erro ao carregar projetos do CSV: For input string: ""
+26/11/2026 17:04:26 - Erro ao carregar projetos do CSV: For input string: ""
+26/11/2026 17:04:37 - Erro ao carregar projetos do CSV: For input string: ""
+26/11/2026 17:04:49 - Erro ao carregar projetos do CSV: For input string: ""
+26/11/2026 17:19:11 - Erro ao carregar projetos do CSV: For input string: "id"

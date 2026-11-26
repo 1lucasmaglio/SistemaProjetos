@@ -24,8 +24,7 @@ public class UsuarioCSV {
 
         for (Usuario usuario : usuarios) {
 
-            String linha =
-                    usuario.getId() + ";" +
+            String linha = usuario.getId() + ";" +
                     usuario.getNome() + ";" +
                     usuario.getEmail() + ";" +
                     usuario.getSenhaHash();
@@ -59,8 +58,7 @@ public class UsuarioCSV {
                     id,
                     dados[1],
                     dados[2],
-                    dados[3]
-            );
+                    dados[3]);
 
             usuarios.add(usuario);
         }

@@ -38,7 +38,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.border.AbstractBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -136,7 +135,6 @@ public class TelaProjetos extends JFrame {
         private JLabel descricaoIdioma;
         private JLabel textoTema;
         private JLabel textoIdioma;
-
 
         private JLabel tituloDashboard;
         private JLabel subtituloDashboard;
@@ -253,13 +251,15 @@ public class TelaProjetos extends JFrame {
                                         Map.entry("editar", "Editar Projeto"),
                                         Map.entry("cancelar", "Cancelar"),
                                         Map.entry("salvar", "Salvar alterações"),
-                                        Map.entry("rodape", "Projeto acadêmico de Análise e Desenvolvimento de Sistemas"),
+                                        Map.entry("rodape",
+                                                        "Projeto acadêmico de Análise e Desenvolvimento de Sistemas"),
                                         Map.entry("statusConcluido", "Concluído"),
                                         Map.entry("statusAndamento", "Em desenvolvimento"),
                                         Map.entry("statusPlanejado", "Planejado"),
                                         Map.entry("quantidadeProjetos", "Quantidade de projetos"),
                                         Map.entry("projetosCriados", "Projetos criados"),
-                                        Map.entry("subtituloConfiguracoes", "Personalize a aparência e o idioma do sistema."),
+                                        Map.entry("subtituloConfiguracoes",
+                                                        "Personalize a aparência e o idioma do sistema."),
                                         Map.entry("subtituloDashboard", "Gerencie e acompanhe seus projetos."),
                                         Map.entry("tituloSistema", "Sistema de Projetos")),
 
@@ -269,7 +269,8 @@ public class TelaProjetos extends JFrame {
                                         Map.entry("projetos", "Projects"),
                                         Map.entry("configuracoes", "Settings"),
                                         Map.entry("dashboard", "Dashboard"),
-                                        Map.entry("descricaoDashboard", "Track your projects' indicators and performance."),
+                                        Map.entry("descricaoDashboard",
+                                                        "Track your projects' indicators and performance."),
                                         Map.entry("totalProjetos", "Total Projects"),
                                         Map.entry("concluidos", "Completed"),
                                         Map.entry("emDesenvolvimento", "In Progress"),
@@ -315,12 +316,104 @@ public class TelaProjetos extends JFrame {
                                         Map.entry("statusPlanejado", "Planned"),
                                         Map.entry("quantidadeProjetos", "Number of projects"),
                                         Map.entry("projetosCriados", "Projects created"),
-                                        Map.entry("subtituloConfiguracoes", "Customize the system's appearance and language."),
+                                        Map.entry("subtituloConfiguracoes",
+                                                        "Customize the system's appearance and language."),
                                         Map.entry("subtituloDashboard", "Manage and track your projects."),
                                         Map.entry("tituloSistema", "Project Management System")));
 
         private String traduzir(String chave) {
                 return traducoes.get(idiomaAtual).get(chave);
+        }
+
+        private String traduzirErro(String mensagem) {
+
+                if (mensagem == null) {
+                        return idiomaAtual.equals("en")
+                                        ? "An unexpected error occurred."
+                                        : "Ocorreu um erro inesperado.";
+                }
+
+                if (!idiomaAtual.equals("en")) {
+                        return mensagem;
+                }
+
+                if (mensagem.startsWith("Erro: ")) {
+                        return "Error: " + mensagem.substring("Erro: ".length());
+                }
+
+                if (mensagem.startsWith("Erro ao excluir projeto: ")) {
+                        return "Error deleting project: "
+                                        + mensagem.substring("Erro ao excluir projeto: ".length());
+                }
+
+                return switch (mensagem) {
+
+                        // Form validation
+
+                        case "O nome do projeto é obrigatório." ->
+                                "Project name is required.";
+
+                        case "O nome deve ter entre 3 e 100 caracteres." ->
+                                "Project name must contain between 3 and 100 characters.";
+
+                        case "A descrição do projeto é obrigatória." ->
+                                "Project description is required.";
+
+                        case "A descrição deve ter entre 10 e 500 caracteres." ->
+                                "Project description must contain between 10 and 500 characters.";
+
+                        case "Categoria inválida." ->
+                                "Invalid category.";
+
+                        case "Status inválido." ->
+                                "Invalid status.";
+
+                        case "O prazo do projeto é obrigatório." ->
+                                "Project deadline is required.";
+
+                        case "O prazo não pode ser uma data passada." ->
+                                "The deadline cannot be in the past.";
+
+                        case "O prazo não pode ser anterior à data de criação." ->
+                                "The deadline cannot be earlier than the creation date.";
+
+                        // Other project messages
+
+                        case "Projeto não encontrado." ->
+                                "Project not found.";
+
+                        case "Informe o nome do projeto." ->
+                                "Enter the project name.";
+
+                        case "Erro ao cadastrar projeto:" ->
+                                "Error creating project:";
+
+                        case "Erro ao carregar projetos:" ->
+                                "Error loading projects:";
+
+                        case "Erro ao buscar projetos:" ->
+                                "Error searching projects:";
+
+                        case "Erro ao carregar projeto:" ->
+                                "Error loading project:";
+
+                        case "Erro ao alterar projeto:" ->
+                                "Error updating project:";
+
+                        case "Erro ao excluir projeto:" ->
+                                "Error deleting project:";
+
+                        case "Erro interno do servidor" ->
+                                "Internal server error.";
+
+                        case "Dados inválidos." ->
+                                "Invalid data.";
+
+                        case "Acesso não autorizado." ->
+                                "Unauthorized access.";
+
+                        default -> mensagem;
+                };
         }
 
         public TelaProjetos(ApiClient cliente) {
@@ -338,7 +431,7 @@ public class TelaProjetos extends JFrame {
 
                 configurarCores();
 
-                viewChart = new ViewChart(temaClaro);
+                viewChart = new ViewChart(temaClaro, idiomaAtual);
 
                 criarComponentes();
                 aplicarIdioma();
@@ -349,7 +442,7 @@ public class TelaProjetos extends JFrame {
         private void recriarInterface() {
 
                 configurarCores();
-                viewChart = new ViewChart(temaClaro);
+                viewChart = new ViewChart(temaClaro, idiomaAtual);
 
                 criarComponentes();
                 aplicarIdioma();
@@ -713,7 +806,9 @@ public class TelaProjetos extends JFrame {
                 });
 
                 comboStatus = new JComboBox<>(new String[] {
-                                "Planejado", "Em desenvolvimento", "Concluído"
+                                traduzir("statusPlanejado"),
+                                traduzir("statusAndamento"),
+                                traduzir("statusConcluido")
                 });
 
                 estilizarCampo(campoNome);
@@ -843,6 +938,54 @@ public class TelaProjetos extends JFrame {
                 centralizar.setForeground(TEXTO);
 
                 tabela.getColumnModel().getColumn(0).setCellRenderer(centralizar);
+
+                DefaultTableCellRenderer renderizadorStatus = new DefaultTableCellRenderer() {
+
+                        @Override
+                        public Component getTableCellRendererComponent(
+                                        JTable tabela,
+                                        Object valor,
+                                        boolean selecionado,
+                                        boolean foco,
+                                        int linha,
+                                        int coluna) {
+
+                                super.getTableCellRendererComponent(
+                                                tabela, valor, selecionado, foco, linha, coluna);
+
+                                setHorizontalAlignment(SwingConstants.CENTER);
+
+                                if (selecionado) {
+                                        setBackground(tabela.getSelectionBackground());
+                                        setForeground(tabela.getSelectionForeground());
+                                } else {
+                                        setOpaque(false);
+
+                                        String status = String.valueOf(valor);
+
+                                        if (status.equals("Concluído")) {
+                                                setText(traduzir("statusConcluido"));
+                                        } else if (status.equals("Em Desenvolvimento")) {
+                                                setText(traduzir("statusAndamento"));
+                                        } else if (status.equals("Planejado")) {
+                                                setText(traduzir("statusPlanejado"));
+                                        }
+                                        if (status.equals("Concluído")) {
+                                                setForeground(new Color(166, 213, 139));
+                                        } else if (status.equals("Em Desenvolvimento")) {
+                                                setForeground(new Color(103, 218, 218));
+                                        } else if (status.equals("Planejado")) {
+                                                setForeground(new Color(239, 98, 108));
+                                        } else {
+                                                setForeground(TEXTO);
+                                        }
+                                }
+
+                                return this;
+                        }
+                };
+
+                tabela.getColumnModel().getColumn(3).setCellRenderer(renderizadorStatus);
 
                 tabela.getColumnModel().getColumn(6).setPreferredWidth(100);
                 tabela.getColumnModel().getColumn(6).setMaxWidth(100);
@@ -1238,6 +1381,18 @@ public class TelaProjetos extends JFrame {
                 tabela.getColumnModel().getColumn(4).setPreferredWidth(130);
                 tabela.getColumnModel().getColumn(5).setPreferredWidth(110);
                 tabela.getColumnModel().getColumn(6).setPreferredWidth(90);
+
+                // Atualiza as opções de status conforme o idioma.
+                int statusSelecionado = comboStatus.getSelectedIndex();
+
+                comboStatus.removeAllItems();
+                comboStatus.addItem(traduzir("statusPlanejado"));
+                comboStatus.addItem(traduzir("statusAndamento"));
+                comboStatus.addItem(traduzir("statusConcluido"));
+
+                if (statusSelecionado >= 0) {
+                        comboStatus.setSelectedIndex(statusSelecionado);
+                }
         }
 
         private JPanel criarPainelComBorda(
@@ -1499,8 +1654,10 @@ public class TelaProjetos extends JFrame {
 
                         int resposta = JOptionPane.showConfirmDialog(
                                         this,
-                                        "Deseja realmente sair?",
-                                        "Sair",
+                                        idiomaAtual.equals("en")
+                                                        ? "Are you sure you want to log out?"
+                                                        : "Deseja realmente sair?",
+                                        idiomaAtual.equals("en") ? "Log out" : "Sair",
                                         JOptionPane.YES_NO_OPTION);
 
                         if (resposta == JOptionPane.YES_OPTION) {
@@ -1523,7 +1680,7 @@ public class TelaProjetos extends JFrame {
                         idiomaAtual = idioma;
                         preferencias.put("idioma", idioma);
 
-                        aplicarIdioma();
+                        recriarInterface();
                 });
         }
 
@@ -1546,7 +1703,13 @@ public class TelaProjetos extends JFrame {
                 LocalDate prazo = campoPrazo.getDate();
 
                 String categoria = comboCategoria.getSelectedItem().toString();
-                String status = comboStatus.getSelectedItem().toString();
+                String[] statusOriginais = {
+                                "Planejado",
+                                "Em Desenvolvimento",
+                                "Concluído"
+                };
+
+                String status = statusOriginais[comboStatus.getSelectedIndex()];
 
                 Projeto projeto = new Projeto(
                                 nome,
@@ -1561,7 +1724,9 @@ public class TelaProjetos extends JFrame {
 
                         JOptionPane.showMessageDialog(
                                         this,
-                                        "Projeto cadastrado com sucesso!");
+                                        idiomaAtual.equals("en")
+                                                        ? "Project registered successfully!"
+                                                        : "Projeto cadastrado com sucesso!");
 
                         limparFormulario();
                         carregarTabela();
@@ -1570,7 +1735,8 @@ public class TelaProjetos extends JFrame {
 
                         JOptionPane.showMessageDialog(
                                         this,
-                                        "Erro ao cadastrar projeto: " + e.getMessage());
+                                        traduzirErro("Erro ao cadastrar projeto:")
+                                                        + " " + traduzirErro(e.getMessage()));
                 }
         }
 
@@ -1588,7 +1754,7 @@ public class TelaProjetos extends JFrame {
                         for (Projeto projeto : projetos) {
                                 if ("Concluído".equalsIgnoreCase(projeto.getStatus())) {
                                         concluidos++;
-                                } else if ("Em desenvolvimento".equalsIgnoreCase(projeto.getStatus())) {
+                                } else if ("Em Desenvolvimento".equalsIgnoreCase(projeto.getStatus())) {
                                         emDesenvolvimento++;
                                 } else if ("Planejado".equalsIgnoreCase(projeto.getStatus())) {
                                         planejados++;
@@ -1605,8 +1771,11 @@ public class TelaProjetos extends JFrame {
                         atualizarPaginaTabela();
 
                 } catch (Exception e) {
-                        JOptionPane.showMessageDialog(this,
-                                        "Erro ao carregar projetos: " + e.getMessage());
+
+                        JOptionPane.showMessageDialog(
+                                        this,
+                                        traduzirErro("Erro ao carregar projetos:")
+                                                        + " " + traduzirErro(e.getMessage()));
                 }
         }
 
@@ -1661,64 +1830,50 @@ public class TelaProjetos extends JFrame {
                 atualizarPaginaTabela();
         }
 
-        // Mostra no máximo cinco números de página, além das setas laterais.
+        // Mostra no máximo 6 números de página, além das setas laterais.
         private void atualizarControlesPaginacao() {
-                if (painelPaginacao == null)
-                        return;
 
                 painelPaginacao.removeAll();
-                int totalPaginas = Math.max(1, (int) Math.ceil(
-                                projetosFiltrados.size() / (double) PROJETOS_POR_PAGINA));
 
-                JButton anterior = criarBotaoPaginacao("‹", false);
+                int totalPaginas = (int) Math.ceil(
+                                projetosFiltrados.size() / (double) PROJETOS_POR_PAGINA);
+
+                JButton anterior = new JButton("‹");
                 anterior.setEnabled(paginaAtual > 1);
                 anterior.addActionListener(e -> mudarPagina(-1));
                 painelPaginacao.add(anterior);
 
                 int primeira = Math.max(1, paginaAtual - 2);
                 int ultima = Math.min(totalPaginas, primeira + 4);
+
                 primeira = Math.max(1, ultima - 4);
 
-                for (int numero = primeira; numero <= ultima; numero++) {
-                        final int pagina = numero;
-                        JButton botaoPagina = criarBotaoPaginacao(
-                                        String.valueOf(numero), numero == paginaAtual);
-                        botaoPagina.addActionListener(e -> {
-                                paginaAtual = pagina;
+                for (int i = primeira; i <= ultima; i++) {
+
+                        final int numeroPagina = i;
+
+                        JButton botao = new JButton(String.valueOf(i));
+
+                        if (i == paginaAtual) {
+                                botao.setBackground(new Color(53, 137, 35));
+                                botao.setForeground(Color.WHITE);
+                        }
+
+                        botao.addActionListener(e -> {
+                                paginaAtual = numeroPagina;
                                 atualizarPaginaTabela();
                         });
-                        painelPaginacao.add(botaoPagina);
+
+                        painelPaginacao.add(botao);
                 }
 
-                JButton proxima = criarBotaoPaginacao("›", false);
+                JButton proxima = new JButton("›");
                 proxima.setEnabled(paginaAtual < totalPaginas);
                 proxima.addActionListener(e -> mudarPagina(1));
                 painelPaginacao.add(proxima);
 
                 painelPaginacao.revalidate();
                 painelPaginacao.repaint();
-        }
-
-        private JButton criarBotaoPaginacao(String texto, boolean selecionado) {
-                Color fundo = selecionado ? new Color(53, 137, 35) : SUPERFICIE_SECUNDARIA;
-                JButton botao = new JButton(texto);
-                botao.setPreferredSize(new Dimension(40, 38));
-                botao.setMinimumSize(new Dimension(40, 38));
-                botao.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-                botao.setForeground(TEXTO);
-                if (selecionado)
-                        botao.setForeground(Color.WHITE);
-                botao.setBackground(fundo);
-                botao.setOpaque(true);
-                botao.setFocusPainted(false);
-                botao.setBorderPainted(true);
-                botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                botao.setEnabled(!("‹".equals(texto) && paginaAtual == 1)
-                                && !("›".equals(texto)
-                                                && paginaAtual >= Math.max(1, (int) Math.ceil(
-                                                                projetosFiltrados.size()
-                                                                                / (double) PROJETOS_POR_PAGINA))));
-                return botao;
         }
 
         private void atualizarGraficos(List<Projeto> projetos) {
@@ -1766,8 +1921,11 @@ public class TelaProjetos extends JFrame {
                         paginaAtual = 1;
                         atualizarPaginaTabela();
                 } catch (Exception e) {
-                        JOptionPane.showMessageDialog(this,
-                                        "Erro ao buscar projetos: " + e.getMessage());
+
+                        JOptionPane.showMessageDialog(
+                                        this,
+                                        traduzirErro("Erro ao buscar projetos:")
+                                                        + " " + traduzirErro(e.getMessage()));
                 }
         }
 
@@ -1787,13 +1945,14 @@ public class TelaProjetos extends JFrame {
 
                         JOptionPane.showMessageDialog(
                                         this,
-                                        "Projeto não encontrado.");
+                                        traduzirErro("Projeto não encontrado."));
 
                 } catch (Exception e) {
 
                         JOptionPane.showMessageDialog(
                                         this,
-                                        "Erro ao carregar projeto: " + e.getMessage());
+                                        traduzirErro("Erro ao carregar projeto:")
+                                                        + " " + traduzirErro(e.getMessage()));
                 }
         }
 
@@ -1801,7 +1960,7 @@ public class TelaProjetos extends JFrame {
 
                 JDialog dialog = new JDialog(
                                 this,
-                                "Editar projeto",
+                                idiomaAtual.equals("en") ? "Edit project" : "Editar projeto",
                                 true);
 
                 dialog.setResizable(false);
@@ -1814,7 +1973,8 @@ public class TelaProjetos extends JFrame {
 
                 painel.setPreferredSize(new Dimension(560, 500));
 
-                JLabel titulo = new JLabel("Editar Projeto");
+                JLabel titulo = new JLabel(
+                                idiomaAtual.equals("en") ? "Edit Project" : "Editar Projeto");
                 titulo.setFont(new Font("Segoe UI", Font.PLAIN, 20));
                 titulo.setForeground(AZUL_ESCURO);
 
@@ -1827,16 +1987,34 @@ public class TelaProjetos extends JFrame {
                 DatePicker prazo = new DatePicker(configuracoes);
                 prazo.setDate(projeto.getPrazo());
 
-                JComboBox<String> categoria = new JComboBox<>(new String[] {
+                String[] categoriasOriginais = {
                                 "Web", "Software", "Mobile", "Desktop"
-                });
+                };
 
-                JComboBox<String> status = new JComboBox<>(new String[] {
-                                "Planejado", "Em desenvolvimento", "Concluído"
-                });
+                String[] categoriasTraduzidas = idiomaAtual.equals("en")
+                                ? new String[] { "Web", "Software", "Mobile", "Desktop" }
+                                : categoriasOriginais;
+
+                JComboBox<String> categoria = new JComboBox<>(categoriasTraduzidas);
+
+                String[] statusOriginais = {
+                                "Planejado", "Em Desenvolvimento", "Concluído"
+                };
+
+                String[] statusTraduzidos = idiomaAtual.equals("en")
+                                ? new String[] { "Planned", "In Progress", "Completed" }
+                                : statusOriginais;
+
+                JComboBox<String> status = new JComboBox<>(statusTraduzidos);
 
                 categoria.setSelectedItem(projeto.getCategoria());
-                status.setSelectedItem(projeto.getStatus());
+
+                int indiceStatus = java.util.Arrays.asList(statusOriginais)
+                                .indexOf(projeto.getStatus());
+
+                if (indiceStatus >= 0) {
+                        status.setSelectedIndex(indiceStatus);
+                }
 
                 estilizarCampo(nome);
                 estilizarCampo(descricao);
@@ -1854,12 +2032,12 @@ public class TelaProjetos extends JFrame {
                 campos.add(criarCampoComRotulo("prazo", prazo));
 
                 JButton botaoSalvar = criarBotao(
-                                "Salvar alterações",
+                                idiomaAtual.equals("en") ? "Save changes" : "Salvar alterações",
                                 new Color(48, 54, 58),
                                 BRANCO);
 
                 JButton botaoCancelar = criarBotao(
-                                "Cancelar",
+                                idiomaAtual.equals("en") ? "Cancel" : "Cancelar",
                                 new Color(112, 120, 126),
                                 BRANCO);
 
@@ -1887,13 +2065,13 @@ public class TelaProjetos extends JFrame {
                         String novaDescricao = descricao.getText().trim();
                         LocalDate novoPrazo = prazo.getDate();
 
-                        String novaCategoria = categoria.getSelectedItem().toString();
-                        String novoStatus = status.getSelectedItem().toString();
+                        String novaCategoria = categoriasOriginais[categoria.getSelectedIndex()];
+                        String novoStatus = statusOriginais[status.getSelectedIndex()];
 
                         if (novoNome.isBlank()) {
                                 JOptionPane.showMessageDialog(
-                                                dialog,
-                                                "Informe o nome do projeto.");
+                                                this,
+                                                traduzirErro("Informe o nome do projeto."));
                                 return;
                         }
 
@@ -1912,7 +2090,9 @@ public class TelaProjetos extends JFrame {
 
                                 JOptionPane.showMessageDialog(
                                                 dialog,
-                                                "Projeto alterado com sucesso!");
+                                                idiomaAtual.equals("en")
+                                                                ? "Project updated successfully!"
+                                                                : "Projeto alterado com sucesso!");
 
                                 dialog.dispose();
                                 carregarTabela();
@@ -1921,7 +2101,8 @@ public class TelaProjetos extends JFrame {
 
                                 JOptionPane.showMessageDialog(
                                                 dialog,
-                                                "Erro ao alterar projeto: " + ex.getMessage());
+                                                traduzirErro("Erro ao alterar projeto:")
+                                                                + " " + traduzirErro(ex.getMessage()));
                         }
                 });
 
@@ -1932,8 +2113,10 @@ public class TelaProjetos extends JFrame {
 
                 int resposta = JOptionPane.showConfirmDialog(
                                 this,
-                                "Deseja realmente excluir este projeto?",
-                                "Confirmar exclusão",
+                                idiomaAtual.equals("en")
+                                                ? "Are you sure you want to delete this project?"
+                                                : "Deseja realmente excluir este projeto?",
+                                idiomaAtual.equals("en") ? "Confirm deletion" : "Confirmar exclusão",
                                 JOptionPane.YES_NO_OPTION);
 
                 if (resposta != JOptionPane.YES_OPTION) {
@@ -1946,7 +2129,9 @@ public class TelaProjetos extends JFrame {
 
                         JOptionPane.showMessageDialog(
                                         this,
-                                        "Projeto excluído com sucesso!");
+                                        idiomaAtual.equals("en")
+                                                        ? "Project deleted successfully!"
+                                                        : "Projeto excluído com sucesso!");
 
                         carregarTabela();
 
@@ -1954,7 +2139,7 @@ public class TelaProjetos extends JFrame {
 
                         JOptionPane.showMessageDialog(
                                         this,
-                                        "Erro ao excluir projeto: " + e.getMessage());
+                                        traduzirErro(e.getMessage()));
                 }
         }
 
@@ -2046,8 +2231,15 @@ public class TelaProjetos extends JFrame {
                                         "frontend/img/icone-excluir.png",
                                         "frontend/img/icone-excluir-hover1.png");
 
-                        editar.setToolTipText("Editar projeto");
-                        excluir.setToolTipText("Excluir projeto");
+                        editar.setToolTipText(
+                                        idiomaAtual.equals("en")
+                                                        ? "Edit project"
+                                                        : "Editar projeto");
+
+                        excluir.setToolTipText(
+                                        idiomaAtual.equals("en")
+                                                        ? "Delete project"
+                                                        : "Excluir projeto");
 
                         painel.add(editar);
                         painel.add(excluir);
