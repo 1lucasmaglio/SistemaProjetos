@@ -1,26 +1,26 @@
 id;usuarioId;nome;descricao;categoria;status;dataCriacao;prazo
-1;2;GTA 6;Desenvolvimento de um jogo de mundo aberto;Software;Em Desenvolvimento;2020-03-15;2026-12-18
-2;2;Red Dead Redemption 2;Criação de um jogo de aventura;Software;Concluído;2012-06-20;2018-10-26
-3;2;GTA Online;Atualização do modo online;Software;Planejado;2023-01-10;2027-04-15
-4;2;Rockstar Launcher;Desenvolvimento de uma plataforma de jogos;Software;Concluído;2020-03-15;2024-08-20
-5;2;GTA San Andreas;Criação de um jogo de ação;Software;Concluído;2000-01-10;2004-10-26
-6;2;Red Dead Online;Desenvolvimento de modo multiplayer;Software;Planejado;2026-09-15;2028-05-20
-7;2;GTA Vice City;Criação de um jogo de mundo aberto;Software;Concluído;2000-01-10;2002-10-29
-8;2;GTA V;Desenvolvimento de um jogo de ação e aventura;Software;Concluído;2006-04-10;2013-09-17
-9;2;Rockstar Store;Criação de uma loja virtual;Web;Em Desenvolvimento;2025-06-18;2027-02-10
-10;2;GTA IV;Desenvolvimento de um jogo de mundo aberto;Software;Concluído;2003-05-20;2008-04-29
-11;2;Max Payne 3;Criação de um jogo de ação;Software;Em Desenvolvimento;2005-02-15;2012-05-15
-12;2;Bully;Desenvolvimento de um jogo escolar;Software;Concluído;2003-05-20;2006-10-17
-13;2;L.A. Noire;Criação de um jogo de investigação;Software;Planejado;2026-09-15;2027-06-20
-14;2;GTA Trilogy;Desenvolvimento de uma coleção de jogos;Software;Em Desenvolvimento;2018-04-20;2021-11-11
-15;2;Rockstar Website;Criação de um site oficial;Web;Planejado;2026-10-10;2028-04-15
-16;2;GTA Chinatown Wars;Criação de um jogo portátil;Software;Concluído;2006-04-10;2009-03-17
-17;2;Red Dead Redemption;Desenvolvimento de um jogo de faroeste;Software;Concluído;2003-05-20;2010-05-18
-18;2;GTA Liberty City Stories;Criação de um jogo de ação;Software;Concluído;2003-01-15;2005-10-25
-19;2;Rockstar Support;Desenvolvimento de uma central de suporte;Web;Em Desenvolvimento;2025-06-18;2027-02-10
-20;2;GTA Episodes;Criação de expansões para GTA IV;Software;Concluído;2007-03-15;2009-10-29
-21;2;Midnight Club;Desenvolvimento de um jogo de corrida;Software;Planejado;2004-02-10;2008-10-21
-22;2;Manhunt;Criação de um jogo de suspense;Software;Concluído;2000-01-10;2003-11-18
-23;2;Rockstar Mobile;Desenvolvimento de jogos para celular;Mobile;Planejado;2026-11-15;2028-08-20
-24;2;GTA Vice City Stories;Criação de um jogo de ação;Software;Em Desenvolvimento;2004-02-10;2006-10-31
-25;2;GTA 6 Online;Planejamento de um modo multiplayer;Software;Em Desenvolvimento;2026-11-26;2029-12-15
+1;2;GTA 6;Desenvolvimento do próximo jogo principal da franquia Grand Theft Auto;Software;Em Desenvolvimento;2024-03-15;2027-06-18
+2;2;Red Dead Redemption 2;Criação de um jogo de aventura em mundo aberto;Mobile;Concluído;2022-06-20;2027-01-15
+3;2;GTA 6 Online;Planejamento do modo multiplayer do GTA 6;Mobile;Planejado;2026-09-15;2028-05-20
+4;2;Rockstar Games Launcher;Desenvolvimento de uma plataforma desktop para gerenciamento de jogos;Mobile;Concluído;2023-03-15;2027-02-20
+5;2;GTA 6 - Mapa;Desenvolvimento do mapa e das regiões exploráveis do jogo;Mobile;Em Desenvolvimento;2024-06-10;2027-03-20
+6;2;GTA 6 - Sistema de Missões;Implementação das missões principais e secundárias;Software;Em Desenvolvimento;2025-02-15;2027-08-20
+7;2;GTA V;Desenvolvimento de um jogo de ação e aventura;Software;Concluído;2022-04-10;2027-01-30
+8;2;GTA 6 - Inteligência Artificial;Desenvolvimento do comportamento de NPCs e personagens;Software;Planejado;2026-11-15;2028-06-20
+9;2;Rockstar Store;Criação de uma loja virtual para produtos e jogos;Web;Em Desenvolvimento;2025-06-18;2027-02-10
+10;2;GTA 6 - Motor Gráfico;Otimização dos recursos gráficos e visuais do jogo;Software;Em Desenvolvimento;2024-05-20;2027-04-29
+11;2;Red Dead Redemption;Desenvolvimento de um jogo de faroeste;Software;Concluído;2023-05-20;2027-05-18
+12;2;GTA 6 - Sistema de Veículos;Implementação da física e personalização de veículos;Desktop;Em Desenvolvimento;2025-05-20;2027-10-17
+13;2;Rockstar Website;Desenvolvimento do portal oficial da empresa;Web;Concluído;2023-01-10;2027-06-20
+14;2;GTA 6 - Testes e Otimização;Testes de desempenho e correção de problemas;Software;Planejado;2026-09-15;2028-06-20
+15;2;GTA 6 - Interface do Usuário;Desenvolvimento dos menus e elementos visuais da interface;Software;Em Desenvolvimento;2025-10-10;2027-04-15
+16;2;GTA San Andreas;Criação de um jogo de ação em mundo aberto;Software;Concluído;2021-01-10;2027-10-26
+17;2;Rockstar Support;Desenvolvimento de uma central de suporte online;Web;Em Desenvolvimento;2025-06-18;2027-02-10
+18;2;GTA 6 - Sistema de Áudio;Implementação de efeitos sonoros, músicas e diálogos;Desktop;Planejado;2026-03-15;2028-10-29
+19;2;Bully;Desenvolvimento de um jogo de aventura escolar;Software;Concluído;2023-05-20;2027-10-17
+20;2;GTA 6 - Aplicativo de Desenvolvimento;Criação de uma ferramenta desktop para gerenciamento interno;Desktop;Em Desenvolvimento;2025-04-10;2027-09-17
+21;2;Max Payne 3;Criação de um jogo de ação;Software;Concluído;2023-02-15;2027-05-15
+22;2;GTA 6 - Sistema de Clima;Desenvolvimento de condições climáticas dinâmicas;Software;Planejado;2026-10-10;2028-04-15
+23;2;Rockstar Mobile;Desenvolvimento de ferramentas e experiências para dispositivos móveis;Mobile;Planejado;2026-11-15;2028-08-20
+24;2;GTA 6 - Sistema de Salvamento;Implementação do salvamento automático e manual;Software;Em Desenvolvimento;2025-02-15;2027-08-20
+25;2;GTA Vice City;Criação de um jogo de mundo aberto;Software;Concluído;2021-01-10;2027-10-26

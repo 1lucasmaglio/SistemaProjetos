@@ -80,3 +80,7 @@
 26/11/2026 17:04:37 - Erro ao carregar projetos do CSV: For input string: ""
 26/11/2026 17:04:49 - Erro ao carregar projetos do CSV: For input string: ""
 26/11/2026 17:19:11 - Erro ao carregar projetos do CSV: For input string: "id"
+26/11/2026 17:25:31 - Erro ao alterar projeto 'Rockstar Launcher' (ID: 4): O prazo não pode ser uma data passada.
+26/11/2026 17:25:37 - Erro ao alterar projeto 'GTA San Andreas' (ID: 5): O prazo não pode ser uma data passada.
+26/11/2026 17:27:32 - Erro ao alterar projeto 'Red Dead Redemption 2' (ID: 2): O prazo não pode ser uma data passada.
+26/11/2026 17:27:41 - Erro ao alterar projeto 'Red Dead Redemption 2' (ID: 2): O prazo não pode ser uma data passada.
