@@ -1,4 +1,4 @@
- <p align="center">
+<p align="center">
   <img src="frontend/img/logoTitle.png" alt="Logo do Sistema de Projetos" width="400" height="400">
 </p>
 
