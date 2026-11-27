@@ -1,3 +1,7 @@
+ <p align="center">
+  <img src="frontend/img/logoTitle.gif" alt="Logo do Sistema de Projetos" width="700">
+</p>
+
 # Sistema de Projetos
 
 Projeto acadêmico desenvolvido durante o curso de **Análise e Desenvolvimento de Sistemas da FATEC**, com base nos conteúdos, exemplos e atividades apresentados pelo professor.
@@ -83,6 +87,8 @@ SistemaProjetos/
 └── frontend/
     ├── css/
     │   └── style.css
+    ├── img/
+    │   └── logoTitle.gif
     ├── js/
     │   └── script.js
     └── projetos.html
