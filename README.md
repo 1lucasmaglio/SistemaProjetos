@@ -4,7 +4,7 @@
 
 # Sistema de Projetos
 
-Projeto acadêmico desenvolvido durante o curso de **Análise e Desenvolvimento de Sistemas da FATEC**, com base nos conteúdos, exemplos e atividades apresentados pelo professor.  <p align="center"><img src="logo/Asset-2.webp" alt="Logo do Sistema de Projetos" width="128" height="128"></p>
+Projeto acadêmico desenvolvido durante o curso de **Análise e Desenvolvimento de Sistemas da FATEC**, com base nos conteúdos, exemplos e atividades apresentados pelo professor. 
 
 O sistema tem como objetivo aplicar conceitos de programação Java, orientação a objetos, persistência de dados, desenvolvimento de APIs REST, autenticação de usuários e integração entre diferentes interfaces.
 
