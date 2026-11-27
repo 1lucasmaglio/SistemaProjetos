@@ -1,5 +1,12 @@
 # Relatório – Qualidade, Métricas e Auditoria do Sistema de Projetos
 
+## Integrantes do grupo
+
+- Lucas Maglio Chiabai
+- Thiago Alexandre Marques Basílio
+- Thiago Santos de Almeida
+- Yann Sahmuel Escobar de Campos
+
 ## 1. Apresentação do sistema
 
 O Sistema de Projetos é uma aplicação desenvolvida como projeto acadêmico durante o curso de Análise e Desenvolvimento de Sistemas da FATEC. Seu objetivo é permitir o gerenciamento de projetos de maneira organizada, possibilitando o cadastro, a consulta, a edição, a exclusão e o acompanhamento das informações registradas.
