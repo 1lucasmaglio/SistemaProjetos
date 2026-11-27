@@ -164,4 +164,4 @@ O desenvolvimento também permite praticar a organização do código em diferen
 
 ---
 
-<p align="center"><img src="logo/Asset-2.webp" alt="Logo do Sistema de Projetos" width="128" height="128"></p>
+<p align="center"><img src="frontend/img/Asset-2.webp" alt="Logo do Sistema de Projetos" width="128" height="128"></p>
