@@ -208,250 +208,251 @@ Seu objetivo é demonstrar a evolução dos cadastros ao longo do tempo.
 
 A etapa de testes tem como objetivo verificar se as funcionalidades do Sistema de Projetos estão funcionando corretamente e se as informações são processadas conforme as regras estabelecidas.
 
-Serão documentados 20 casos de teste, envolvendo principalmente o cadastro, a consulta, a alteração, a exclusão, a autenticação, os campos obrigatórios e as validações dos projetos.
+Foram realizados 20 casos de teste, envolvendo o cadastro, a consulta, a alteração, a exclusão, a autenticação, a persistência dos dados, a validação de campos e a integração entre as interfaces Web e Desktop.
 
-Também serão considerados testes relacionados à comunicação entre as interfaces Web e Desktop, verificando se ambas apresentam resultados consistentes ao utilizar o mesmo backend.
-
-Os casos de teste serão documentados individualmente, contendo:
-
-- Nome do teste.
-- Funcionalidade ou campo testado.
-- Valor de entrada.
-- Resultado esperado.
-- Resultado obtido.
-- Status do teste.
+Cada caso de teste apresenta seu identificador, nome, descrição, ação realizada, resultado esperado, resultado obtido e status final.
 
 ### 4.1. Casos de teste
 
-**Caso de Teste 01**
+**Caso de Teste 01 – ID: 2026001**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
-
----
-
-**Caso de Teste 02**
-
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Login no Web.
+- **Funcionalidade testada:** Autenticação de usuário na interface Web.
+- **Ação:** Acessar a página de login, preencher os campos de usuário e senha com dados válidos e clicar no botão "Entrar".
+- **Resultado esperado:** Login realizado com sucesso, com redirecionamento para a página principal do sistema.
+- **Resultado obtido:** Login realizado com sucesso e acesso à página principal.
+- **Status:** Aprovado.
 
 ---
 
-**Caso de Teste 03**
+**Caso de Teste 02 – ID: 2026002**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
-
----
-
-**Caso de Teste 04**
-
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Login no Desktop.
+- **Funcionalidade testada:** Autenticação de usuário na interface Desktop.
+- **Ação:** Acessar a tela de login, preencher os campos de usuário e senha com dados válidos e clicar no botão "Entrar".
+- **Resultado esperado:** Login realizado com sucesso, com acesso à página principal do sistema.
+- **Resultado obtido:** Login realizado com sucesso e acesso à página principal.
+- **Status:** Aprovado.
 
 ---
 
-**Caso de Teste 05**
+**Caso de Teste 03 – ID: 2026003**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
-
----
-
-**Caso de Teste 06**
-
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Cadastro de projeto no Web.
+- **Funcionalidade testada:** Cadastro de novos projetos na interface Web.
+- **Ação:** Preencher os campos do formulário com informações válidas e clicar no botão de cadastro.
+- **Resultado esperado:** O projeto deve ser cadastrado com sucesso e exibido na lista de projetos.
+- **Resultado obtido:** O projeto foi cadastrado com sucesso nas opções "Planejado" e "Concluído". Porém, ao selecionar a opção "Em Desenvolvimento", aparece uma mensagem informando "Status inválido".
+- **Status:** Reprovado.
 
 ---
 
-**Caso de Teste 07**
+**Caso de Teste 04 – ID: 2026004**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
-
----
-
-**Caso de Teste 08**
-
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Cadastro de projeto no Desktop.
+- **Funcionalidade testada:** Cadastro de novos projetos na interface Desktop.
+- **Ação:** Preencher os campos do formulário com informações válidas e clicar no botão de cadastro.
+- **Resultado esperado:** O projeto deve ser cadastrado com sucesso e exibido na lista de projetos.
+- **Resultado obtido:** O projeto foi cadastrado com sucesso.
+- **Status:** Aprovado.
 
 ---
 
-**Caso de Teste 09**
+**Caso de Teste 05 – ID: 2026005**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
-
----
-
-**Caso de Teste 10**
-
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Cadastro de conta no Web.
+- **Funcionalidade testada:** Cadastro de novos usuários na interface Web.
+- **Ação:** Acessar a página de cadastro, preencher os campos com informações válidas e clicar no botão de cadastrar conta.
+- **Resultado esperado:** A conta deve ser criada com sucesso e o sistema deve confirmar a conclusão do cadastro.
+- **Resultado obtido:** A conta foi cadastrada com sucesso e o sistema confirmou a conclusão do cadastro.
+- **Status:** Aprovado.
 
 ---
 
-**Caso de Teste 11**
+**Caso de Teste 06 – ID: 2026006**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
-
----
-
-**Caso de Teste 12**
-
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Cadastro de conta no Desktop.
+- **Funcionalidade testada:** Cadastro de novos usuários na interface Desktop.
+- **Ação:** Acessar a página de cadastro, preencher os campos com informações válidas e clicar no botão de cadastrar conta.
+- **Resultado esperado:** A conta deve ser criada com sucesso e o sistema deve confirmar a conclusão do cadastro.
+- **Resultado obtido:** A conta foi cadastrada com sucesso e o sistema confirmou a conclusão do cadastro.
+- **Status:** Aprovado.
 
 ---
 
-**Caso de Teste 13**
+**Caso de Teste 07 – ID: 2026007**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
-
----
-
-**Caso de Teste 14**
-
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Edição de projeto no Web.
+- **Funcionalidade testada:** Alteração de informações de projetos na interface Web.
+- **Ação:** Selecionar um projeto existente, alterar suas informações e salvar as modificações.
+- **Resultado esperado:** As alterações devem ser salvas e apresentadas nos dados do projeto.
+- **Resultado obtido:** As alterações foram salvas e exibidas corretamente.
+- **Status:** Aprovado.
 
 ---
 
-**Caso de Teste 15**
+**Caso de Teste 08 – ID: 2026008**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
-
----
-
-**Caso de Teste 16**
-
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Edição de projeto no Desktop.
+- **Funcionalidade testada:** Alteração de informações de projetos na interface Desktop.
+- **Ação:** Selecionar um projeto existente, alterar suas informações e salvar as modificações.
+- **Resultado esperado:** As alterações devem ser salvas e apresentadas nos dados do projeto.
+- **Resultado obtido:** As alterações foram salvas com sucesso nas opções "Planejado" e "Concluído". Porém, ao selecionar a opção "Em Desenvolvimento", aparece uma mensagem informando "Status inválido".
+- **Status:** Reprovado.
 
 ---
 
-**Caso de Teste 17**
+**Caso de Teste 09 – ID: 2026009**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
-
----
-
-**Caso de Teste 18**
-
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Exclusão de projeto no Web.
+- **Funcionalidade testada:** Exclusão de projetos na interface Web.
+- **Ação:** Selecionar um projeto existente e executar a opção de exclusão.
+- **Resultado esperado:** O projeto deve ser removido da lista de projetos cadastrados.
+- **Resultado obtido:** O projeto foi excluído com sucesso e deixou de aparecer na lista.
+- **Status:** Aprovado.
 
 ---
 
-**Caso de Teste 19**
+**Caso de Teste 10 – ID: 2026010**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Exclusão de projeto no Desktop.
+- **Funcionalidade testada:** Exclusão de projetos na interface Desktop.
+- **Ação:** Selecionar um projeto existente e executar a opção de exclusão.
+- **Resultado esperado:** O projeto deve ser removido da lista de projetos cadastrados.
+- **Resultado obtido:** O projeto foi excluído com sucesso e deixou de aparecer na lista.
+- **Status:** Aprovado.
 
 ---
 
-**Caso de Teste 20**
+**Caso de Teste 11 – ID: 2026011**
 
-- Nome do teste:
-- Funcionalidade testada:
-- Valor de entrada:
-- Resultado esperado:
-- Resultado obtido:
-- Status: ( ) Aprovado ( ) Reprovado
+- **Nome:** Validação de credenciais inválidas no Web.
+- **Funcionalidade testada:** Validação de autenticação na interface Web.
+- **Ação:** Preencher os campos de login com credenciais inválidas e tentar acessar o sistema.
+- **Resultado esperado:** O sistema deve rejeitar as credenciais e impedir o acesso à plataforma.
+- **Resultado obtido:** O sistema rejeitou as credenciais inválidas e impediu o acesso.
+- **Status:** Aprovado.
+
+---
+
+**Caso de Teste 12 – ID: 2026012**
+
+- **Nome:** Validação de credenciais inválidas no Desktop.
+- **Funcionalidade testada:** Validação de autenticação na interface Desktop.
+- **Ação:** Preencher os campos de login com credenciais inválidas e tentar acessar o sistema.
+- **Resultado esperado:** O sistema deve rejeitar as credenciais e impedir o acesso à plataforma.
+- **Resultado obtido:** O sistema rejeitou as credenciais inválidas e impediu o acesso.
+- **Status:** Aprovado.
+
+---
+
+**Caso de Teste 13 – ID: 2026013**
+
+- **Nome:** Persistência dos projetos cadastrados no Web.
+- **Funcionalidade testada:** Armazenamento e recuperação dos projetos na interface Web.
+- **Ação:** Cadastrar um projeto, sair do sistema ou atualizar a página e consultar novamente a lista.
+- **Resultado esperado:** O projeto deve permanecer disponível após o novo acesso ao sistema.
+- **Resultado obtido:** O projeto permaneceu armazenado e disponível após o novo acesso.
+- **Status:** Aprovado.
+
+---
+
+**Caso de Teste 14 – ID: 2026014**
+
+- **Nome:** Persistência dos projetos cadastrados no Desktop.
+- **Funcionalidade testada:** Armazenamento e recuperação dos projetos na interface Desktop.
+- **Ação:** Cadastrar um projeto, sair do sistema e acessar novamente para consultar a lista.
+- **Resultado esperado:** O projeto deve permanecer disponível após o novo acesso ao sistema.
+- **Resultado obtido:** O projeto permaneceu armazenado e disponível após o novo acesso.
+- **Status:** Aprovado.
+
+---
+
+**Caso de Teste 15 – ID: 2026015**
+
+- **Nome:** Validação de campos obrigatórios.
+- **Funcionalidade testada:** Validação dos campos obrigatórios no cadastro de projetos.
+- **Ação:** Tentar cadastrar um projeto deixando um ou mais campos obrigatórios em branco.
+- **Resultado esperado:** O sistema deve impedir o cadastro e informar que os campos obrigatórios precisam ser preenchidos.
+- **Resultado obtido:** O sistema impediu o cadastro incompleto e realizou a validação dos campos obrigatórios.
+- **Status:** Aprovado.
+
+---
+
+**Caso de Teste 16 – ID: 2026016**
+
+- **Nome:** Exibição do projeto cadastrado.
+- **Funcionalidade testada:** Listagem e apresentação dos projetos cadastrados.
+- **Ação:** Cadastrar um projeto e consultar sua exibição na lista.
+- **Resultado esperado:** O projeto deve aparecer na lista com as informações correspondentes ao cadastro.
+- **Resultado obtido:** O projeto foi exibido corretamente na lista com suas respectivas informações.
+- **Status:** Aprovado.
+
+---
+
+**Caso de Teste 17 – ID: 2026017**
+
+- **Nome:** Consistência dos projetos entre Web e Desktop.
+- **Funcionalidade testada:** Integração e consistência dos dados entre as duas interfaces.
+- **Ação:** Consultar os mesmos projetos nas versões Web e Desktop e comparar as informações exibidas.
+- **Resultado esperado:** As informações dos projetos devem corresponder nas duas versões do sistema.
+- **Resultado obtido:** As informações dos projetos foram apresentadas corretamente nas duas versões.
+- **Status:** Aprovado.
+
+---
+
+**Caso de Teste 18 – ID: 2026018**
+
+- **Nome:** Atualização de dados entre plataformas.
+- **Funcionalidade testada:** Sincronização das informações entre as interfaces Web e Desktop.
+- **Ação:** Alterar as informações de um projeto em uma das plataformas e consultar os dados na outra versão.
+- **Resultado esperado:** A outra plataforma deve apresentar as informações atualizadas corretamente.
+- **Resultado obtido:** Os dados atualizados foram apresentados corretamente na outra plataforma.
+- **Status:** Aprovado.
+
+---
+
+**Caso de Teste 19 – ID: 2026019**
+
+- **Nome:** Exibição do dashboard.
+- **Funcionalidade testada:** Carregamento dos indicadores e gráficos do dashboard.
+- **Ação:** Acessar o dashboard e consultar os indicadores e dados exibidos.
+- **Resultado esperado:** O dashboard deve carregar corretamente e apresentar as informações disponíveis no sistema.
+- **Resultado obtido:** O dashboard foi carregado corretamente e apresentou as informações esperadas.
+- **Status:** Aprovado.
+
+---
+
+**Caso de Teste 20 – ID: 2026020**
+
+- **Nome:** Registro de logs do sistema.
+- **Funcionalidade testada:** Registro das operações realizadas pelos usuários nos arquivos de log.
+- **Ação:** Executar uma operação no sistema e consultar os registros de logs correspondentes.
+- **Resultado esperado:** O sistema deve registrar a operação realizada com as informações disponíveis para o evento.
+- **Resultado obtido:** O registro da operação foi encontrado nos logs do sistema.
+- **Status:** Aprovado.
 
 ## 5. Análise dos erros encontrados
 
-Esta seção será preenchida após a realização dos 20 casos de teste.
+Após a execução dos 20 casos de teste, foram identificadas duas reprovações relacionadas ao uso do status "Em Desenvolvimento" no gerenciamento de projetos.
 
-Serão registrados os erros identificados durante a utilização do sistema, considerando problemas relacionados ao cadastro, validação de informações, autenticação, comunicação entre as interfaces, atualização dos dados e demais funcionalidades.
+No cadastro de projetos pela interface Web (Caso de Teste 03), o sistema permitiu cadastrar projetos com os status "Planejado" e "Concluído", mas apresentou a mensagem "Status inválido" ao selecionar "Em Desenvolvimento".
 
-Também será verificado se os erros apresentados ao usuário correspondem ao comportamento esperado.
+O mesmo problema foi identificado na edição de projetos pela interface Desktop (Caso de Teste 08). As alterações foram realizadas corretamente com os status "Planejado" e "Concluído", porém a seleção de "Em Desenvolvimento" resultou na mensagem "Status inválido".
 
-**Resultados dos testes e erros identificados:**
+Esses resultados indicam uma inconsistência na validação ou no tratamento do status entre as interfaces e o backend, que precisa ser investigada e corrigida.
 
-_Preenchimento pendente após a execução dos testes._
+### 5.1. Resumo dos resultados
+
+| Resultado | Quantidade |
+|---|---:|
+| Testes aprovados | 18 |
+| Testes reprovados | 2 |
+| Total de testes | 20 |
+| Percentual de aprovação | 90% |
+| Percentual de reprovação | 10% |
+
+**Conclusão da análise:** A maioria das funcionalidades avaliadas apresentou o comportamento esperado. Entretanto, os problemas identificados com o status "Em Desenvolvimento" demonstram a necessidade de revisar a validação dos status de projetos, garantindo o funcionamento correto nas interfaces Web e Desktop.
 
 ## 6. Logs – Registro e auditoria do sistema
 
@@ -538,6 +539,6 @@ Além das operações tradicionais de um CRUD, o sistema possui um dashboard com
 
 A implementação dos arquivos de log também contribui para o acompanhamento das operações, identificação de erros e auditoria das atividades realizadas.
 
-A documentação dos 20 casos de teste permitirá avaliar o comportamento das funcionalidades e verificar se as regras estabelecidas estão sendo respeitadas.
+A execução dos 20 casos de teste permitiu avaliar o comportamento das funcionalidades. Foram obtidos 18 testes aprovados e 2 reprovados, resultando em um índice de aprovação de 90%. Os problemas encontrados estão relacionados à validação do status "Em Desenvolvimento" em operações realizadas pelas interfaces Web e Desktop.
 
 Dessa forma, o projeto demonstra a aplicação de conceitos de desenvolvimento de software, organização de código, qualidade, análise de dados e auditoria, aproximando uma aplicação acadêmica das características encontradas em sistemas utilizados profissionalmente.
