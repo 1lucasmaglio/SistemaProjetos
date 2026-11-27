@@ -164,4 +164,4 @@ O desenvolvimento também permite praticar a organização do código em diferen
 
 ---
 
-**Observação:** Este projeto possui finalidade educacional e foi desenvolvido com base nas orientações, nos exemplos e nos materiais disponibilizados pelo professor durante as aulas, com personalizações realizadas ao longo do desenvolvimento.
+<p align="center"><img src="logo/Asset-2.webp" alt="Logo do Sistema de Projetos" width="128" height="128"></p>
