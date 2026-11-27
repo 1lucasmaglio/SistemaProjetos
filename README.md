@@ -165,3 +165,44 @@ O desenvolvimento também permite praticar a organização do código em diferen
 ---
 
 <p align="center"><img src="frontend/img/Asset-2.webp" alt="Logo do Sistema de Projetos" width="128" height="128"></p>
+
+## 🤝 Colaboradores
+
+Agradecemos às seguintes pessoas que contribuíram para este projeto:
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/1lucasmaglio" title="Sobre">
+        <img src="https://avatars.githubusercontent.com/u/266368513?v=4" width="100px;"   alt="Foto do Lucas Maglio no GitHub"/><br>
+        <sub>
+          <b>Lucas Maglio</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/YannEscobar" title="Sobre">
+        <img src="https://avatars.githubusercontent.com/u/240530528?v=4" width="100px;" alt="Foto do Yann no GitHub"/><br>
+        <sub>
+          <b>Yann Escobar</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/ThiagoALM626" title="Sobre">
+        <img src="https://avatars.githubusercontent.com/u/288315951?v=4" width="100px;"   alt="Foto do Thiago Santos no GitHub"/><br>
+        <sub>
+          <b>Thiago Santos</b>
+        </sub>
+      </a>
+    </td>
+        <td align="center">
+      <a href="https://github.com/thiagobasilio887-sys" title="Sobre">
+        <img src="https://avatars.githubusercontent.com/u/288312813?v=4" width="100px;" alt="Foto do Thiago Basilio no GitHub"/><br>
+        <sub>
+          <b>Thiago Basilio</b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
