@@ -40,7 +40,7 @@ A aplicação permite gerenciar projetos por meio de uma interface desktop desen
 - Associação dos projetos aos respectivos usuários.
 - Controle de acesso aos projetos de cada usuário.
 
-### Gerenciamento de projetos
+### Geenciamento de projetos
 - Cadastro de projetos.
 - Listagem dos projetos cadastrados.
 - Busca de projetos por ID.
