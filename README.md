@@ -1,5 +1,5 @@
  <p align="center">
-  <img src="logo/logoTitle" alt="Logo do Sistema de Projetos" width="600" height="600">
+  <img src="logo/logoTitle.png" alt="Logo do Sistema de Projetos" width="600" height="600">
 </p>
 
 # Sistema de Projetos
